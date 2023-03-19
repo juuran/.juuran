@@ -1,5 +1,5 @@
 #!/bin/bash
-source /home/c945fvc/.config/omat/skribat/fail.sh
+source ~/.config/omat/skriptit/fail.sh
 noOfArgsOriginally=$(("${#@}"))
 searchPath="not set";
 

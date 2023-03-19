@@ -11,25 +11,25 @@ alias less='less -R'
 alias tree='tree -C'
 alias mvn='mvn --color always'
 alias cd..='cd ..'
-alias refresh-zsh='source /home/c945fvc/.zshrc'
-alias koira='(/home/c945fvc/mqjexplorer/mqjexplorer/MQJExplorer/runme.sh > /dev/null &); echo ""'
+alias refresh-zsh='source ~/.zshrc'
+alias koira='(~/mqjexplorer/mqjexplorer/MQJExplorer/runme.sh > /dev/null &); echo ""'
 alias intelliJ='(/opt/kela/intelliJ/2022.3.2/idea-IC-223.8617.56/bin/idea.sh > /dev/null 2>&1) & echo ""'
 alias intelliJWithLogging='/opt/kela/intelliJ/2022.3.2/idea-IC-223.8617.56/bin/idea.sh'
 
 ## omat skriptit tästä alaspäin
-alias git-log=/home/c945fvc/.config/omat/skribat/git-log.sh
-alias git-branch-descriptions=/home/c945fvc/.config/omat/skribat/git-branch-descriptions.sh
-alias git-log=/home/c945fvc/.config/omat/skribat/git-log.sh
-alias git-modified-branches=/home/c945fvc/.config/omat/skribat/git-modified-branches.sh
-alias git-pull-all=/home/c945fvc/.config/omat/skribat/git-pull-all.sh
+alias git-log=~/.config/omat/skriptit/git-log.sh
+alias git-branch-descriptions=~/.config/omat/skriptit/git-branch-descriptions.sh
+alias git-log=~/.config/omat/skriptit/git-log.sh
+alias git-modified-branches=~/.config/omat/skriptit/git-modified-branches.sh
+alias git-pull-all=~/.config/omat/skriptit/git-pull-all.sh
 
-alias f-f-f-find=/home/c945fvc/.config/omat/skribat/f-f-f-find.sh
-alias g-g-g-grep=/home/c945fvc/.config/omat/skribat/g-g-g-grep.sh
-alias show-tasks=/home/c945fvc/.config/omat/skribat/tasks.sh
-alias tasks=/home/c945fvc/.config/omat/skribat/tasks.sh
+alias f-f-f-find=~/.config/omat/skriptit/f-f-f-find.sh
+alias g-g-g-grep=~/.config/omat/skriptit/g-g-g-grep.sh
+alias show-tasks=~/.config/omat/skriptit/tasks.sh
+alias tasks=~/.config/omat/skriptit/tasks.sh
 
 ## aliaksen kaltaiset funktiot (kaikki ei taivu aliakseksi sen rajoitusten takia)
 function llss() { ll "$@" | less ; }
-function error() { source /home/c945fvc/.config/omat/skribat/error.sh; error "$@"; }
-function fail() { ( source /home/c945fvc/.config/omat/skribat/fail.sh; fail "$@" ); }  ## ei haluta kaataa pääistuntoa komentoriviltä...
+function error() { source ~/.config/omat/skriptit/error.sh; error "$@"; }
+function fail() { ( source ~/.config/omat/skriptit/fail.sh; fail "$@" ); }  ## ei haluta kaataa pääistuntoa komentoriviltä...
 function perse() { [ -n "$1" ] && local space=", "; echo -e "\e[0;33m Jep, sanopa muuta$space$@! \e[0m"; }

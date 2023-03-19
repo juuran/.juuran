@@ -65,13 +65,6 @@ HIST_STAMPS="dd.mm.yyyy"
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
 
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git sudo web-search mvn zsh-autosuggestions zsh-syntax-highlighting)
-
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -103,33 +96,50 @@ fi
 
 ## -------------------- omat -------------------- ##
 
-# Yeah, fuck those
-if [ -f ~/.config/omat/skriptit/.aliases ]; then
-    . ~/.config/omat/skriptit/.aliases
+## Eri värit tohon virheenkorjaajaan pitäis saada näin
+# Declare the variable
+typeset -A ZSH_HIGHLIGHT_STYLES
+# ehreet
+ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=191,underline     # =fg=blue,underline
+ZSH_HIGHLIGHT_STYLES[precommand]=fg=191,underline       # =fg=blue,underline
+ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=191,underline    # =fg=blue,underline
+ZSH_HIGHLIGHT_STYLES[arg0]=fg=191                       # =fg=blue
+# punane
+ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=211,bold         # =fg=red,bold
+
+## auto-suggestionsin väri
+typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
+
+
+## eri koneet
+sleep 1 && echo $USER && sleep 1
+
+plugins=(git sudo web-search mvn zsh-autosuggestions zsh-syntax-highlighting)
+
+if [ $USER = c945fvc ]; then
+    ## Svidduun se non-breaking space
+    setxkbmap -option "nbsp:none"
+
+    # Which plugins would you like to load?
+    # Standard plugins can be found in $ZSH/plugins/
+    # Custom plugins may be added to $ZSH_CUSTOM/plugins/
+    # Example format: plugins=(rails git textmate ruby lighthouse)
+    # Add wisely, as too many plugins slow down shell startup.
+    
+
+  elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=1'
+    plugins=(git sudo web-search mvn zsh-autosuggestions zsh-syntax-highlighting)
 fi
 
-## Svidduun se non-breaking space
-if [ $USER = c945fvc ]; then
-  setxkbmap -option "nbsp:none"
+if [ -f ~/.config/omat/skriptit/.aliases ]; then
+    . ~/.config/omat/skriptit/.aliases
 fi
 
 # Pistetääns yhtenäinen historia molempaisiin shelleihin
 unsetopt EXTENDED_HISTORY
 HISTFILE=~/.shell_history
 
-## Eri värit tohon virheenkorjaajaan pitäis saada näin
-  # Declare the variable
-  typeset -A ZSH_HIGHLIGHT_STYLES
-  # ehreet
-  ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=191,underline     # =fg=blue,underline
-  ZSH_HIGHLIGHT_STYLES[precommand]=fg=191,underline       # =fg=blue,underline
-  ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=191,underline    # =fg=blue,underline
-  ZSH_HIGHLIGHT_STYLES[arg0]=fg=191                       # =fg=blue
-  # punane
-  ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=211,bold         # =fg=red,bold
-
-## auto-suggestionsin väri
-typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 
 ## Enpäs nyt jaksa keksiä parempaa paikkaan näille muistiinpanoille, joten
 ## muistiin panen ne tänne.

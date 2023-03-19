@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /home/c945fvc/.config/omat/skribat/error.sh
+source ~/.config/omat/skriptit/error.sh
 
 ## Elämää helpottava skripti
 ##   1. argumentti on viesti
