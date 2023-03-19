@@ -41,7 +41,7 @@ zstyle ':omz:update' frequency 7
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
+ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
@@ -64,6 +64,20 @@ HIST_STAMPS="dd.mm.yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
+
+if [ $USER = c945fvc ]; then
+    # Which plugins would you like to load?
+    # Standard plugins can be found in $ZSH/plugins/
+    # Custom plugins may be added to $ZSH_CUSTOM/plugins/
+    # Example format: plugins=(rails git textmate ruby lighthouse)
+    # Add wisely, as too many plugins slow down shell startup.
+    plugins=(git sudo web-search mvn zsh-autosuggestions zsh-syntax-highlighting)
+  
+  elif [ $USER = juuran ]; then
+    plugins=(git sudo zsh-autosuggestions)
+  elif [ $USER = ubuntu ]; then
+    plugins=(git sudo zsh-autosuggestions zsh-syntax-highlighting)
+fi
 
 source $ZSH/oh-my-zsh.sh
 
@@ -94,6 +108,7 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
+
 ## -------------------- omat -------------------- ##
 
 ## Eri värit tohon virheenkorjaajaan pitäis saada näin
@@ -111,25 +126,13 @@ ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=211,bold         # =fg=red,bold
 typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 
 
-## eri koneet
-sleep 1 && echo $USER && sleep 1
-
-plugins=(git sudo web-search mvn zsh-autosuggestions zsh-syntax-highlighting)
-
+## ERI KONEIDEN MUUTTUJAT (muut kuin pluginit)
 if [ $USER = c945fvc ]; then
     ## Svidduun se non-breaking space
     setxkbmap -option "nbsp:none"
-
-    # Which plugins would you like to load?
-    # Standard plugins can be found in $ZSH/plugins/
-    # Custom plugins may be added to $ZSH_CUSTOM/plugins/
-    # Example format: plugins=(rails git textmate ruby lighthouse)
-    # Add wisely, as too many plugins slow down shell startup.
     
-
   elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
-    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=1'
-    plugins=(git sudo web-search mvn zsh-autosuggestions zsh-syntax-highlighting)
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
 fi
 
 if [ -f ~/.config/omat/skriptit/.aliases ]; then

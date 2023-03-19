@@ -27,6 +27,7 @@ alias f-f-f-find=~/.config/omat/skriptit/f-f-f-find.sh
 alias g-g-g-grep=~/.config/omat/skriptit/g-g-g-grep.sh
 alias show-tasks=~/.config/omat/skriptit/tasks.sh
 alias tasks=~/.config/omat/skriptit/tasks.sh
+alias show-usable-colors=~/.config/omat/skriptit/show-usable-colors.sh
 
 ## aliaksen kaltaiset funktiot (kaikki ei taivu aliakseksi sen rajoitusten takia)
 function llss() { ll "$@" | less ; }
