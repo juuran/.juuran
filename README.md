@@ -1,4 +1,4 @@
-# Näin käyttelet
+# Nain cäyttelet
 
 Cen tästä cäy, saa kaiken woivo(ttelu)n heittääwi.
 Waan toiwoa sen sijaan, uuden cattilassa ceittäwi.
