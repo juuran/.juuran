@@ -1,3 +1,12 @@
+if [ $USER = c945fvc ]; then
+  # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+  # Initialization code that may require console input (password prompts, [y/n]
+  # confirmations, etc.) must go above this block; everything else may go below.
+  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+  fi
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -8,7 +17,12 @@ export ZSH="$HOME/.config/zsh/oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="muse"
+if [ $USER = c945fvc ]; then
+    ZSH_THEME="powerlevel10k/powerlevel10k"
+
+  else
+    ZSH_THEME="muse"
+fi
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -72,7 +86,7 @@ if [ $USER = c945fvc ]; then
     # Example format: plugins=(rails git textmate ruby lighthouse)
     # Add wisely, as too many plugins slow down shell startup.
     plugins=(git sudo web-search mvn zsh-autosuggestions zsh-syntax-highlighting)
-  
+
   elif [ $USER = juuran ]; then
     plugins=(git sudo zsh-autosuggestions)
   elif [ $USER = ubuntu ]; then
@@ -125,24 +139,26 @@ ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=211,bold         # =fg=red,bold
 ## auto-suggestionsin väri
 typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 
+# Pistetääns yhtenäinen historia molempaisiin shelleihin
+unsetopt EXTENDED_HISTORY
+HISTFILE=~/.shell_history
+
 
 ## ERI KONEIDEN MUUTTUJAT (muut kuin pluginit)
 if [ $USER = c945fvc ]; then
     ## Svidduun se non-breaking space
     setxkbmap -option "nbsp:none"
-    
+    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
   elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
 fi
 
+## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
 if [ -f ~/.config/omat/skriptit/.aliases ]; then
     . ~/.config/omat/skriptit/.aliases
 fi
-
-# Pistetääns yhtenäinen historia molempaisiin shelleihin
-unsetopt EXTENDED_HISTORY
-HISTFILE=~/.shell_history
-
 
 ## Enpäs nyt jaksa keksiä parempaa paikkaan näille muistiinpanoille, joten
 ## muistiin panen ne tänne.
