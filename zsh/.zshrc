@@ -55,7 +55,8 @@ zstyle ':omz:update' frequency 7
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+# (Tämä taitaa olla vähän aikaansa jäljessä. Ei ainakaan tajua cd ... aliasta)
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
