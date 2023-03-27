@@ -12,8 +12,8 @@ alias tree='tree -C'
 alias mvn='mvn --color always'
 alias cd..='cd ..'
 alias refresh-zsh='source ~/.zshrc'
-alias koira='(~/mqjexplorer/mqjexplorer/MQJExplorer/runme.sh > /dev/null &); echo ""'
-alias intelliJ='(/opt/kela/intelliJ/2022.3.2/idea-IC-223.8617.56/bin/idea.sh > /dev/null 2>&1) & echo ""'
+alias koira='(~/mqjexplorer/mqjexplorer/MQJExplorer/runme.sh > /dev/null &); echo ""'                     ## jostain helkatin syystä ...
+alias intelliJ='/opt/kela/intelliJ/2022.3.2/idea-IC-223.8617.56/bin/idea.sh > /dev/null 2>&1 &; disown'   ## ... näissä ei toimi sama!
 alias intelliJWithLogging='/opt/kela/intelliJ/2022.3.2/idea-IC-223.8617.56/bin/idea.sh'
 
 ## omat skriptit tästä alaspäin
