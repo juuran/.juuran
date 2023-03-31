@@ -86,7 +86,7 @@ if [ $USER = c945fvc ]; then
     # Custom plugins may be added to $ZSH_CUSTOM/plugins/
     # Example format: plugins=(rails git textmate ruby lighthouse)
     # Add wisely, as too many plugins slow down shell startup.
-    plugins=(git sudo web-search mvn npm zsh-autosuggestions zsh-syntax-highlighting)
+    plugins=(git sudo web-search mvn npm zsh-syntax-highlighting zsh-autosuggestions)
 
   elif [ $USER = juuran ]; then
     plugins=(git sudo zsh-autosuggestions)
@@ -126,19 +126,23 @@ fi
 
 ## -------------------- omat -------------------- ##
 
+
 ## Eri värit tohon virheenkorjaajaan pitäis saada näin
+grayish='fg=240'
+greenish='fg=191'
+reddish='fg=211'
 # Declare the variable
 typeset -A ZSH_HIGHLIGHT_STYLES
 # ehreet
-ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=191,underline     # =fg=blue,underline
-ZSH_HIGHLIGHT_STYLES[precommand]=fg=191,underline       # =fg=blue,underline
-ZSH_HIGHLIGHT_STYLES[autodirectory]=fg=191,underline    # =fg=blue,underline
-ZSH_HIGHLIGHT_STYLES[arg0]=fg=191                       # =fg=blue
+ZSH_HIGHLIGHT_STYLES[suffix-alias]=$greenish,underline     # =fg=blue,underline
+ZSH_HIGHLIGHT_STYLES[precommand]=$greenish,underline       # =fg=blue,underline
+ZSH_HIGHLIGHT_STYLES[autodirectory]=$greenish,underline    # =fg=blue,underline
+ZSH_HIGHLIGHT_STYLES[arg0]=$greenish                       # =fg=blue
 # punane
-ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=211,bold         # =fg=red,bold
+ZSH_HIGHLIGHT_STYLES[unknown-token]=$reddish,bold         # =fg=red,bold
 
 ## auto-suggestionsin väri
-typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
+typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayish
 
 # Pistetääns yhtenäinen historia molempaisiin shelleihin
 unsetopt EXTENDED_HISTORY
