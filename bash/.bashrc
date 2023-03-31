@@ -122,10 +122,6 @@ fi
 export SDKMAN_DIR="/home/juuran/.sdkman"
 [[ -s "/home/juuran/.sdkman/bin/sdkman-init.sh" ]] && source "/home/juuran/.sdkman/bin/sdkman-init.sh"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 ## Tulostaa stderr punaisella
 #exec 9>&2
 #exec 8> >(
@@ -148,3 +144,8 @@ fi
 if [ $USER = c945fvc ]; then
   setxkbmap -option "nbsp:none"
 fi
+
+## kun nvm asennettiin, lisäsi tämän
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

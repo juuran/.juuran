@@ -12,7 +12,7 @@ while getopts "d:" OPTION; do
     *)
       ## Perään lisättävien argumenttien lisäksi Bash käyttää samaa OPTARG -muuttujaa myös virheellisille vivuille!
       [ "$OPTARG" = "-" ] && exitPrintError "Long options are not supported!"
-      fail "Incorrect option '$OPTARG' or you forgot to specify an argument for an option that requires it."
+      fail "Incorrect option '$OPTARG' or you forgot to specify an argument for an option that requires it. Correct ones are:\n    -d    set search path (directory to search from)"
       ;;
   esac
 done

@@ -16,7 +16,7 @@ while getopts "ie" OPTION; do
       ;;
     *)
       ## Perään lisättävien argumenttien lisäksi Bash käyttää samaa OPTARG -muuttujaa myös virheellisille vivuille!
-      fail "Incorrect option '$OPTARG'"
+      fail "Incorrect option '$OPTARG'. Correct ones are:\n    -i    To make cases significant. By default case is ignored.\n    -e    Only exact matches are returned without \"implied wildcards\" on search term."
       ;;
   esac
 done
