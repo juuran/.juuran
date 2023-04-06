@@ -6,7 +6,7 @@ alias la='ls -A'
 alias grep='grep --color=force'
 
 ## oikeat ohjelmat
-alias less='less -R'
+alias less='less --RAW-CONTROL-CHARS --no-init --quit-if-one-screen'
 alias tree='tree -C'
 alias cd..='cd ..'
 alias refresh-zsh='source ~/.zshrc'
