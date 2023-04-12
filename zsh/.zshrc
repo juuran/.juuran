@@ -183,8 +183,8 @@ fi
 ##
 ##         cityarray=( ${(f)citytext} )
 ##         - nyt cityarray on splitattu enttereiden kohdalta!
-##   - jostain neronleimauksesta taulukot on 1-indeksisiä zsh:ssä... Niinpä
-##     taulukoita käytellään tämän kanssa näin:
+##   - jostain neronleimauksesta taulukot on 1-indeksisiä zsh:ssä... Niinpä, joten
+##     todellisuudessa taulukoita käytellään zsh:ssä näin:
 ##         setopt KSH_ARRAYS
 ##         echo ${taul[0]}
 ##         ## tulostaa jotain
