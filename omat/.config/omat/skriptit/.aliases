@@ -2,7 +2,7 @@
 alias ls='ls --color=always'
 alias l='ls -CF'
 alias ll='ls -alFh'
-alias la='ls -A'
+alias la='ls -AF'
 alias grep='grep --color=force'
 
 ## oikeat ohjelmat
