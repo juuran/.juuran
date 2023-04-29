@@ -92,6 +92,10 @@ if [ $USER = c945fvc ]; then
     plugins=(git sudo zsh-autosuggestions)
   elif [ $USER = ubuntu ]; then
     plugins=(git sudo zsh-autosuggestions zsh-syntax-highlighting)
+  
+  ## default
+  else
+    plugins=(git sudo zsh-autosuggestions zsh-syntax-highlighting)
 fi
 
 source $ZSH/oh-my-zsh.sh
