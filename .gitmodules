@@ -1,10 +1,10 @@
 [submodule "zsh/.config/zsh/custom-oh-my-zsh/plugins/zsh-autosuggestions"]
 	path = zsh/.config/zsh/custom-oh-my-zsh/plugins/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions/tree/master
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
 [submodule "zsh/.config/zsh/custom-oh-my-zsh/plugins/zsh-syntax-highlighting"]
 	path = zsh/.config/zsh/custom-oh-my-zsh/plugins/zsh-syntax-highlighting
-	url = https://github.com/zsh-users/zsh-syntax-highlighting/tree/master
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
 	branch = origin/master
 [submodule "zsh/.config/zsh/oh-my-zsh"]
 	path = zsh/.config/zsh/oh-my-zsh
-	url = https://github.com/ohmyzsh/ohmyzsh
+	url = https://github.com/ohmyzsh/ohmyzsh.git
