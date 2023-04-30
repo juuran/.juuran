@@ -1,19 +1,23 @@
 _This repo exists to make life with Unix configs and scripts "fun", or at least more so._
 
+**_Cen tästä cäy, <br> saa kaiken woivo(ttelu)n heittää_**
 
-# Nain cäyttelet
+# Näin cäyttelet
 
-Cen tästä cäy, saa kaiken woivo(ttelu)n heittää. <br>
-Waan toiwon, uuden, sen sijaan cattilassa ceittää.
+Alustat sa caiken tällä (lukien mucaan alimoduulit):
 
-## Jos haluat sa kaiken stow'aa (paitsi tämän READMEen)
+    git clone --recurse-submodules https://github.com/juuran/.juuran.git
 
-`stow */`
+Jos haluat sa kaiken stow'aa (paitsi tämän READMEen)
 
+    stow */
 
-## Ja jospa vain yhden
+Ja jospa yhden vain
 
-`stow yksi`
+    stow yksi
 
+# Päivittää voit müös ilman tuscaa
+
+`git pull --recurse-submodules` tahi tiirailla `git fetch --all --prune --recurse-submodules`
 
 Loput löydät sa manuaalista.
