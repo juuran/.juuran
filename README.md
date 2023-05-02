@@ -20,9 +20,9 @@ Ja jospa yhden vain
 
 `git pull --recurse-submodules` tahi tiirailla `git fetch --all --prune --recurse-submodules`
 
-## _Loput löydät sa manuaalista._
+## _Loput löydät sa manuaalista!_
 
-### Erikoistarpeet
+### PS. Erikoistarpeet
 
 Joscin se on sanottawa, että mikäli haluat sa saada kaicen näkymän ilman 'HEAD detached' <br>
 ilmoitusta, teepä näin. (Tosin muista, hintana on alimoduulein näkyminen osana 'main' <br>
