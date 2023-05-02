@@ -43,9 +43,10 @@ printMatching() {
   
   grep -rE -h --color=never --regexp="$regexp" $SEARCH_PATH | while read -r task
     do
-      [[ $showFilePath == "true" ]] && \
-        file=$(grep -lr "$task" $SEARCH_PATH) || \
-        file=$(grep -lr "$task" $SEARCH_PATH | xargs -L 1 basename)
+      if [ $showFilePath = "true" ]
+        then  file=$(grep -lr "$task" $SEARCH_PATH)
+        else  file=$(grep -lr "$task" $SEARCH_PATH | xargs -L 1 basename)
+      fi
       text="${task:$((2+offset))}"
       printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"
       printWithinScreen "$printLine"
