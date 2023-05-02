@@ -16,8 +16,17 @@ Ja jospa yhden vain
 
     stow yksi
 
-# Päivittää voit müös ilman tuscaa
+# Päivittää voit myös ilman tuscaa
 
 `git pull --recurse-submodules` tahi tiirailla `git fetch --all --prune --recurse-submodules`
 
-Loput löydät sa manuaalista.
+## _Loput löydät sa manuaalista._
+
+### Erikoistarpeet
+
+Joscin se on sanottawa, että mikäli haluat sa saada kaicen näkymän ilman 'HEAD detached' <br>
+ilmoitusta, teepä näin. (Tosin muista, hintana on alimoduulein näkyminen osana 'main' <br>
+haaraa, mikä hieman valheellista lie... Mutta se on se hinta, koska muutoin aina yhden <br>
+commitin kerrallansa checkouttaa ja siten irroittaa.)
+
+    git clone git@github.com:juuran/.juuran.git && git -C .juuran submodule update --remote --merge
