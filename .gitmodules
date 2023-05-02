@@ -2,11 +2,15 @@
 	path = zsh/.config/zsh/custom-oh-my-zsh/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions.git
 	update = merge
+	branch = master
 [submodule "zsh/.config/zsh/custom-oh-my-zsh/plugins/zsh-syntax-highlighting"]
 	path = zsh/.config/zsh/custom-oh-my-zsh/plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
 	update = merge
+	branch = master
 [submodule "zsh/.config/zsh/oh-my-zsh"]
 	path = zsh/.config/zsh/oh-my-zsh
 	url = https://github.com/ohmyzsh/ohmyzsh.git
 	update = merge
+	branch = master
+
