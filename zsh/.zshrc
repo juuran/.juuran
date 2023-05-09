@@ -165,6 +165,10 @@ if [ $USER = c945fvc ]; then
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+    ## Add JBang to environment (ei kovin tärkeä)
+    alias j!=jbang
+    export PATH="$HOME/.jbang/bin:$PATH"
+
   elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
 fi

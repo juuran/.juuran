@@ -25,7 +25,7 @@ done
 [[ $parallel == "true" ]] && [[ $runCustomCommand == "true" ]] && echo "Parallel running is not allowed with option 'do' because it \
 skews the logs and could do damage to all projects with unsafe parameters." && exit 2
 
-runGitPull() {
+runGitCommand() {
   [[ $parallel == "true" ]] && echo "Working on $shortPath." || echo -e "\nWorking on $shortPath. "
 
   if [[ $onlyFetch == "true" ]]; then
@@ -34,9 +34,14 @@ runGitPull() {
   elif [[ $runCustomCommand == "true" ]]; then
     echo "Running command: git -C $fullPath $doToAll"
     git -C "$fullPath" $doToAll || exit 2   ## Ei toimi jos "$doToAll", vain noin. Veikkaan että yrittäisi antaa silloin tarjota esim. git "branch --show-current" kun git taas osaa lukea vain git "branch" "--show-current". Mene ja tiedä!
+  
   else
+  ## Run git pull
+    local currentBranch
+    currentBranch=$(git -C "$fullPath" branch --show-current)
     git -C "$fullPath" checkout $branch && \
-    git -C "$fullPath" pull \
+    git -C "$fullPath" pull && \
+    git -C "$fullPath" checkout $currentBranch \
     || exit 2
   fi
 }
@@ -54,9 +59,9 @@ for path in $projects; do
   [[ $shortPath == "yms" ]] && echo -e "\nSkipping '$shortPath'." && continue  ## muut kokeilut
 
   if [[ $parallel == "true" ]]; then
-      runGitPull &
+      runGitCommand &
     else
-      runGitPull
+      runGitCommand
   fi
   
   pids+=" $!"           ## $! on viimeisimmän uuden taustaprosessin pid (olettaisin että tajuaa hakea vain kys. bash istunnon pidejä...?)
