@@ -48,9 +48,16 @@ findIt() {
   local term; term="$1"
   local path; path="$2"
 
+  echo "Seuraavan tulosteen pitäisi testata, onko kys merkki hakusanassa"
+  [[ "$term" == *"*"* ]] && echo true || echo false
+
   if [ $exactMatchesOnly = false ]
-    then find "$path" -$name "*$term*" 2> /dev/null | less -FRX -Ip "$term"  ## ignorattu sekä findissä että lessissä
-    else find "$path" -$name "$term" 2> /dev/null   | less -FRX -p "$term"
+    then
+      [[ "$term" == *"\*"* ]] && find "$path" -$name "*$term*" 2> /dev/null | less -FRX -Ip "$term" || \
+                                 find "$path" -$name "*$term*" 2> /dev/null | less -FRX
+    else
+      [[ "$term" == *"\*"* ]] && find "$path" -$name "$term" 2> /dev/null   | less -FRX -p "$term" || \
+                                 find "$path" -$name "$term" 2> /dev/null   | less -FRX
   fi
 }
 
