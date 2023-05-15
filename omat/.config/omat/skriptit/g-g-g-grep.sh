@@ -1,46 +1,26 @@
 #!/bin/bash
-source ~/.config/omat/skriptit/fail.sh
-noOfArgsOriginally=$(("${#@}"))
-searchPath="not set";
+source "$(dirname "$0")/fail.sh"
 
-## Optioiden käsittely (tällä kertaa "melko vaivattomasti")
-while getopts "d:" OPTION; do
-  case "$OPTION" in
-    d)
-      searchPath="$OPTARG"
-      ;;
-    *)
-      ## Perään lisättävien argumenttien lisäksi Bash käyttää samaa OPTARG -muuttujaa myös virheellisille vivuille!
-      [ "$OPTARG" = "-" ] && exitPrintError "Long options are not supported!"
-      fail "Incorrect option '$OPTARG' or you forgot to specify an argument for an option that requires it. Correct ones are:\n    -d    set search path (directory to search from)"
-      ;;
-  esac
-done
-## getopts käytön jälkeen täytyy "nollata" argumenttien indeksi, että saadaan "tavalliset" argumentit mukaan
-shift "$(($OPTIND -1))"
-
-
-noOfArgsAfterOpts=$(("${#@}"))
-
-if [ "$searchPath" = "not set" ]
-  then
-    true
-  else
-    [ "$searchPath" = "" ] && fail "The path given is empty."
-
-    if [ $noOfArgsAfterOpts -gt 1 ]; then
-      grep -Ir --color=always "$@" "$searchPath" 2> /dev/null | less
-    elif [ $noOfArgsAfterOpts -gt 0 ]; then
-      grep -Ir --color=always "$1" "$searchPath" 2> /dev/null
-    else
-      fail "The search criteria is required."
-    fi
+## Yksinkertaistettu (uudelleenkirjoitettu) g-g-g-grep.sh
+for arg in "$@"; do
+  if [ "$arg" == "--help" ] || [ "$arg" == "-h" ]; then
+    echo "        g-g-g-grep.sh - grep for humans"
+    echo "Uses grep to search for contents of files recursively"
+    echo
+    echo "Usage:"
+    echo '  g-g-g-grep.sh "arg1"            search for arg1'\''s content from current directory'
+    echo '  g-g-g-grep.sh "arg1" arg2       search for arg1'\''s content from arg2'\''s directory'
+    echo '  g-g-g-grep.sh "arg1" arg2 argN  search for arg1'\''s content from arg2'\''s directory with argN parameters given to grep'
     exit
-fi
+  fi
+done
 
-if [[ noOfArgsOriginally -eq 1 ]]
-  then grep -Ir --color=always "$1" ./* 2> /dev/null
-  elif [[ $noOfArgsOriginally -gt 1 ]];
-    then grep -Ir --color=always "$@" ./* 2> /dev/null | less
-  else fail 'No arguments found, so maybe not worth it...?'
+noOfArgs=$#
+
+if [ $noOfArgs -lt 1 ]; then
+  fail 'At least one argument is needed'
+elif [ $noOfArgs -eq 1 ]; then
+  grep --fixed-strings --ignore-case --dereference-recursive --color=always "$1" ./* 2> /dev/null | less -FR
+elif [ $noOfArgs -gt 1 ]; then
+  grep --fixed-strings --ignore-case --dereference-recursive --color=always "$@" 2> /dev/null | less -FR
 fi

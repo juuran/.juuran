@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/.config/omat/skriptit/error.sh
+source "$(dirname "$0")/error.sh"
 
 ## Elämää helpottava skripti
 ##   1. argumentti on viesti

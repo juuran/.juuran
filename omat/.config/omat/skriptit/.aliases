@@ -35,6 +35,7 @@ alias show-usable-colors=~/.config/omat/skriptit/show-usable-colors.sh
 
 ## aliaksen kaltaiset funktiot (kaikki ei taivu aliakseksi sen rajoitusten takia)
 function llss()   { ll "$@" | less ; }
-function error()  { source ~/.config/omat/skriptit/error.sh; error "$@"; }
-function fail()   { ( source ~/.config/omat/skriptit/fail.sh; fail "$@" ); }  ## ei haluta kaataa pääistuntoa komentoriviltä...
+## Marked for deletion, eli katsotaan ensin hajoaako mitään!
+# function error()  { source ~/.config/omat/skriptit/error.sh; error "$@"; }
+# function fail()   { ( source ~/.config/omat/skriptit/fail.sh; fail "$@" ); }  ## ei haluta kaataa pääistuntoa komentoriviltä...
 function perse()  { [ -n "$1" ] && local space=", "; echo -e "\e[0;33m Jep, sanopa muuta$space$@! \e[0m"; }
