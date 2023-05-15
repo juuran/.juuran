@@ -49,8 +49,22 @@ findIt() {
   local path; path="$2"
 
   if [ $exactMatchesOnly = false ]
-    then find "$path" -$name "*$term*" 2> /dev/null | less -FRX -Ip "$term"  ## ignorattu sekä findissä että lessissä
-    else find "$path" -$name "$term" 2> /dev/null   | less -FRX -p "$term"
+    then output=$(find "$path" -$name "*$term*" 2> /dev/null)  ## ignorattu sekä findissä että lessissä
+    else output=$(find "$path" -$name "$term" 2> /dev/null)
+  fi
+
+  ## Turha kikkailu #1 - piirtää tuotantokoneella rumasti liian matalat kun -p haku päällä
+  terminalHeight=$(tput lines)
+  outputHeight=$(echo "$output" | wc -l)
+  if [ $outputHeight -lt $terminalHeight ]
+    then echo "$output"
+    else output2=$(echo "$output" | less -FRX -p "$term")
+  fi
+  output2Height=$(echo "$output2" | wc -l)
+
+  ## Turha kikkailu #2 - jotkin haut eivät oletuksena piirrä ikkunaa, koska find ja less haut eivät mätsää
+  if [ $output2Height -ne $outputHeight ]
+    then echo "$output" | less -FRX
   fi
 }
 
