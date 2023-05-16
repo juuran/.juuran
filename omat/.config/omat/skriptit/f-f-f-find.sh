@@ -48,16 +48,20 @@ findIt() {
   local term; term="$1"
   local path; path="$2"
 
-  echo "Seuraavan tulosteen pitäisi testata, onko kys merkki hakusanassa"
-  [[ "$term" == *"*"* ]] && echo true || echo false
-
   if [ $exactMatchesOnly = false ]
     then
-      [[ "$term" == *"\*"* ]] && find "$path" -$name "*$term*" 2> /dev/null | less -FRX -Ip "$term" || \
-                                 find "$path" -$name "*$term*" 2> /dev/null | less -FRX
+      ## Kuin String.contains, etsii substringiä. Suodatetaan * koska less ja find hakujen erotessa eka ruutu ei tulostu.
+      ## TODO: Tämäkään toteutus ei miellytä, koska pitäisi myös tulostaa vain siinä tapauksessa että löytyy jotain... Muuten tulee
+      ## taas se sama valitus ruutu, että eipä mittää näy. Voe voe... Pitää jättää hautumaan!
+      if [[ "$term" == *"*"* ]];
+        then find "$path" -$name "*$term*" 2> /dev/null | less -FRX
+        else find "$path" -$name "*$term*" 2> /dev/null | less -FRX -Ip "$term"
+      fi                           
     else
-      [[ "$term" == *"\*"* ]] && find "$path" -$name "$term" 2> /dev/null   | less -FRX -p "$term" || \
-                                 find "$path" -$name "$term" 2> /dev/null   | less -FRX
+      if [[ "$term" == *"*"* ]];
+        then find "$path" -$name "$term" 2> /dev/null     | less -FRX
+        else find "$path" -$name "$term" 2> /dev/null     | less -FRX -p "$term"
+      fi
   fi
 }
 
