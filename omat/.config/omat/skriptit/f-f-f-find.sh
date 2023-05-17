@@ -22,7 +22,7 @@ for arg in "$@"; do
 done
 
 ## Optioiden käsittely
-while getopts "ie" OPTION; do
+while getopts "iex" OPTION; do
   case "$OPTION" in
     i)
       echo "        -- Case is significant --"
@@ -31,6 +31,9 @@ while getopts "ie" OPTION; do
     e)
       echo "        -- Exact matches only --"
       exactMatchesOnly=true
+      ;;
+    x)
+      echo "  -- (DEBUG: ignoreCase=$ignoreCase, exactMatchesOnly=$exactMatchesOnly. Received params: $*) --"
       ;;
     *)
       ## Perään lisättävien argumenttien lisäksi Bash käyttää samaa OPTARG -muuttujaa myös virheellisille vivuille!
@@ -66,7 +69,11 @@ findIt() {
 }
 
 noOfArgs=$#
-if [ $noOfArgs -eq 1 ];   then findIt "$1" "./"
-elif [ $noOfArgs -eq 2 ]; then findIt "$1" "$2"
-else fail "Incorrect amount of arguments. Options must be placed first. Type -h for help. (The order of arguments is significant in find making it difficult to use.)"
+if [ $noOfArgs -eq 1 ]
+  then findIt "$1" "./"
+elif [ $noOfArgs -eq 2 ]
+  then
+    [ -d "$2" ] || fail "The path '$2' is not a valid directory." 2
+    findIt "$1" "$2"
+else fail "Incorrect amount of arguments. Type -h for help. Note that options must be placed first.\nComplex queries are disabled, because 'find' is difficult to use. For example the order of arguments is significant and compounding." 2
 fi
