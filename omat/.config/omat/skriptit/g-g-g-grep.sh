@@ -3,10 +3,7 @@ source "$(dirname "$0")/fail.sh"
 
 ignoreCase="--ignore-case"
 recursive="--dereference-recursive"
-## TODO: Jos aiot jättää tähän nämä optioiden käsittelyt (onhan tuo -X ihan kiva) Niin on pakko lisätä
-## oikea optioiden käsittely, koska tällä tyylillä ei voi yhdistää näitä optioita saman viivan alle!
-## TODO: Mieti tuoko nämä oikeaa lisäarvoa... Debuggaus turha ja tämä '[ ${path:0:1} != "-" ]' karmea!
-## Yksinkertaistettu (uudelleenkirjoitettu) g-g-g-grep.sh
+## (Ei enää) yksinkertaistettu, mutta täysin uudelleenkirjoitettu g-g-g-grep.sh
 printHelp() {
   echo "        g-g-g-grep.sh - grep for humans"
   echo "Uses grep to search for contents of files recursively. Cannot access files outside user's privileges."
@@ -15,13 +12,16 @@ printHelp() {
   echo '  g-g-g-grep.sh [OPTION]... "arg1"            search for arg1'\''s content from current directory'
   echo '  g-g-g-grep.sh [OPTION]... "arg1" arg2       search for arg1'\''s content from arg2'\''s directory'
   echo '  g-g-g-grep.sh [OPTION]... "arg1" arg2 argN  search for arg1'\''s content from arg2'\''s directory with argN parameters given to grep'
+  echo
   echo 'Options (must be spelled out before "arg1"):'
-  echo " NOTE! HUOM! OBS! ATTENZION! Options given in beginning go to this script, options in the end go to grep (except -h which always prints this)!"
-  echo '  -i    turn "--ignore-case" off which is on by default - makes case significant'
-  echo '  -X    keeps printed text on screen (usually) - controls whether -X option is given to less'
-  echo '  -r    change "--dereference-recursive" into normal "--recursive", because it could help'
-  echo '  -d    turn all recursion off'
-  echo '  -x    display debug print'
+  echo '  -h, --help  prints this help'
+  echo '  -i          turn "--ignore-case" off which is on by default - makes case significant'
+  echo '  -X          keeps printed text on screen (usually) - controls whether -X option is given to less'
+  echo '  -r          change "--dereference-recursive" into normal "--recursive", because it could help'
+  echo '  -d          turn all recursion off'
+  echo '  -x          display debug print'
+  echo
+  echo "ATTENZION! Options in the beginning go to g-g-g-grep.sh, options in the end go to grep (except -h which always prints this help)!"
   exit
 }
 
@@ -46,7 +46,7 @@ while getopts "irdXxh" OPTION; do
       X="X"
       ;;
     x)
-      echo "  -- (DEBUG: Received params as a whole at this moment: '$*') --"
+      echo "  -- (DEBUG: Received params as a whole at this moment: $*) --"
       isDebug=true
       ;;
     h)
@@ -74,8 +74,15 @@ elif [ $noOfArgs -eq 1 ]; then
   exit 0
 
 elif [ $noOfArgs -gt 1 ]; then
-  path="$2"
-  ! [ -d "$path" ] && [ ${path:0:1} != "-" ] && fail "The path '$path' is not a valid directory." 2
+  possiblyPath="$2"
+  ! [ -d "$possiblyPath" ] && [ ${possiblyPath:0:1} != "-" ] && fail "The path '$possiblyPath' is not a valid directory." 2
+  
+  ## dry run että saadaan oikeat virheet kiinni (less hävittää ne)
+  grep --fixed-strings $ignoreCase $recursive --color=always "$@" &> /dev/null
+  exitCode="$?"
+  [ "$isDebug" == true ] && echo "  -- (DEBUG: exit code from grep: $exitCode) --"
+  [ $exitCode -eq 2 ] && fail "Faulty argument or option given to grep. Try 'man grep' for more info." 3
   grep --fixed-strings $ignoreCase $recursive --color=always "$@" 2> /dev/null | less -FR$X
   exit 0
+  
 fi

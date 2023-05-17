@@ -14,10 +14,11 @@ printHelp() {
   echo '  f-f-f-find.sh [OPTION]... "arg1" arg2   find a file with arg1'\''s content from arg2'\''s directory'
   echo 
   echo 'Options (must be spelled out before "arg1"):'
-  echo '  -i    make case significant, by default it'\''s ignored'
-  echo '  -e    remove implied wildcards *around* words resulting in exact matches only'
-  echo '  -X    sometimes useful; keeps prints taller than terminal height usually on'
-  echo '        screen (depending on whether lines occupy only one line - uses '\''less -X'\'')'
+  echo '  -h, --help  prints this help'
+  echo '  -i          make case significant, by default it'\''s ignored'
+  echo '  -e          remove implied wildcards *around* words resulting in exact matches only'
+  echo '  -X          sometimes useful; keeps prints taller than terminal height usually on'
+  echo '              screen (depending on whether lines occupy only one line - uses '\''less -X'\'')'
   exit
 }
 
