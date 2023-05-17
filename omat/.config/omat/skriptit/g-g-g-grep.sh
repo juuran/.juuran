@@ -12,9 +12,9 @@ printHelp() {
   echo "Uses grep to search for contents of files recursively. Cannot access files outside user's privileges."
   echo
   echo "Usage:"
-  echo '  g-g-g-grep.sh "arg1"            search for arg1'\''s content from current directory'
-  echo '  g-g-g-grep.sh "arg1" arg2       search for arg1'\''s content from arg2'\''s directory'
-  echo '  g-g-g-grep.sh "arg1" arg2 argN  search for arg1'\''s content from arg2'\''s directory with argN parameters given to grep'
+  echo '  g-g-g-grep.sh [OPTION]... "arg1"            search for arg1'\''s content from current directory'
+  echo '  g-g-g-grep.sh [OPTION]... "arg1" arg2       search for arg1'\''s content from arg2'\''s directory'
+  echo '  g-g-g-grep.sh [OPTION]... "arg1" arg2 argN  search for arg1'\''s content from arg2'\''s directory with argN parameters given to grep'
   echo 'Options (must be spelled out before "arg1"):'
   echo " NOTE! HUOM! OBS! ATTENZION! Options given in beginning go to this script, options in the end go to grep (except -h which always prints this)!"
   echo '  -i    turn "--ignore-case" off which is on by default - makes case significant'
