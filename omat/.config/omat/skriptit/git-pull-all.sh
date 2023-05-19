@@ -68,6 +68,7 @@ for path in $projects; do
   [ $shortPath == "cpi-token-test" ] && pullBranch="master" && echo -en "\nSetting default branch as 'master' for cpi-token-test."
   [ $shortPath == "EESSITestingki" ] && echo -e "\nSkipping '$shortPath'." && continue ## intellij kansioni
   [ $shortPath == "yms" ] && echo -e "\nSkipping '$shortPath'." && continue  ## muut kokeilut
+  [ $shortPath == "salt" ] && echo -e "\nSkipping '$shortPath'." && continue  ## saltstack on vähän poikkeus
 
   if [ $parallel == true ]; then
       runGitCommand &
