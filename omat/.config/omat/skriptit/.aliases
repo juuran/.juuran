@@ -39,3 +39,9 @@ function llss()   { ll "$@" | less ; }
 # function error()  { source ~/.config/omat/skriptit/error.sh; error "$@"; }
 # function fail()   { ( source ~/.config/omat/skriptit/fail.sh; fail "$@" ); }  ## ei haluta kaataa pääistuntoa komentoriviltä...
 function perse()  { [ -n "$1" ] && local space=", "; echo -e "\e[0;33m Jep, sanopa muuta$space$@! \e[0m"; }
+function lad()    {
+    ls -d "$1"/*/
+}
+function lld()    {
+    ls -d1 "$1"/*/
+}
