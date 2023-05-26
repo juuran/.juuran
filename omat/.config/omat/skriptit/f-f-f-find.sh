@@ -83,8 +83,6 @@ findIt() {
           if [ $outputHeight -gt $screenHeight ]
             then find "$path" -$name "*$term*" 2> /dev/null | less -FR$X -Ip "$term"
             else find "$path" -$name "*$term*" 2> /dev/null  ## *3
-            echo "$outputHeight -gt $screenHeight"
-            echo "test $outputHeight -gt $screenHeight"
           fi
       fi
     
