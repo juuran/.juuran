@@ -11,14 +11,14 @@ printHelp() {
   echo 
   echo 'Usage:'
   echo '  f-f-f-find.sh [OPTION]... "arg1"        find a file with arg1'\''s content from current directory'
-  echo '  f-f-f-find.sh [OPTION]... "arg1" arg2   find a file with arg1'\''s content from arg2'\''s directory'
+  echo '  f-f-f-find.sh [OPTION]... "arg1" arg2   find a file with arg1'\''s content from arg2'\''s directory (only one path allowed)'
   echo 
   echo 'Options (must be spelled out before "arg1"):'
   echo '  -h, --help  prints this help'
   echo '  -i          make case significant, by default it'\''s ignored'
   echo '  -e          remove implied wildcards *around* words resulting in exact matches only'
-  echo '  -X          sometimes useful; keeps prints taller than terminal height usually on'
-  echo '              screen (depending on whether lines occupy only one line - uses '\''less -X'\'')'
+  echo '  -X          sometimes useful; keeps prints taller than terminal height usually on screen (depending on whether lines occupy'
+  echo "              only one line - uses 'less -X')"
   exit
 }
 
@@ -111,9 +111,10 @@ if [ $noOfArgs -eq 1 ]; then
     exit 0
 
 elif [ $noOfArgs -eq 2 ]; then
+    arg="$1"
     path="$2"
-    [ -d "$2" ] || fail "The path '$2' is not a valid directory." 2
-    findIt "$1" "$2"
+    [ -d "$path" ] || fail "The path '$path' is not a valid directory." 2
+    findIt "$arg" "$path"
     exit 0
 else
     fail "Incorrect amount of arguments. Type -h for help. Note that options must be placed first.\n(Complex queries are disabled, because find is difficult to use. For example the order of arguments is significant and compounding.)"
