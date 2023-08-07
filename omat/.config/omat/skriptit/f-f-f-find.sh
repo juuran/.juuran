@@ -2,7 +2,8 @@
 source "$(dirname "$0")/fail.sh"
 
 exactMatchesOnly=false  ## by default searches for names 'containing' search term
-ignoreCase=true
+iC="--ignore-case"
+name="iname"
 X=""
 
 printHelp() {
@@ -32,7 +33,8 @@ while getopts "ieXh" OPTION; do
   case "$OPTION" in
     i)
       echo "        -- Case is significant --"
-      ignoreCase=false
+      iC=""
+      name="name"
       ;;
     e)
       echo "        -- Exact matches only --"
@@ -52,8 +54,6 @@ while getopts "ieXh" OPTION; do
 done
 ## getopts käytön jälkeen täytyy "nollata" argumenttien indeksi, että saadaan "tavalliset" argumentit mukaan
 shift "$(($OPTIND -1))"
-
-[ $ignoreCase = true ] && name=iname || name=name
 
 
 ## Hakulogiikka (kutsutaan alempaa)
@@ -76,12 +76,12 @@ findIt() {
     then
       if [[ "$term" == *"*"* ]];  ## *1
         then
-          find "$path" -$name "*$term*" 2> /dev/null | less -FR$X  ## *2
+          find "$path" -$name "*$term*" 2> /dev/null | less -FR$X $iC  ## *2
         
         else
           outputHeight=$(find "$path" -$name "*$term*" 2> /dev/null | wc -l)
           if [ $outputHeight -gt $screenHeight ]
-            then find "$path" -$name "*$term*" 2> /dev/null | less -FR$X -Ip "$term"
+            then find "$path" -$name "*$term*" 2> /dev/null | less -FR$X $iC -p "$term"
             else find "$path" -$name "*$term*" 2> /dev/null  ## *3
           fi
       fi
@@ -89,12 +89,12 @@ findIt() {
     else
       if [[ "$term" == *"*"* ]];
         then
-          find "$path" -$name "$term" 2> /dev/null | less -FR$X
+          find "$path" -$name "$term" 2> /dev/null | less -FR$X $iC
 
         else
           outputHeight=$(find "$path" -$name "$term" 2> /dev/null | wc -l)
           if [ $outputHeight -gt $screenHeight ]
-            then find "$path" -$name "$term" 2> /dev/null | less -FR$X -Ip "$term"
+            then find "$path" -$name "$term" 2> /dev/null | less -FR$X $iC -p "$term"
             else find "$path" -$name "$term" 2> /dev/null
           fi
       fi

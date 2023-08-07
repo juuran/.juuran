@@ -10,12 +10,14 @@ alias less='less --RAW-CONTROL-CHARS --no-init --quit-if-one-screen --ignore-cas
 alias tree='tree -C'
 alias cd..='cd ..'
 alias refresh-zsh='source ~/.zshrc'
+alias diff='diff --color=always'
 
 ## käyttäjä- / ympäristökohtaiset
 if [ $USER = c945fvc ]; then
 alias fmanager='exo-open --launch FileManager'
 alias mvn='mvn --color always'
 alias koira='(~/mqjexplorer/mqjexplorer/MQJExplorer/runme.sh > /dev/null &); echo ""'                     ## jostain helkatin syystä ...
+alias keystore='kse %f > /dev/null 2>&1 &; disown'
 alias intelliJ='/opt/kela/intelliJ/2022.3.2/idea-IC-223.8617.56/bin/idea.sh > /dev/null 2>&1 &; disown'   ## ... näissä ei toimi sama!
 alias intelliJWithLogging='/opt/kela/intelliJ/2022.3.2/idea-IC-223.8617.56/bin/idea.sh'
 alias tasks=~/.config/omat/skriptit/tasks.sh
@@ -34,11 +36,8 @@ alias g-g-g-grep=~/.config/omat/skriptit/g-g-g-grep.sh
 alias show-usable-colors=~/.config/omat/skriptit/show-usable-colors.sh
 
 ## aliaksen kaltaiset funktiot (kaikki ei taivu aliakseksi sen rajoitusten takia)
-function llss()   { ll "$@" | less ; }
-## Marked for deletion, eli katsotaan ensin hajoaako mitään!
-# function error()  { source ~/.config/omat/skriptit/error.sh; error "$@"; }
-# function fail()   { ( source ~/.config/omat/skriptit/fail.sh; fail "$@" ); }  ## ei haluta kaataa pääistuntoa komentoriviltä...
 function perse()  { [ -n "$1" ] && local space=", "; echo -e "\e[0;33m Jep, sanopa muuta$space$@! \e[0m"; }
+function llss()   { ll "$@" | less ; }
 function lad()    {
     ls -d "$1"/*/
 }
