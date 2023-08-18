@@ -2,7 +2,7 @@
 source "$(dirname "$0")/fail.sh"
 
 iC="--ignore-case"
-recursive="--dereference-recursive"
+recursive="--recursive"
 patternSyntax="--fixed-strings"
 color="--color=always"
 grepMode="normal"
@@ -23,7 +23,8 @@ Options:
     -h, --help  prints this help
     -i          turn \"--ignore-case\" off which is on by default – makes case significant
     -X          keeps printed text on screen (usually) – controls whether -X option is given to less
-    -d          change default \"--dereference-recursive\" into normal \"--recursive\", because it could help
+    -d          change default \"--recursive\" into \"--dereference-recursive\", because it 
+could help
     -r          turn all recursion off
     -c          zgrep is used to read compressed files which always disables unsupported recursion
     -E          changes the search argument to be interpreted as an extended regular expressions (ERE) instead of a string\
@@ -42,7 +43,7 @@ while getopts "xidrcXES:h" OPTION; do
       iC=""
       ;;
     d)
-      recursive="--recursive"
+      recursive="--dereference-recursive"
       ;;
     r)
       recursive=""
