@@ -13,9 +13,9 @@ printHelp() {
 Uses grep to search for contents of files recursively. Cannot access files outside user's privileges.
 
 Usage:
-    g-g-g-grep.sh [OPTION]... \"arg1\"                            search for arg1 (with quotes if contains whitespace) from current dir
-    g-g-g-grep.sh [OPTION]... \"arg1\" [OPTION_TO_GREP]...        search for arg1 from current dir with n options given to grep
-    g-g-g-grep.sh [OPTION]... \"arg1\" \"argN\" [OPTION_TO_GREP]... search for arg1 from argN paths with n options given to grep
+    g-g-g-grep.sh [OPTION]... \"arg1\"                               search for arg1 (\"quoted\" if whitespace) from current dir
+    g-g-g-grep.sh [OPTION]... \"arg1\" [OPTION_TO_GREP]...           search for arg1 from current dir with n options given to grep
+    g-g-g-grep.sh [OPTION]... \"arg1\" \"argN\" [OPTION_TO_GREP]...  search for arg1 from argN paths with n options given to grep
 
 ATTENZION! Options in the beginning are handled by this script but options after args are fed straight to grep!
 
@@ -23,8 +23,7 @@ Options:
     -h, --help  prints this help
     -i          turn \"--ignore-case\" off which is on by default – makes case significant
     -X          keeps printed text on screen (usually) – controls whether -X option is given to less
-    -d          change default \"--recursive\" into \"--dereference-recursive\", because it 
-could help
+    -d          change default \"--recursive\" into \"--dereference-recursive\", because it could help
     -r          turn all recursion off
     -c          zgrep is used to read compressed files which always disables unsupported recursion
     -E          changes the search argument to be interpreted as an extended regular expressions (ERE) instead of a string\
