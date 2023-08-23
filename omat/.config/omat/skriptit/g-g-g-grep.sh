@@ -79,8 +79,8 @@ if [ $noOfArgs -lt 1 ]; then
 
 elif [ $noOfArgs -eq 1 ]; then
   if [ $grepMode == "normal" ]
-    then  grep $patternSyntax $iC $recursive $color $e "$1" ./* | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
-    else zgrep $patternSyntax $iC            $color $e "$1" ./* | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+    then  grep $patternSyntax $iC $recursive $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+    else zgrep $patternSyntax $iC            $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
   fi
 
 elif [ $noOfArgs -gt 1 ]; then
