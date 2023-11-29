@@ -74,21 +74,21 @@ shift "$(($OPTIND -1))"
 ## Ohjelmalogiikka (uudelleenkirjoitettu ja yksinkertaistettu)
 exitCode=0
 noOfArgs=$#
-if [ $noOfArgs -lt 1 ]; then
+if [ "$noOfArgs" -lt 1 ]; then
   fail 'At least one argument is needed' 3
 
-elif [ $noOfArgs -eq 1 ]; then
-  if [ $grepMode == "normal" ]
+elif [ "$noOfArgs" -eq 1 ]; then
+  if [ "$grepMode" == "normal" ]
     then  grep $patternSyntax $iC $recursive $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
     else zgrep $patternSyntax $iC            $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
   fi
 
-elif [ $noOfArgs -gt 1 ]; then
+elif [ "$noOfArgs" -gt 1 ]; then
   arg="$1"
   eitherDirOrOpt="$2"
   [ -z "$eitherDirOrOpt" ] && fail "The second argument can't be empty!" 3
 
-  if [ ${eitherDirOrOpt:0:1} == "-" ]; then
+  if [ "${eitherDirOrOpt:0:1}" == "-" ]; then
     possiblyDir="./*"
     shift 1             ## jos kyseessä on optioni, niin se halutaan siirtää suoraan grepille ...
   else
@@ -98,13 +98,13 @@ elif [ $noOfArgs -gt 1 ]; then
   paths=( "${possiblyDir[@]}" )
 
   ## grep usealle argumentille (kelan koneet ei tue zgrepin kanssa argumentteja loppuun, siksi tällä tyylillä)
-  if   [ $grepMode == "normal" ];     then  grep $patternSyntax $iC $recursive $color $e      "$arg" ${paths[@]} "$@" | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
-  elif [ $grepMode == "compressed" ]; then zgrep $patternSyntax $iC            $color "$@" $e "$arg" ${paths[@]}      | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+  if   [ "$grepMode" == "normal" ];     then  grep $patternSyntax $iC $recursive $color $e      "$arg" ${paths[@]} "$@" | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+  elif [ "$grepMode" == "compressed" ]; then zgrep $patternSyntax $iC            $color "$@" $e "$arg" ${paths[@]}      | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
   fi
 
 fi
 
-if [ $exitCode -eq 141 ]
+if [ "$exitCode" -eq 141 ]
   then exit 0
   else exit $exitCode
 fi
