@@ -22,12 +22,11 @@ printHelp() {
   echo 
   echo 'Options (must be spelled out before "ARG1"):'
   echo '  -h, --help  prints this help'
-  echo '  -i          make case significant, by default it'\''s ignored'
-  echo '  -e          remove implied wildcards *around* words resulting in exact matches only'
+  echo "  -i          make case significant, by default case is ignored"
+  echo '  -e          exact matches only by removing wildcards  *  around words'
   echo '  -p          for searching paths, e.g. -p ".git/" to look for paths with a pattern'
-  echo '  -m          maxdepth, i.e. the amount how deep to descend in path recursion'
-  echo '  -X          sometimes useful; keeps prints taller than terminal height usually on screen (depending on whether lines occupy'
-  echo "              only one line - uses 'less -X')"
+  echo '  -m          maxdepth, i.e. the amount how deep to descend in path recursion (infinite by default)'
+  echo "  -X          prints taller than terminal height are kept on screen if they occupy only one line (less -X)"
   exit
 }
 
