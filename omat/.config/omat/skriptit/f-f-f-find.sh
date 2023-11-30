@@ -2,22 +2,30 @@
 source "$(dirname "$0")/fail.sh"
 
 exactMatchesOnly=false  ## by default searches for names 'containing' search term
-iC="--ignore-case"
-name="iname"
+iC="--ignore-case"  ## tämä käytössä vain lessillä!
+isIgnoreCase=true
+type="iname"
+maxdepth=""
+l=""
 X=""
 
 printHelp() {
-  echo "        f-f-f-find.sh - find for humans"
-  echo "Uses find to look for files by filename recursively. Cannot access files outside user's privileges."
+  echo "        f-f-f-find.sh - find for humans (v.1.00)"
+  echo "Uses find to look for files by filename recursively. Cannot access files outside current user's privileges."
   echo 
   echo 'Usage:'
-  echo '  f-f-f-find.sh [OPTION]... "arg1"        find a file with arg1'\''s content from current directory'
-  echo '  f-f-f-find.sh [OPTION]... "arg1" arg2   find a file with arg1'\''s content from arg2'\''s directory (only one path allowed)'
+  echo '  f-f-f-find.sh [OPTION]... "ARG1"        find files with ARG1'\''s content from current directory'
+  echo '  f-f-f-find.sh [OPTION]... "ARG1" ARG2   find files with ARG1'\''s content from ARG2'\''s directory (only one path allowed!)'
+  echo
+  echo "    ARG1:   >> search term <<"
+  echo "    ARG2:   >> path to start from <<"
   echo 
-  echo 'Options (must be spelled out before "arg1"):'
+  echo 'Options (must be spelled out before "ARG1"):'
   echo '  -h, --help  prints this help'
   echo '  -i          make case significant, by default it'\''s ignored'
   echo '  -e          remove implied wildcards *around* words resulting in exact matches only'
+  echo '  -p          for searching paths, e.g. -p ".git/" to look for paths with a pattern'
+  echo '  -m          maxdepth, i.e. the amount how deep to descend in path recursion'
   echo '  -X          sometimes useful; keeps prints taller than terminal height usually on screen (depending on whether lines occupy'
   echo "              only one line - uses 'less -X')"
   exit
@@ -29,12 +37,13 @@ for arg in "$@"; do
 done
 
 ## Optioiden käsittely
-while getopts "ieXh" OPTION; do
+while getopts "ieXhpm:" OPTION; do
   case "$OPTION" in
     i)
       echo "        -- Case is significant --"
+      isIgnoreCase=false
       iC=""
-      name="name"
+      type="name"
       ;;
     e)
       echo "        -- Exact matches only --"
@@ -45,6 +54,17 @@ while getopts "ieXh" OPTION; do
       ;;
     h)
       printHelp
+      ;;
+    p)
+      if [ "$isIgnoreCase" == true ]
+        then type="ipath"
+        else type="path"
+      fi
+      ;;
+    m)
+      maxdepth="-maxdepth"
+      l="$OPTARG"
+      [ "$l" -eq "$l" ] || fail "The value for maxdepth must be a number!"
       ;;
     *)
       ## Perään lisättävien argumenttien lisäksi Bash käyttää samaa OPTARG -muuttujaa myös virheellisille vivuille!
@@ -76,26 +96,26 @@ findIt() {
     then
       if [[ "$term" == *"*"* ]];  ## *1
         then
-          find "$path" -$name "*$term*" 2> /dev/null | less -FR$X $iC  ## *2
+          find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FR$X $iC  ## *2
         
         else
-          outputHeight=$(find "$path" -$name "*$term*" 2> /dev/null | wc -l)
+          outputHeight=$(find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | wc -l)
           if [ $outputHeight -gt $screenHeight ]
-            then find "$path" -$name "*$term*" 2> /dev/null | less -FR$X $iC -p "$term"
-            else find "$path" -$name "*$term*" 2> /dev/null  ## *3
+            then find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FR$X $iC -p "$term"
+            else find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null  ## *3
           fi
       fi
     
     else
       if [[ "$term" == *"*"* ]];
         then
-          find "$path" -$name "$term" 2> /dev/null | less -FR$X $iC
+          find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FR$X $iC
 
         else
-          outputHeight=$(find "$path" -$name "$term" 2> /dev/null | wc -l)
+          outputHeight=$(find "$path" -$type "$term" $maxdepth $l 2> /dev/null | wc -l)
           if [ $outputHeight -gt $screenHeight ]
-            then find "$path" -$name "$term" 2> /dev/null | less -FR$X $iC -p "$term"
-            else find "$path" -$name "$term" 2> /dev/null
+            then find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FR$X $iC -p "$term"
+            else find "$path" -$type "$term" $maxdepth $l 2> /dev/null
           fi
       fi
   fi

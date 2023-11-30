@@ -4,6 +4,10 @@
 ## ilman mitään häslinkiä ja voi luottaa, ettei ole duplikaatteja! Opinpahan reg expistä taas
 ## lisää sitä paitsi. Kyllä siinä pärjää ihan hyvin ilman capture groupejakin.
 
+printHelp() {
+  echo "tasks v.1.00"
+}
+
 SEARCH_PATH='/home/c945fvc/notes/*'
 NO_COLOR='\033[0m'
 GREEN=$(tput setaf 83)

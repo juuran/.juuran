@@ -9,7 +9,7 @@ grepMode="normal"
 
 printHelp() {
   echo "\
-        g-g-g-grep.sh - grep for humans
+        g-g-g-grep.sh - grep for humans (v.1.00)
 Uses grep to search for contents of files recursively. Cannot access files outside user's privileges.
 
 Usage:
@@ -22,11 +22,11 @@ ATTENZION! Options in the beginning are handled by this script but options after
 Options:
     -h, --help  prints this help
     -i          turn \"--ignore-case\" off which is on by default – makes case significant
-    -X          keeps printed text on screen (usually) – controls whether -X option is given to less
     -d          change default \"--recursive\" into \"--dereference-recursive\", because it could help
     -r          turn all recursion off
     -c          zgrep is used to read compressed files which always disables unsupported recursion
     -E          changes the search argument to be interpreted as an extended regular expressions (ERE) instead of a string\
+    -X          keeps printed text on screen (usually) – controls whether -X option is given to less
 "
   exit 0
 }
@@ -36,7 +36,7 @@ for arg in "$@"; do
 done
 
 ## Optioiden käsittely
-while getopts "xidrcXES:h" OPTION; do
+while getopts "idrcXEh" OPTION; do
   case "$OPTION" in
     i)
       iC=""

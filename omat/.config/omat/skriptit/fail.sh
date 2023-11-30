@@ -2,7 +2,7 @@
 
 source "$(dirname "$0")/error.sh"
 
-## Elämää helpottava skripti
+## Elämää helpottava skripti, joka printtaa virheen syserr:iin ja poistuu virhekoodilla.
 ##   1. argumentti on viesti
 ##   2. argumentti on vapaaehtoinen exit koodi, oletuksena 1
 function fail() {
