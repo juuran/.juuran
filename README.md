@@ -9,7 +9,7 @@ Alustat sa caiken tällä (lukien mucaan alimoduulit):
 
     git clone --recurse-submodules https://github.com/juuran/.juuran.git
 
-Jos haluat sa kaiken stow'aa (paitsi tämän READMEen)
+Jos haluat sa kaiken stow'aa (paitsi tämän READMEen) – muistapa myös .juuran cansioon mennä!
 
     stow */
 
