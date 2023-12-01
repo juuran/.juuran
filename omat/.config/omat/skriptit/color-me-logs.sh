@@ -2,7 +2,7 @@
 source "$(dirname "$0")/fail.sh"
 
 printHelp() {
-  echo "        color-me-logs.sh - log colorizer (v.1.00)"
+  echo "        color-me-logs.sh - log colorizer (v.1.01)"
   echo "Adds a little sparkle to your day!"
   echo
   echo "Usage example:"
@@ -28,7 +28,7 @@ while getopts "m:h" OPTION; do
       if   [ "$OPTARG" == "default" ];  then mode="default"
       elif [ "$OPTARG" == "holodeck" ]; then mode="holodeck"
       elif [ "$OPTARG" == "typical" ];  then mode="typical"
-      else fail "Unkown mode!"
+      else fail "Unkown mode '$OPTARG'!"
       fi
       ;;
     h)

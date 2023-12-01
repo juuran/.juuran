@@ -10,7 +10,7 @@ l=""
 X=""
 
 printHelp() {
-  echo "        f-f-f-find.sh - find for humans (v.1.00)"
+  echo "        f-f-f-find.sh - find for humans (v.1.01)"
   echo "Uses find to look for files by filename recursively. Cannot access files outside current user's privileges."
   echo 
   echo 'Usage:'
