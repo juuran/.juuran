@@ -4,11 +4,10 @@
 ## ilman mitään häslinkiä ja voi luottaa, ettei ole duplikaatteja! Opinpahan reg expistä taas
 ## lisää sitä paitsi. Kyllä siinä pärjää ihan hyvin ilman capture groupejakin.
 
-printHelp() {
-  echo "tasks v.1.00"
-}
+source "$(dirname "$0")/fail.sh"
 
-SEARCH_PATH='/home/c945fvc/notes/*'
+NOTES_PATH="/home/c945fvc/notes"
+SEARCH_PATH="$NOTES_PATH/*"
 NO_COLOR='\033[0m'
 GREEN=$(tput setaf 83)
 RED='\033[0;91m'
@@ -18,17 +17,62 @@ IGNORE='\033[2;97m'
 DONE=$(tput setaf 71)
 SCREEN_MAX_WIDTH=$(tput cols)
 SAFETY_FACTOR=19   ## tämä on viimeinen arvo joka toimii sekä "path" että ilman. Älä pliis käytä tähän enää sekuntiakaan!
-# PRINTABLE_WIDTH_MAX=$(($(tput cols) + 3))   ## värien käyttö jotenkin sotkee, kikkailtava... 3 suurin mikä toimii nyt...?
 
-showIgnored="false"
-showCompleted="true"
-showFilePath="false"
+printHelp() {
+  echo "        tasks.sh (v.1.01)"
+  echo "Näyttää auki olevat täskit. Niitä voi merkata käyttämällä § merkkiä, joka jostain ihmeen syystä"
+  echo "näppiksestä löytyy. Tarkempaa tietoa löytyy tiedostosta ~/notes/koodaus/tasks.txt."
+  echo
+  echo "SYNTAKSISTA:"
+  echo "    § normaali merkintä                                 näkyy normaalilla prioriteetilla"
+  echo "   §§ TÄRKEÄ merkintä                                   näkyy ensimmäisenä ja boldattuna"
+  echo "   !§ tehty merkintä                                    näkyy viimeisenä ja merkattu tehdyksi"
+  echo "   _§ ohitettu merkintä, jonka saatavissa näkyviin      näkyy himmeänä vivulla \"ignored\""
+  echo "    § arkistoitu merkintä §                             ei näy ollenkaan millään vivulla"
+  echo 
+  echo "VIVUT:"
+  echo "  path        näyttää koko polun tiedostoon"
+  echo "  all         myös merkinnät tulevat näkyviin"
+  echo "  ignored     vain \"ignoratut\" merkinnät näytetään"
+  echo "  undone      vain suorittamattomat merkinnät näytetään eli poistaa suoritetut näkymästä"
+  echo "  add         vaatii argumentin – lisää uuden merkinnän, käytetään: add \"pese pyykit!\""
+  echo "  -h, --help  tulostaa tämän helpin"
+  exit
+}
+
+addMe() {
+  thingToAdd="$1"
+  [[ "$thingToAdd" == *"§"* ]] || fail "Muista käyttää syntaksimerkintöjä (esim. §)! Mitään ei tallennettu."
+  echo "$thingToAdd" >> "$NOTES_PATH/kela/todo.txt"
+}
+
+## Hjälp
 for arg in "$@"; do
-  [[ $arg == "fullPath" ]] || [[ $arg  == "fullpath" ]] || [[ $arg  == "path" ]] || [[ $arg  == "fp" ]] && showFilePath="true"
-  [[ $arg == "all" ]] || [[ $arg == "full" ]] || [[ $arg == "ignored" ]] && showIgnored="true"
-  [[ $arg == "undone" ]] || [[ $arg == "short" ]] || [[ $arg == "brief" ]] || [[ $arg == "summary" ]] && showCompleted="false"
+  [ "$arg" == "--help" ] || [ "$arg" == "-h" ] && printHelp
 done
 
+showNormal=true
+showIgnored=false
+showCompleted=true
+displayFilePath=false
+for arg in "$@"; do
+  if    [ "$arg"  == "path" ]; then
+    displayFilePath=true
+  elif  [ "$arg" == "all" ]; then
+    showIgnored=true
+  elif  [ "$arg" == "ignored" ]; then
+    showIgnored=true
+    showCompleted=false
+    showNormal=false
+  elif  [ "$arg" == "undone" ]; then
+    showCompleted=false
+  elif  [ "$arg" == "add" ]; then
+    addMe "$2"
+    break;
+  else
+    fail "Vääränlainen vipu!"
+  fi
+done
 
 printWithinScreen() {
   local line="$1"
@@ -43,11 +87,11 @@ printMatching() {
   color="$2"
   checkbox="$3"
   offset="$4"
-  [[ -n "$5" ]] && textColor="$5" || textColor="$NO_COLOR"
+  [ -n "$5" ] && textColor="$5" || textColor="$NO_COLOR"
   
   grep -rE -h --color=never --regexp="$regexp" $SEARCH_PATH | while read -r task
     do
-      if [ $showFilePath = "true" ]
+      if [ "$displayFilePath" == "true" ]
         then  file=$(grep -lr "$task" $SEARCH_PATH)
         else  file=$(grep -lr "$task" $SEARCH_PATH | xargs -L 1 basename)
       fi
@@ -61,18 +105,21 @@ printMatching() {
 echo -e "\nTämänhetkiset täskit"
 start="^[^§_!]*"  ## rivin alussa ei saa syntaksimerkkejä ennen vars. sääntöä
 end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälkeen (käytetään arkistointiin = poistamiseen tuloksista)
+
 ## tärkeät
+[ "$showNormal" == true ] && \
 printMatching "$start§{2}$end"    $PRIORITY   "[ ]"   1   $PRIORITY
 
 ## tekemättömät
+[ "$showNormal" == true ] && \
 printMatching "$start§{1}$end"    $NO_COLOR   "[ ]"   0
 
 ## ignore
-[[ $showIgnored == "true" ]] && \
+[ "$showIgnored" == true ] && \
 printMatching "${start}_§$end"    $IGNORE     "[ ]"   1   $IGNORE
 
 ## tehdyt
-[[ $showCompleted == "true" ]] && \
+[ "$showCompleted" == true ] && \
 printMatching "$start!§$end"      $GREEN      "[x]"   1   $DONE
 
 ## vanhat väärät
