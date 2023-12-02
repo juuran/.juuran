@@ -6,7 +6,7 @@
 
 source "$(dirname "$0")/fail.sh"
 
-NOTES_PATH="/home/c945fvc/notes"
+[ -z $NOTES_PATH ] && NOTES_PATH="/home/c945fvc/notes"
 SEARCH_PATH="$NOTES_PATH/*"
 NO_COLOR='\033[0m'
 GREEN=$(tput setaf 83)
@@ -43,7 +43,7 @@ printHelp() {
 addMe() {
   thingToAdd="$1"
   [[ "$thingToAdd" == *"§"* ]] || fail "Muista käyttää syntaksimerkintöjä (esim. §)! Mitään ei tallennettu."
-  echo "$thingToAdd" >> "$NOTES_PATH/kela/todo.txt"
+  echo "$thingToAdd" >> "$NOTES_PATH/todo.txt"
 }
 
 ## Hjälp
