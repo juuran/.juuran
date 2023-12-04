@@ -5,12 +5,13 @@
 ## Nämä siis kohdennetaan itse _argumentsille
 ##  -s  optargs hommelin kanssa käytettävä, tarkoittaa että -x -y on sama kuin -xy
 ##  -S  lopeta parsiminen jos tulee -- mikä Unixissa usein meinaa, ei enää optioita
+##  -C  muokkaa curcontext parametria kun käytetään ->state actionia... käytännössä ???
 ##
 ##
 ## ERI SPECIT
 ## spec
 ##  n:message:action    n:näs normi argumentti 
-##  m::message:action   kahdella kaksoipisteellä argumentti on valinnainen
+##  n::message:action   kahdella kaksoipisteellä argumentti on valinnainen
 ##  :message:action     seuraava argumentti järjestyksessä, joka päätellään (numeroita ei tarvi ollenkaan)
 ##  *:message:action    ???
 ##
@@ -34,8 +35,7 @@ depthsOfHades='(0 1 2 3 4 5 6 7 8 9 99)'
 _arguments -s \
     '1:hakutermi:' \
     '2::polku:_files' \
-    '-h[display help]' \
-    '--help[display help]' \
+    '(-h --help)'{-h,--help}'[display help]' \
     '-i[ignore case off, makes case significant]' \
     '-e[exact matches only]' \
     '-p[to look for paths with a pattern]' \

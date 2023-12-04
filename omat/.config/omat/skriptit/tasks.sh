@@ -6,17 +6,24 @@
 
 source "$(dirname "$0")/fail.sh"
 
+clearCache() {
+  echo -n "" > "$TASKS_CACHE"
+}
+
 [ -z $NOTES_PATH ] && NOTES_PATH="/home/c945fvc/notes"
 SEARCH_PATH="$NOTES_PATH/*"
 NO_COLOR='\033[0m'
 GREEN=$(tput setaf 83)
-RED='\033[0;91m'
+RED='\033[0;91m'  
 MAGENTA=$(tput setaf 134)
 PRIORITY='\033[1;97m'
 IGNORE='\033[2;97m'
 DONE=$(tput setaf 71)
 SCREEN_MAX_WIDTH=$(tput cols)
 SAFETY_FACTOR=19   ## tämä on viimeinen arvo joka toimii sekä "path" että ilman. Älä pliis käytä tähän enää sekuntiakaan!
+TASKS=()
+TASKS_CACHE="$HOME/.cache/.tasks_edit_cache"
+! [ -e "$TASKS_CACHE" ] && clearCache  ## Tyhjää, mutta myös luo cachen
 
 printHelp() {
   echo "        tasks.sh (v.1.01)"
@@ -55,6 +62,9 @@ showNormal=true
 showIgnored=false
 showCompleted=true
 displayFilePath=false
+isRendered=true
+storeValuesForAutocomplete=false
+shouldCacheBeFilled=false
 for arg in "$@"; do
   if    [ "$arg"  == "path" ]; then
     displayFilePath=true
@@ -69,6 +79,19 @@ for arg in "$@"; do
   elif  [ "$arg" == "add" ]; then
     addMe "$2"
     break;
+  elif  [ "$arg" == "edit" ] || [ "$arg" == "autocomplete_edit" ]; then
+    if [ "$(stat -c %s $TASKS_CACHE)" -ne 0 ] && \
+       [[ $(find "$TASKS_CACHE" -not -newermt '-5 seconds' -print) ]]; then
+      clearCache ## Jos file on epätyhjä ja vanhempi kuin 12 s, poistetaan
+    fi
+    isRendered=false
+    storeValuesForAutocomplete=true
+    
+    ## Muokkaus koskee aina kaikkia!
+    showNormal=true
+    showIgnored=true
+    showCompleted=true
+    displayFilePath=false
   else
     fail "Vääränlainen vipu!"
   fi
@@ -83,28 +106,60 @@ printWithinScreen() {
 }
 
 printMatching() {
+  local regexp color checkbox offset textColor file
+  local -a tasks
   regexp="$1"
   color="$2"
   checkbox="$3"
   offset="$4"
   [ -n "$5" ] && textColor="$5" || textColor="$NO_COLOR"
   
-  grep -rE -h --color=never --regexp="$regexp" $SEARCH_PATH | while read -r task
-    do
-      if [ "$displayFilePath" == "true" ]
-        then  file=$(grep -lr "$task" $SEARCH_PATH)
-        else  file=$(grep -lr "$task" $SEARCH_PATH | xargs -L 1 basename)
-      fi
-      text="${task:$((2+offset))}"
-      printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"
+  shopt -s lastpipe  ## Tämä vaaditaan tai muuten muutos näkyisi vain alishellissä (jonka pipe luo ja) joka exittaa
+  grep -rE -h --color=never --regexp="$regexp" $SEARCH_PATH | while read -r task; do
+      tasks+=( "$task" )
+  done
+
+
+  for task in "${tasks[@]}"; do
+    if [ "$displayFilePath" == "true" ]
+      then  file=$(grep -lr "$task" $SEARCH_PATH)
+      else  file=$(grep -lr "$task" $SEARCH_PATH | xargs -L 1 basename)
+    fi
+    text="${task:$((2+offset))}"
+    printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"
+
+    if    [ "$isRendered" == true ]; then
       printWithinScreen "$printLine"
+    elif  [ "$shouldCacheBeFilled" == true ]; then
+        TASKS+=( "$text" )
+        echo "${TASKS[@]}" >> "$TASKS_CACHE"
+    fi
+  done
+}
+
+displayResultsForAutocomplete() {
+  if [ "$storeValuesForAutocomplete" == true ]; then
+    size="${#TASKS[@]}"
+    for (( i=0 ; i < $size ; i++ )); do
+      echo -e "${TASKS[i]}"
     done
+  fi
 }
 
 
-echo -e "\nTämänhetkiset täskit"
+[ "$isRendered" == true ] && echo -e "\nTämänhetkiset täskit"
 start="^[^§_!]*"  ## rivin alussa ei saa syntaksimerkkejä ennen vars. sääntöä
 end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälkeen (käytetään arkistointiin = poistamiseen tuloksista)
+
+[ "$storeValuesForAutocomplete" == true ] && [ "$(stat -c %s $TASKS_CACHE)" -eq 0 ] && \
+  shouldCacheBeFilled=true  ## Jos cachetus päällä ja cache tyhjä, niin täytetään sitä
+
+## Käytetään ohituskaistaa jos juuri cachetettu tulokset, että toimisi nopeammin!
+if [ "$storeValuesForAutocomplete" == true ] && [ "$shouldCacheBeFilled" == false ]; then
+  TASKS="$(cat $TASKS_CACHE)"  ## Tähän on hyvä päättää. Cachetus toimii, mutta pitää vielä lukea oikein sisään.
+  displayResultsForAutocomplete
+  exit 0
+fi
 
 ## tärkeät
 [ "$showNormal" == true ] && \
@@ -124,3 +179,5 @@ printMatching "$start!§$end"      $GREEN      "[x]"   1   $DONE
 
 ## vanhat väärät
 printMatching "$start§!$end"      $RED        "Virheellinen merkintä, poista!"   1
+
+[ "$storeValuesForAutocomplete" == true ] && displayResultsForAutocomplete
