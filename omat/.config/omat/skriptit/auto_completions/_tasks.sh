@@ -29,11 +29,24 @@ _tasks_ehdotukset() {
       size="${#raakaData}"
 
       ## Oikeasti, kuka sanoi että zsh olisi yhtään parempi kuin bash... Tämä on jotain ihan hirveää.
+<<<<<<< Updated upstream
       typeset -Z 0 j  ## Tällä ilmeisesti voi luoda jotain että pädättävisä niin ja niin monella nollalla. Nyt 0.
       for ((indeksi=1; indeksi<$size; indeksi++)); do
         j=$indeksi
         # muokattavat+=( "Tunniste_$j:${raakaData[$j]}" )
         muokattavat+=( "Tunniste_${j}:${raakaData[$indeksi]}" )
+=======
+      if [ "$size" -gt 99 ]
+        then typeset -Z 3 j  ## Tällä luodaan kolmella 0:lla pädättävä numero
+        else typeset -Z 2 j
+      fi
+      
+      for ((indeksi=1; indeksi<=$size; indeksi++)); do
+        j=$indeksi
+        sanitized="${raakaData[$indeksi]}"
+        # muokattavat+=( "Tunniste_$j:${raakaData[$j]}" )
+        muokattavat+=( "%{$fg[white]%}'$j:$sanitized'%{$fg[white]%}" )
+>>>>>>> Stashed changes
       done
 
       _describe -t output 'Aiemman merkinnän editoimiseen' muokattavat

@@ -6,5 +6,9 @@ typeset -Z 5 j
       # <some command> <formatted string with i>
       j=$i; echo "part-$j" # use $j here for sure the effects of below 2 lines
       echo "$(printf "part-%05d" $i)"
+<<<<<<< Updated upstream
+=======
+      echo "$(printf "part-% 5d" $i)"
+>>>>>>> Stashed changes
       echo "part-${(l:5::0:)j}"
     done
