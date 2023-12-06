@@ -2,46 +2,15 @@
 
 source "$(dirname "$0")/fail.sh"
 
-<<<<<<< Updated upstream
-clearCache() {
-  echo -n "" > "$TASKS_CACHE"
-}
+COLORFUL_AUTOCOMPLETE=true
 
-[ -z $NOTES_PATH ] && NOTES_PATH="/home/c945fvc/notes"
-SEARCH_PATH="$NOTES_PATH/*"
-NO_COLOR='\033[0m'
-GREEN=$(tput setaf 83)
-RED='\033[0;91m'  
-MAGENTA=$(tput setaf 134)
-=======
-[ -z "$NOTES_PATH" ] && NOTES_PATH="/home/c945fvc/notes"  ## Määritelään shell rc filussa. Tämä shell debug yms poikkeuksia varten!
-SEARCH_PATH="$NOTES_PATH/*"
-NO_COLOR='\033[0;37m'
-GREEN='\033[0;92m'
-RED='\033[0;91m'
-MAGENTA='\033[0;95m'
->>>>>>> Stashed changes
-PRIORITY='\033[1;97m'
-IGNORE='\033[2;97m'
-DONE='\033[2;92m'
-SCREEN_MAX_WIDTH=$(tput cols)
-SAFETY_FACTOR=19   ## tämä on viimeinen arvo joka toimii sekä "path" että ilman. Älä pliis käytä tähän enää sekuntiakaan!
-<<<<<<< Updated upstream
-TASKS=()
-TASKS_CACHE="$HOME/.cache/.tasks_edit_cache"
-! [ -e "$TASKS_CACHE" ] && clearCache  ## Tyhjää, mutta myös luo cachen
-=======
-TASKS_FOR_AUTOCOMPLETE=()
-FILES_FOR_AUTOCOMPLETE=()
-AUTOCOMPLETE_CACHE_FILE="$HOME/.cache/.tasks_edit_cache"
->>>>>>> Stashed changes
-
-## cachen alustus tehtävä jo tässä
+## Tämä tiedosto vaaditaan jo funktioissa!
 clearCache() {
   echo -n "" > "$AUTOCOMPLETE_CACHE_FILE"
   echo -n "" > "$AUTOCOMPLETE_CACHE_FILE.files"
 }
 
+AUTOCOMPLETE_CACHE_FILE="$HOME/.cache/.tasks_edit_cache"
 ! [ -e "$AUTOCOMPLETE_CACHE_FILE" ] && clearCache  ## jos ei ole cachea, luo cachen (ja toki myös tyhjää sen)
 
 
@@ -77,11 +46,13 @@ addMe() {
 printWithinScreen() {
   local printLine="$1"
   maxSize=$((SCREEN_MAX_WIDTH + SAFETY_FACTOR))
-  [[ ${#printLine} -gt $maxSize ]] && \
-    echo -e "${printLine:0:$((maxSize))} ...$NO_COLOR" || \
-    echo -e "$printLine$NO_COLOR"
+  if [[ ${#printLine} -gt $maxSize ]]
+    then echo -e "${printLine:0:$((maxSize))} ...$NO_COLOR"
+    else echo -e "$printLine$NO_COLOR"
+  fi
 }
 
+## -- Tärkein funktio! --
 printMatching() {
   local -a tasks
   local regexp="$1"
@@ -111,12 +82,18 @@ printMatching() {
       fileToCache="$fileToCache:$lineNumber"
     fi
     local text="${taskText:$((2+offset))}"
-    local printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"
+    if [ $isGatherValuesForAutocomplete == false ];
+      then local printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"  ## default
+      else       printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}${NO_COLOR}"
+    fi
 
     if    [ "$isRendered" == true ]; then
       printWithinScreen "$printLine"
     elif  [ "$isCacheUsable" == false ]; then  ## Jos cache ei ole kunnossa, niin täytetään se uusilla tiedoilla
-        TASKS_FOR_AUTOCOMPLETE+=( "($file) $text" )  ## Tässä ei ole mitään järkeä, värit hajos!?!?!?
+        if [ $COLORFUL_AUTOCOMPLETE == true ]
+          then TASKS_FOR_AUTOCOMPLETE+=( "$printLine" )
+          else TASKS_FOR_AUTOCOMPLETE+=( "$text" )
+        fi
         FILES_FOR_AUTOCOMPLETE+=( "$fileToCache" )
     fi
   done
@@ -126,6 +103,7 @@ readCache() {
   readarray -t TASKS_FOR_AUTOCOMPLETE < "$AUTOCOMPLETE_CACHE_FILE"
   readarray -t FILES_FOR_AUTOCOMPLETE < "$AUTOCOMPLETE_CACHE_FILE.files"
 }
+
 
 writeToCache() {
   local size="${#TASKS_FOR_AUTOCOMPLETE[@]}"
@@ -159,10 +137,19 @@ editNote() {
   [ "$index" -lt 0 ] && fail "Annettu indeksi ei voi olla alle yhden!"
   
   local fileWithRow="${FILES_FOR_AUTOCOMPLETE[$index]}"
-  local editor="subl"
-  local komento="$editor $fileWithRow"
+  local komento=""
+  
+  if where $editor &> /dev/null; then
+    komento="subl $fileWithRow"
+  else
+    local rowNumber="$(echo $fileWithRow | cut -d : -f 2)"
+    local file="$(echo $fileWithRow | cut -d : -f 1)"
+    komento="nano +$rowNumber $file"
+  fi
+  
   echo "$komento"
   $komento
+  return 0  ## Palautetaan onnistunut suoritus vaikka komento feilaisikin (esim. editori ei asennettuna)
 }
 
 
@@ -176,14 +163,9 @@ showIgnored=false
 showCompleted=true
 displayFilePath=false
 isRendered=true
-<<<<<<< Updated upstream
-storeValuesForAutocomplete=false
-shouldCacheBeFilled=false
-=======
 isEditNotes=false
 isGatherValuesForAutocomplete=false
 isCacheUsable=false
->>>>>>> Stashed changes
 for arg in "$@"; do
   if    [ "$arg"  == "path" ]; then
     displayFilePath=true
@@ -198,21 +180,6 @@ for arg in "$@"; do
   elif  [ "$arg" == "add" ]; then
     addMe "$2"
     break;
-<<<<<<< Updated upstream
-  elif  [ "$arg" == "edit" ] || [ "$arg" == "autocomplete_edit" ]; then
-    if [ "$(stat -c %s $TASKS_CACHE)" -ne 0 ] && \
-       [[ $(find "$TASKS_CACHE" -not -newermt '-5 seconds' -print) ]]; then
-      clearCache ## Jos file on epätyhjä ja vanhempi kuin 12 s, poistetaan
-    fi
-    isRendered=false
-    storeValuesForAutocomplete=true
-    
-    ## Muokkaus koskee aina kaikkia!
-    showNormal=true
-    showIgnored=true
-    showCompleted=true
-    displayFilePath=false
-=======
   elif  [ "$arg" == "edit" ] || [ "$arg" == "autocomplete_edit" ]; then  ## autocomplete_edit on piilotettu vipu
     setIsCacheUsableOrClear
     isRendered=false
@@ -229,58 +196,38 @@ for arg in "$@"; do
       [ "$indexToEditZsh" -eq "$indexToEditZsh" ] || fail "Muokattavan muistiinpanon viitteen on oltava numero."
       break;
     fi
->>>>>>> Stashed changes
   else
     fail "Vääränlainen vipu!"
   fi
 done
 
+[ -z "$NOTES_PATH" ] && NOTES_PATH="/home/c945fvc/notes"  ## Määritelään shell rc filussa. Tämä shell debug yms poikkeuksia varten!
+SEARCH_PATH="$NOTES_PATH/*"
+SCREEN_MAX_WIDTH=$(tput cols)
+SAFETY_FACTOR=19   ## tämä on viimeinen arvo joka toimii sekä "path" että ilman. Älä pliis käytä tähän enää sekuntiakaan!
+TASKS_FOR_AUTOCOMPLETE=()
+FILES_FOR_AUTOCOMPLETE=()
 
-<<<<<<< Updated upstream
-printMatching() {
-  local regexp color checkbox offset textColor file
-  local -a tasks
-  regexp="$1"
-  color="$2"
-  checkbox="$3"
-  offset="$4"
-  [ -n "$5" ] && textColor="$5" || textColor="$NO_COLOR"
-  
-  shopt -s lastpipe  ## Tämä vaaditaan tai muuten muutos näkyisi vain alishellissä (jonka pipe luo ja) joka exittaa
-  grep -rE -h --color=never --regexp="$regexp" $SEARCH_PATH | while read -r task; do
-      tasks+=( "$task" )
-  done
+NO_COLOR='\033[0;37m'
+GREEN='\033[0;92m'
+RED='\033[0;91m'
+MAGENTA='\033[0;95m'
+PRIORITY='\033[1;97m'
+IGNORE='\033[2;97m'
+DONE='\033[2;92m'
+if [ $isGatherValuesForAutocomplete == true ] && [ $isEditNotes == false ] && [ "true" == "pökäle" ]; then  ## autocompleteen zsh värit!
+  NO_COLOR="$(tput sgr0)"
+  GREEN="$(tput 2; tput cnorm)"
+  RED="$(tput 1; tput cnorm)"
+  MAGENTA="$(tput 5; tput cnorm)"
+  PRIORITY="$(tput setaf 7; tput bold)"
+  IGNORE="$(tput 7; tput dim)"
+  DONE="$(tput 2; tput dim)"
+fi
 
 
-  for task in "${tasks[@]}"; do
-    if [ "$displayFilePath" == "true" ]
-      then  file=$(grep -lr "$task" $SEARCH_PATH)
-      else  file=$(grep -lr "$task" $SEARCH_PATH | xargs -L 1 basename)
-    fi
-    text="${task:$((2+offset))}"
-    printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"
-
-    if    [ "$isRendered" == true ]; then
-      printWithinScreen "$printLine"
-    elif  [ "$shouldCacheBeFilled" == true ]; then
-        TASKS+=( "$text" )
-        echo "${TASKS[@]}" >> "$TASKS_CACHE"
-    fi
-  done
-}
-
-displayResultsForAutocomplete() {
-  if [ "$storeValuesForAutocomplete" == true ]; then
-    size="${#TASKS[@]}"
-    for (( i=0 ; i < $size ; i++ )); do
-      echo -e "${TASKS[i]}"
-    done
-  fi
-}
-=======
 ## ---- Ohjelmalogiikka -----
 [ "$isRendered" == true ] && echo -e "\nTämänhetkiset täskit"
->>>>>>> Stashed changes
 
 ## Käytetään ohituskaistaa jos juuri cachetettu tulokset, että toimisi nopeammin!
 if [ "$isCacheUsable" == true ]; then
@@ -290,24 +237,10 @@ if [ "$isCacheUsable" == true ]; then
   exit 0
 fi
 
-<<<<<<< Updated upstream
-[ "$isRendered" == true ] && echo -e "\nTämänhetkiset täskit"
-=======
 
 ## regexp
->>>>>>> Stashed changes
 start="^[^§_!]*"  ## rivin alussa ei saa syntaksimerkkejä ennen vars. sääntöä
 end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälkeen (käytetään arkistointiin = poistamiseen tuloksista)
-
-[ "$storeValuesForAutocomplete" == true ] && [ "$(stat -c %s $TASKS_CACHE)" -eq 0 ] && \
-  shouldCacheBeFilled=true  ## Jos cachetus päällä ja cache tyhjä, niin täytetään sitä
-
-## Käytetään ohituskaistaa jos juuri cachetettu tulokset, että toimisi nopeammin!
-if [ "$storeValuesForAutocomplete" == true ] && [ "$shouldCacheBeFilled" == false ]; then
-  TASKS="$(cat $TASKS_CACHE)"  ## Tähän on hyvä päättää. Cachetus toimii, mutta pitää vielä lukea oikein sisään.
-  displayResultsForAutocomplete
-  exit 0
-fi
 
 ## tärkeät
 [ "$showNormal" == true ] && \
@@ -326,14 +259,8 @@ fi
   printMatching "$start!§$end"      $GREEN      "[x]"   1   $DONE
 
 ## vanhat väärät
-<<<<<<< Updated upstream
-printMatching "$start§!$end"      $RED        "Virheellinen merkintä, poista!"   1
-
-[ "$storeValuesForAutocomplete" == true ] && displayResultsForAutocomplete
-=======
   printMatching "$start§!$end"      $RED        "Virheellinen merkintä, poista!"   1
 
 [ "$isCacheUsable" == false ] && writeToCache
 [ "$isEditNotes" == true ] && editNote && exit 0
 [ "$isGatherValuesForAutocomplete" == true ] && displayResultsForAutocomplete
->>>>>>> Stashed changes

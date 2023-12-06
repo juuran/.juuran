@@ -175,7 +175,7 @@ if [ $USER = c945fvc ]; then
 
   elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
-    NOTES_PATH="/home/juuran/"
+    export NOTES_PATH="/home/juuran/notes"
 fi
 
 ## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
