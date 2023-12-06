@@ -133,7 +133,7 @@ displayResultsForAutocomplete() {
 editNote() {
   local index="$((($indexToEditZsh - 1)))"  ## zsh indeksointi alkaa 1:stä eikä 0:sta
   local size="${#FILES_FOR_AUTOCOMPLETE[@]}"
-  [ "$index" -gt $size ] && fail "Annettu indeksi on liian suuri!"
+  [ "$index" -ge $size ] && fail "Annettu indeksi on liian suuri!"
   [ "$index" -lt 0 ] && fail "Annettu indeksi ei voi olla alle yhden!"
   
   local fileWithRow="${FILES_FOR_AUTOCOMPLETE[$index]}"
