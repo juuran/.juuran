@@ -45,11 +45,21 @@ addMe() {
 
 printWithinScreen() {
   local printLine="$1"
+  local finalPrint
+  [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && \
+    SAFETY_FACTOR=11  ## autocompletelle isompi vara
   maxSize=$((SCREEN_MAX_WIDTH + SAFETY_FACTOR))
+  
   if [[ ${#printLine} -gt $maxSize ]]
-    then echo -e "${printLine:0:$((maxSize))} ...$NO_COLOR"
-    else echo -e "$printLine$NO_COLOR"
+    then finalPrint="${printLine:0:$((maxSize))} ...${NO_COLOR}"
+    else finalPrint="${printLine}${NO_COLOR}"
   fi
+
+  if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ]; then  ## Jos cache ei ole kunnossa, niin täytetään se uusilla tiedoilla
+    TASKS_FOR_AUTOCOMPLETE+="$finalPrint\n"
+  fi
+
+  [ "$isNormalOutputRendered" == true ] && echo -e "$finalPrint"
 }
 
 ## -- Tärkein funktio! --
@@ -77,24 +87,23 @@ printMatching() {
       file="$(echo $task | cut -d : -f 1)"
     elif  [ "$isGatherValuesForAutocomplete" == true ]; then
       file="$(echo $task | cut -d : -f 1 | xargs -L 1 basename)"
+    fi
+    local text="${taskText:$((2+offset))}"    
+    printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"
+
+    [ "$isCacheUsable" == true ] && [ "$isNormalOutputRendered" == false ] && return 0;
+
+    if [ $COLORFUL_AUTOCOMPLETE == false ]; then
+      printWithinScreen "$text"
+    else
+      printWithinScreen "$printLine"
+    fi
+
+    if [ "$isCacheUsable" == false ]; then
       local lineNumber; lineNumber="$(echo $task | cut -d : -f 2)"
       local fileToCache; fileToCache="$(echo $task | cut -d : -f 1)"
       fileToCache="$fileToCache:$lineNumber"
-    fi
-    local text="${taskText:$((2+offset))}"
-    if [ $isGatherValuesForAutocomplete == false ];
-      then local printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"  ## default
-      else       printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}${NO_COLOR}"
-    fi
-
-    if    [ "$isRendered" == true ]; then
-      printWithinScreen "$printLine"
-    elif  [ "$isCacheUsable" == false ]; then  ## Jos cache ei ole kunnossa, niin täytetään se uusilla tiedoilla
-        if [ $COLORFUL_AUTOCOMPLETE == true ]
-          then TASKS_FOR_AUTOCOMPLETE+=( "$printLine" )
-          else TASKS_FOR_AUTOCOMPLETE+=( "$text" )
-        fi
-        FILES_FOR_AUTOCOMPLETE+=( "$fileToCache" )
+      FILES_FOR_AUTOCOMPLETE+=( "$fileToCache" )
     fi
   done
 }
@@ -126,7 +135,7 @@ setIsCacheUsableOrClear() {
 displayResultsForAutocomplete() {
   local size="${#TASKS_FOR_AUTOCOMPLETE[@]}"
   for (( i=0 ; i < $size ; i++ )); do
-    echo -e "${TASKS_FOR_AUTOCOMPLETE[i]}"  ## tiedostopolkuja ei tässä erikseen liitetä
+    echo -ne "${TASKS_FOR_AUTOCOMPLETE[i]}"  ## tiedostopolkuja ei tässä erikseen liitetä
   done
 }
 
@@ -139,12 +148,12 @@ editNote() {
   local fileWithRow="${FILES_FOR_AUTOCOMPLETE[$index]}"
   local komento=""
   
-  if where $editor &> /dev/null; then
+  if where subl &> /dev/null; then
     komento="subl $fileWithRow"
   else
-    local rowNumber="$(echo $fileWithRow | cut -d : -f 2)"
-    local file="$(echo $fileWithRow | cut -d : -f 1)"
-    komento="nano +$rowNumber $file"
+    local row;  row="$(echo $fileWithRow | cut -d : -f 2)"
+    local file; file="$(echo $fileWithRow | cut -d : -f 1)"
+    komento="nano +$row $file"
   fi
   
   echo "$komento"
@@ -162,7 +171,7 @@ showNormal=true
 showIgnored=false
 showCompleted=true
 displayFilePath=false
-isRendered=true
+isNormalOutputRendered=true
 isEditNotes=false
 isGatherValuesForAutocomplete=false
 isCacheUsable=false
@@ -182,7 +191,7 @@ for arg in "$@"; do
     break;
   elif  [ "$arg" == "edit" ] || [ "$arg" == "autocomplete_edit" ]; then  ## autocomplete_edit on piilotettu vipu
     setIsCacheUsableOrClear
-    isRendered=false
+    isNormalOutputRendered=false
     isGatherValuesForAutocomplete=true
     showIgnored=true  ## Muokkaus koskee aina kaikkia eli sama kuin "all"!
 
@@ -215,19 +224,19 @@ MAGENTA='\033[0;95m'
 PRIORITY='\033[1;97m'
 IGNORE='\033[2;97m'
 DONE='\033[2;92m'
-if [ $isGatherValuesForAutocomplete == true ] && [ $isEditNotes == false ] && [ "true" == "pökäle" ]; then  ## autocompleteen zsh värit!
+if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isEditNotes" == false ]; then  ## autocompleteen zsh värit!
   NO_COLOR="$(tput sgr0)"
-  GREEN="$(tput 2; tput cnorm)"
-  RED="$(tput 1; tput cnorm)"
-  MAGENTA="$(tput 5; tput cnorm)"
+  GREEN="$(tput setaf 2; tput cnorm)"
+  RED="$(tput setaf 1; tput cnorm)"
+  MAGENTA="$(tput setaf 5; tput cnorm)"
   PRIORITY="$(tput setaf 7; tput bold)"
-  IGNORE="$(tput 7; tput dim)"
-  DONE="$(tput 2; tput dim)"
+  IGNORE="$(tput setaf 7; tput dim)"
+  DONE="$(tput setaf 2; tput dim)"
 fi
 
 
 ## ---- Ohjelmalogiikka -----
-[ "$isRendered" == true ] && echo -e "\nTämänhetkiset täskit"
+[ "$isNormalOutputRendered" == true ] && echo -e "\nTämänhetkiset täskit"
 
 ## Käytetään ohituskaistaa jos juuri cachetettu tulokset, että toimisi nopeammin!
 if [ "$isCacheUsable" == true ]; then
