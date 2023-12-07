@@ -99,7 +99,7 @@ printMatching() {
 
 
   for task in "${tasks[@]}"; do
-    taskText="$(echo $task | cut -d : -f 3-)"
+    local taskText; taskText="$(echo $task | cut -d : -f 3-)"
     
     if    [ "$isGatherValuesForAutocomplete" == false ] && [ "$displayFilePath" == false ]; then  ## default
       file="$(echo $task | cut -d : -f 1 | xargs -L 1 basename)"
@@ -239,13 +239,13 @@ PRIORITY='\033[1;97m'
 IGNORE='\033[2;97m'
 DONE='\033[2;92m'
 if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isEditNotes" == false ]; then  ## autocompleteen zsh värit!
-  NO_COLOR="$(tput sgr0)"
-  GREEN="$(tput setaf 2; tput cnorm)"
-  RED="$(tput setaf 1; tput cnorm)"
-  MAGENTA="$(tput setaf 5; tput cnorm)"
-  PRIORITY="$(tput setaf 7; tput bold)"
-  IGNORE="$(tput setaf 7; tput dim)"
-  DONE="$(tput setaf 2; tput dim)"
+  NO_COLOR="'$(tput sgr0)'"
+  GREEN="'$(tput setaf 2; tput cnorm)'"
+  RED="'$(tput setaf 1; tput cnorm)'"
+  MAGENTA="'$(tput setaf 5; tput cnorm)'"
+  PRIORITY="'$(tput setaf 7; tput bold)'"
+  IGNORE="'$(tput setaf 7; tput dim)'"
+  DONE="'$(tput setaf 2; tput dim)'"
 fi
 
 
