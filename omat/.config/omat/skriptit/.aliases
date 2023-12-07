@@ -14,6 +14,7 @@ alias tree='tree -C'
 alias cd..='cd ..'
 alias diff='diff --color=always'
 alias watch='watch --color'
+alias nano='nano -l'
 
 ## omat skriptit tästä alaspäin
 alias git-log=~/.config/omat/skriptit/git-log.sh

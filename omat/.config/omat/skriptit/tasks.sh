@@ -1,8 +1,22 @@
 #!/bin/bash
 
+
+
+## TODO: Kirjoita skripti, joka muuttaa line breakit oikeanlaisiksi, witun windows!!!!!
+## Komento sille on: sed -i -e 's/\r$//' $fileName
+
+
+
 source "$(dirname "$0")/fail.sh"
 
-COLORFUL_AUTOCOMPLETE=true
+COLORFUL_AUTOCOMPLETE=false
+[ -z "$NOTES_PATH" ] && NOTES_PATH="/home/c945fvc/notes"  ## Määritelään shell rc filussa. Tämä shell debug yms poikkeuksia varten!
+SEARCH_PATH="$NOTES_PATH/*"
+SCREEN_MAX_WIDTH=$(tput cols)
+SAFETY_FACTOR=19   ## tämä on viimeinen arvo joka toimii sekä "path" että ilman. Älä pliis käytä tähän enää sekuntiakaan!
+CACHE_VALID_MAX_SECONDS=10
+TASKS_FOR_AUTOCOMPLETE=()
+FILES_FOR_AUTOCOMPLETE=()
 
 ## Tämä tiedosto vaaditaan jo funktioissa!
 clearCache() {
@@ -45,18 +59,24 @@ addMe() {
 
 printWithinScreen() {
   local printLine="$1"
+  local textWithoutColor="$2"
   local finalPrint
   [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && \
-    SAFETY_FACTOR=11  ## autocompletelle isompi vara
+    SCREEN_MAX_WIDTH=38  ## autocompletelle isompi vara
   maxSize=$((SCREEN_MAX_WIDTH + SAFETY_FACTOR))
   
-  if [[ ${#printLine} -gt $maxSize ]]
+  if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && [ "$COLORFUL_AUTOCOMPLETE" == false ];
+    then local NO_COLOR="" ## TODO: Karmea häck... korjaa joskus!
+  fi
+
+  if [[ ${#textWithoutColor} -gt $maxSize ]]
     then finalPrint="${printLine:0:$((maxSize))} ...${NO_COLOR}"
     else finalPrint="${printLine}${NO_COLOR}"
   fi
 
   if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ]; then  ## Jos cache ei ole kunnossa, niin täytetään se uusilla tiedoilla
-    TASKS_FOR_AUTOCOMPLETE+="$finalPrint\n"
+    # TASKS_FOR_AUTOCOMPLETE+=( "$finalPrint\n" )
+    TASKS_FOR_AUTOCOMPLETE+=( "$finalPrint" )
   fi
 
   [ "$isNormalOutputRendered" == true ] && echo -e "$finalPrint"
@@ -88,15 +108,16 @@ printMatching() {
     elif  [ "$isGatherValuesForAutocomplete" == true ]; then
       file="$(echo $task | cut -d : -f 1 | xargs -L 1 basename)"
     fi
-    local text="${taskText:$((2+offset))}"    
+    local text="${taskText:$((2+offset))}"
+    local textWithoutColor="  ${checkbox}  ($file) ${text}"
     printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"
 
-    [ "$isCacheUsable" == true ] && [ "$isNormalOutputRendered" == false ] && return 0;
+    [ "$isCacheUsable" == true ] && [ "$isNormalOutputRendered" == false ] && break  ## TODO: Tarkista joskus onko tämä validi paikka tälle
 
     if [ $COLORFUL_AUTOCOMPLETE == false ]; then
-      printWithinScreen "$text"
+      printWithinScreen "$textWithoutColor" "$textWithoutColor"
     else
-      printWithinScreen "$printLine"
+      printWithinScreen "$printLine" "$textWithoutColor"
     fi
 
     if [ "$isCacheUsable" == false ]; then
@@ -124,8 +145,8 @@ writeToCache() {
 
 setIsCacheUsableOrClear() {
   if  [ "$(stat -c %s $AUTOCOMPLETE_CACHE_FILE)" -ne 0 ] && \
-      [[ $(find "$AUTOCOMPLETE_CACHE_FILE" -newermt '-10 seconds' -print) ]]; then
-        isCacheUsable=true  ## vain epätyhjä alle 10 sekuntia vanha cache sopiva
+      [[ "$(find "$AUTOCOMPLETE_CACHE_FILE" -newermt "-$CACHE_VALID_MAX_SECONDS seconds" -print)" ]]; then
+        isCacheUsable=true
   else
         isCacheUsable=false
         clearCache
@@ -135,7 +156,7 @@ setIsCacheUsableOrClear() {
 displayResultsForAutocomplete() {
   local size="${#TASKS_FOR_AUTOCOMPLETE[@]}"
   for (( i=0 ; i < $size ; i++ )); do
-    echo -ne "${TASKS_FOR_AUTOCOMPLETE[i]}"  ## tiedostopolkuja ei tässä erikseen liitetä
+    echo -e "${TASKS_FOR_AUTOCOMPLETE[i]}"  ## tiedostopolkuja ei tässä erikseen liitetä
   done
 }
 
@@ -153,7 +174,7 @@ editNote() {
   else
     local row;  row="$(echo $fileWithRow | cut -d : -f 2)"
     local file; file="$(echo $fileWithRow | cut -d : -f 1)"
-    komento="nano +$row $file"
+    komento="nano -l +$row $file"
   fi
   
   echo "$komento"
@@ -209,13 +230,6 @@ for arg in "$@"; do
     fail "Vääränlainen vipu!"
   fi
 done
-
-[ -z "$NOTES_PATH" ] && NOTES_PATH="/home/c945fvc/notes"  ## Määritelään shell rc filussa. Tämä shell debug yms poikkeuksia varten!
-SEARCH_PATH="$NOTES_PATH/*"
-SCREEN_MAX_WIDTH=$(tput cols)
-SAFETY_FACTOR=19   ## tämä on viimeinen arvo joka toimii sekä "path" että ilman. Älä pliis käytä tähän enää sekuntiakaan!
-TASKS_FOR_AUTOCOMPLETE=()
-FILES_FOR_AUTOCOMPLETE=()
 
 NO_COLOR='\033[0;37m'
 GREEN='\033[0;92m'

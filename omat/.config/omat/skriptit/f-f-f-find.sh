@@ -1,6 +1,9 @@
 #!/bin/bash
 source "$(dirname "$0")/fail.sh"
 
+## TODO: Kirjoita skripti, joka muuttaa line breakit oikeanlaisiksi, witun windows!!!!!
+## Komento sille on: sed -i -e 's/\r$//' $fileName
+
 exactMatchesOnly=false  ## by default searches for names 'containing' search term
 iC="--ignore-case"  ## tämä käytössä vain lessillä!
 isIgnoreCase=true

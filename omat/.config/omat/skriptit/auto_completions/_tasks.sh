@@ -33,11 +33,11 @@ _tasks_ehdotukset() {
         then typeset -Z 3 j  ## Tällä luodaan kolmella 0:lla pädättävä numero
         else typeset -Z 2 j
       fi
-      
+
       for ((indeksi=1; indeksi<=$size; indeksi++)); do
         j=$indeksi
         # muokattavat+=( "Tunniste_$j:${raakaData[$j]}" )
-        muokattavat+=( "$j:${raakaData[$indeksi]}" )
+        muokattavat+=( "$j : ${raakaData[$indeksi]}" )
       done
 
       _describe -t output 'Aiemman merkinnän editoimiseen' muokattavat
