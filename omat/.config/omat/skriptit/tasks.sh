@@ -14,7 +14,7 @@ COLORFUL_AUTOCOMPLETE=true
 SEARCH_PATH="$NOTES_PATH/*"
 SCREEN_MAX_WIDTH=$(tput cols)
 SAFETY_FACTOR=19   ## tämä on viimeinen arvo joka toimii sekä "path" että ilman. Älä pliis käytä tähän enää sekuntiakaan!
-CACHE_VALID_MAX_SECONDS=10
+CACHE_VALID_MAX_SECONDS=5
 TASKS_FOR_AUTOCOMPLETE=()
 FILES_FOR_AUTOCOMPLETE=()
 
@@ -30,7 +30,7 @@ AUTOCOMPLETE_CACHE_FILE="$HOME/.cache/.tasks_edit_cache"
 
 ## ---- Funktiot ----
 printHelp() {
-  echo "        tasks.sh (v.1.02)"
+  echo "        tasks.sh (v.1.20)"
   echo "Näyttää auki olevat täskit. Niitä voi merkata käyttämällä § merkkiä, joka jostain ihmeen syystä"
   echo "näppiksestä löytyy. Tarkempaa tietoa löytyy tiedostosta ~/notes/koodaus/tasks.txt."
   echo
@@ -58,21 +58,29 @@ addMe() {
 }
 
 printWithinScreenWithColors() {
+  local beginningPart="  ${checkbox}  (${file}) "
+  local endPart="$text"
+  local finalPrintWithoutColor="${beginningPart}${endPart}"
   [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && \
-    SCREEN_MAX_WIDTH=38  ## autocompletelle isompi vara
-  maxSize=$((SCREEN_MAX_WIDTH + SAFETY_FACTOR))
+    SAFETY_FACTOR=117  ## isompi on varovaisempi! (131 feilas!) (tosi leveällä 214) (kapealla 56)
   
-
-  if [[ ${#text} -gt $maxSize ]]
-    then local textWithinScreen="${text:0:$((maxSize))} ..."
-    else local textWithinScreen="$text"
+  widthOfbeginningPart=${#beginningPart}
+  maxSize=$((SCREEN_MAX_WIDTH - SAFETY_FACTOR))
+  spaceLeftForEndPart=$((maxSize - widthOfbeginningPart))
+  [ $spaceLeftForEndPart -lt 0 ] && spaceLeftForEndPart=0
+  
+  if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && \
+     [ "$isNormalOutputRendered" == false ] && [ "$COLORFUL_AUTOCOMPLETE" == false ]; then
+    local color=""; local NO_COLOR=""; local textColor=""; MAGENTA="";
   fi
-  
-  local finalPrint="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_MAGENTA}) ${textColor}${textWithinScreen}${NO_COLOR}"
+
+  widthOfFinalWithoutColor=${#finalPrintWithoutColor}
+  if [[ $widthOfFinalWithoutColor -gt $maxSize ]]
+    then local finalPrint="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${endPart:0:$((spaceLeftForEndPart))} ...${NO_COLOR}"
+    else local finalPrint="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}${NO_COLOR}"
+  fi
 
   if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ]; then  ## jos cache ei kunnossa, täytetään se
-    [ "$COLORFUL_AUTOCOMPLETE" == false ] && \
-      finalPrint="  ${checkbox}  (${file}) ${text}"
     TASKS_FOR_AUTOCOMPLETE+=( "$finalPrint" )
   fi
 
@@ -161,7 +169,8 @@ editNote() {
   local fileWithRow="${FILES_FOR_AUTOCOMPLETE[$index]}"
   local komento=""
   
-  if where subl &> /dev/null; then
+  echo "EDITOR_IS_SUBL=$EDITOR_IS_SUBL  ja sekä $(where subl) ja $(command -v /bin/subl &> /dev/null)"
+  if [ "$EDITOR_IS_SUBL" == true ] && command -v /bin/subl &> /dev/null; then
     komento="subl $fileWithRow"
   else
     local row;  row="$(echo $fileWithRow | cut -d : -f 2)"
@@ -180,6 +189,7 @@ for arg in "$@"; do  ## Hjälp on short-circuiting eli voi laittaa mihin vaan ja
   [ "$arg" == "--help" ] || [ "$arg" == "-h" ] && printHelp && exit 0
 done
 
+showPriority=true
 showNormal=true
 showIgnored=false
 showCompleted=true
@@ -190,14 +200,19 @@ isGatherValuesForAutocomplete=false
 isCacheUsable=false
 for arg in "$@"; do
   if    [ "$arg"  == "path" ]; then
+    showIgnored=true
     displayFilePath=true
   elif  [ "$arg" == "all" ]; then
     showIgnored=true
   elif  [ "$arg" == "ignored" ]; then
     showIgnored=true
-    showCompleted=false
+    showPriority=false
     showNormal=false
+    showCompleted=false
   elif  [ "$arg" == "undone" ]; then
+    showCompleted=false
+  elif  [ "$arg" == "priority" ]; then
+    showNormal=false
     showCompleted=false
   elif  [ "$arg" == "add" ]; then
     addMe "$2"
@@ -227,25 +242,9 @@ NO_COLOR='\033[0;37m'
 GREEN='\033[0;92m'
 RED='\033[0;91m'
 MAGENTA='\033[0;95m'
-NO_MAGENTA='\033[0;37m'
 PRIORITY='\033[1;97m'
 IGNORE='\033[2;97m'
 DONE='\033[2;92m'
-if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isEditNotes" == false ]; then  ## autocompleteen zsh värit!
-  GREEN='\033[0;92m'
-  NO_GREEN='\033[0;37m'
-  RED='\033[0;91m'
-  NO_RED='\033[0;37m'
-  MAGENTA='\033[0;37m'
-  NO_MAGENTA='\033[0;37m'
-  PRIORITY='\033[1;97m'
-  NO_PRIORITY='\033[0;37m'
-  IGNORE='\033[2;97m'
-  NO_IGNORE='\033[0;37m'
-  DONE='\033[2;92m'
-  NO_DONE='\033[0;37m'
-fi
-
 
 ## ---- Ohjelmalogiikka -----
 [ "$isNormalOutputRendered" == true ] && echo -e "\nTämänhetkiset täskit"
@@ -264,7 +263,7 @@ start="^[^§_!]*"  ## rivin alussa ei saa syntaksimerkkejä ennen vars. säänt�
 end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälkeen (käytetään arkistointiin = poistamiseen tuloksista)
 
 ## tärkeät
-[ "$showNormal" == true ] && \
+[ "$showPriority" == true ] && \
   printMatching "$start§{2}$end"  "[ ]"   1   "$PRIORITY"   "$NO_PRIORITY"
 
 ## tekemättömät

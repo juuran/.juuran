@@ -172,6 +172,7 @@ if [ $USER = c945fvc ]; then
     export PATH="$HOME/.jbang/bin:$PATH"
     ## Omien skriptien globaalit muuttujat
     export NOTES_PATH="/home/c945fvc/notes"
+    export EDITOR_IS_SUBL=true
 
   elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'

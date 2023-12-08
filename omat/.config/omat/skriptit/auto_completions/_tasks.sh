@@ -6,6 +6,7 @@ _tasks_ehdotukset() {
   komennot=(
     edit:'Muokkaa aiempaa merkintää'
     path:'Näytä koko polku tiedostolle'
+    priority:'Näytä vain tärkeimmät tehtävät'
     all:'Näytä kaikki merkinnät'
     ignored:'Näytä vain "ignoratut" merkinnät'
     undone:'Vain tekemättömät näytetään'
@@ -37,7 +38,7 @@ _tasks_ehdotukset() {
       for ((indeksi=1; indeksi<=$size; indeksi++)); do
         j=$indeksi
         # muokattavat+=( "Tunniste_$j:${raakaData[$j]}" )
-        muokattavat+=( "$j : ${raakaData[$indeksi]}" )
+        muokattavat+=( "$j: ${raakaData[$indeksi]}" )
       done
 
       _describe -t output 'Aiemman merkinnän editoimiseen' muokattavat
