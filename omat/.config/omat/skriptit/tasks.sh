@@ -9,7 +9,7 @@
 
 source "$(dirname "$0")/fail.sh"
 
-COLORFUL_AUTOCOMPLETE=false
+COLORFUL_AUTOCOMPLETE=true
 [ -z "$NOTES_PATH" ] && NOTES_PATH="/home/c945fvc/notes"  ## Määritelään shell rc filussa. Tämä shell debug yms poikkeuksia varten!
 SEARCH_PATH="$NOTES_PATH/*"
 SCREEN_MAX_WIDTH=$(tput cols)
@@ -57,25 +57,22 @@ addMe() {
   echo "$thingToAdd" >> "$NOTES_PATH/todo.txt"
 }
 
-printWithinScreen() {
-  local printLine="$1"
-  local textWithoutColor="$2"
-  local finalPrint
+printWithinScreenWithColors() {
   [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && \
     SCREEN_MAX_WIDTH=38  ## autocompletelle isompi vara
   maxSize=$((SCREEN_MAX_WIDTH + SAFETY_FACTOR))
   
-  if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && [ "$COLORFUL_AUTOCOMPLETE" == false ];
-    then local NO_COLOR="" ## TODO: Karmea häck... korjaa joskus!
-  fi
 
-  if [[ ${#textWithoutColor} -gt $maxSize ]]
-    then finalPrint="${printLine:0:$((maxSize))} ...${NO_COLOR}"
-    else finalPrint="${printLine}${NO_COLOR}"
+  if [[ ${#text} -gt $maxSize ]]
+    then local textWithinScreen="${text:0:$((maxSize))} ..."
+    else local textWithinScreen="$text"
   fi
+  
+  local finalPrint="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_MAGENTA}) ${textColor}${textWithinScreen}${NO_COLOR}"
 
-  if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ]; then  ## Jos cache ei ole kunnossa, niin täytetään se uusilla tiedoilla
-    # TASKS_FOR_AUTOCOMPLETE+=( "$finalPrint\n" )
+  if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ]; then  ## jos cache ei kunnossa, täytetään se
+    [ "$COLORFUL_AUTOCOMPLETE" == false ] && \
+      finalPrint="  ${checkbox}  (${file}) ${text}"
     TASKS_FOR_AUTOCOMPLETE+=( "$finalPrint" )
   fi
 
@@ -86,11 +83,12 @@ printWithinScreen() {
 printMatching() {
   local -a tasks
   local regexp="$1"
-  local color="$2"
-  local checkbox="$3"
-  local offset="$4"
-  local textColor="$NO_COLOR"
-  [ -n "$5" ] && textColor="$5"
+  local checkbox="$2"
+  local offset="$3"
+  [ -n "$4" ] && local color="$4"         || color="$NO_COLOR"
+  [ -n "$5" ] && local colorOff="$5"      || colorOff="$NO_COLOR"
+  [ -n "$6" ] && local textColor="$6"     || textColor="$color"
+  [ -n "$7" ] && local textColorOff="$7"  || textColorOff="$colorOff"
   
   shopt -s lastpipe  ## Tämä vaaditaan tai muuten muutos näkyisi vain alishellissä (jonka pipe luo ja) joka exittaa
   grep -rEn --color=never --regexp="$regexp" $SEARCH_PATH | while read -r task; do
@@ -109,16 +107,10 @@ printMatching() {
       file="$(echo $task | cut -d : -f 1 | xargs -L 1 basename)"
     fi
     local text="${taskText:$((2+offset))}"
-    local textWithoutColor="  ${checkbox}  ($file) ${text}"
-    printLine="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}"
 
     [ "$isCacheUsable" == true ] && [ "$isNormalOutputRendered" == false ] && break  ## TODO: Tarkista joskus onko tämä validi paikka tälle
 
-    if [ $COLORFUL_AUTOCOMPLETE == false ]; then
-      printWithinScreen "$textWithoutColor" "$textWithoutColor"
-    else
-      printWithinScreen "$printLine" "$textWithoutColor"
-    fi
+    printWithinScreenWithColors
 
     if [ "$isCacheUsable" == false ]; then
       local lineNumber; lineNumber="$(echo $task | cut -d : -f 2)"
@@ -235,17 +227,23 @@ NO_COLOR='\033[0;37m'
 GREEN='\033[0;92m'
 RED='\033[0;91m'
 MAGENTA='\033[0;95m'
+NO_MAGENTA='\033[0;37m'
 PRIORITY='\033[1;97m'
 IGNORE='\033[2;97m'
 DONE='\033[2;92m'
 if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isEditNotes" == false ]; then  ## autocompleteen zsh värit!
-  NO_COLOR="'$(tput sgr0)'"
-  GREEN="'$(tput setaf 2; tput cnorm)'"
-  RED="'$(tput setaf 1; tput cnorm)'"
-  MAGENTA="'$(tput setaf 5; tput cnorm)'"
-  PRIORITY="'$(tput setaf 7; tput bold)'"
-  IGNORE="'$(tput setaf 7; tput dim)'"
-  DONE="'$(tput setaf 2; tput dim)'"
+  GREEN='\033[0;92m'
+  NO_GREEN='\033[0;37m'
+  RED='\033[0;91m'
+  NO_RED='\033[0;37m'
+  MAGENTA='\033[0;37m'
+  NO_MAGENTA='\033[0;37m'
+  PRIORITY='\033[1;97m'
+  NO_PRIORITY='\033[0;37m'
+  IGNORE='\033[2;97m'
+  NO_IGNORE='\033[0;37m'
+  DONE='\033[2;92m'
+  NO_DONE='\033[0;37m'
 fi
 
 
@@ -267,22 +265,22 @@ end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälk
 
 ## tärkeät
 [ "$showNormal" == true ] && \
-  printMatching "$start§{2}$end"    $PRIORITY   "[ ]"   1   $PRIORITY
+  printMatching "$start§{2}$end"  "[ ]"   1   "$PRIORITY"   "$NO_PRIORITY"
 
 ## tekemättömät
 [ "$showNormal" == true ] && \
-  printMatching "$start§{1}$end"    $NO_COLOR   "[ ]"   0
+  printMatching "$start§{1}$end"  "[ ]"   0
 
 ## ignore
 [ "$showIgnored" == true ] && \
-  printMatching "${start}_§$end"    $IGNORE     "[ ]"   1   $IGNORE
+  printMatching "${start}_§$end"  "[ ]"   1   "$IGNORE"     "$NO_IGNORE"
 
 ## tehdyt
 [ "$showCompleted" == true ] && \
-  printMatching "$start!§$end"      $GREEN      "[x]"   1   $DONE
+  printMatching "$start!§$end"    "[x]"   1   "$GREEN"      "$NO_GREEN"   "$DONE"  "$NO_DONE"
 
 ## vanhat väärät
-  printMatching "$start§!$end"      $RED        "Virheellinen merkintä, poista!"   1
+  printMatching "$start§!$end"    "Virheellinen merkintä, poista!"  1   "$RED"  "$NO_RED"
 
 [ "$isCacheUsable" == false ] && writeToCache
 [ "$isEditNotes" == true ] && editNote && exit 0
