@@ -240,7 +240,7 @@ IGNORE='\033[2;97m'
 DONE='\033[2;92m'
 
 ## ---- Ohjelmalogiikka -----
-[ "$isNormalOutputRendered" == true ] && echo -e "\nTämänhetkiset täskit"
+[ "$isNormalOutputRendered" == true ] && echo -e "Tämänhetkiset täskit"
 
 ## Käytetään ohituskaistaa jos juuri cachetettu tulokset, että toimisi nopeammin!
 if [ "$isCacheUsable" == true ]; then
