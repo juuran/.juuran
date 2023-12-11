@@ -42,6 +42,7 @@ if [ $USER = c945fvc ]; then
   alias show-tasks=~/.config/omat/skriptit/tasks.sh
   alias git-pull-all=~/.config/omat/skriptit/git-pull-all.sh
   alias vaihda-java=~/.config/omat/skriptit/vaihda-java.sh
+  alias fix-line-endings=~/.config/omat/skriptit/fix-line-endings.sh
   export BROWSER=temp_open_google
 
   function temp_open_google() {

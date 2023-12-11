@@ -35,6 +35,7 @@ _tasks_ehdotukset() {
         else typeset -Z 2 j
       fi
 
+      local indeksi
       for ((indeksi=1; indeksi<=$size; indeksi++)); do
         j=$indeksi
         # muokattavat+=( "Tunniste_$j:${raakaData[$j]}" )

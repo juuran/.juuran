@@ -1,20 +1,13 @@
 #!/bin/bash
 
-
-
-## TODO: Kirjoita skripti, joka muuttaa line breakit oikeanlaisiksi, witun windows!!!!!
-## Komento sille on: sed -i -e 's/\r$//' $fileName
-
-
-
 source "$(dirname "$0")/fail.sh"
 
 COLORFUL_AUTOCOMPLETE=true
-[ -z "$NOTES_PATH" ] && NOTES_PATH="/home/c945fvc/notes"  ## Määritelään shell rc filussa. Tämä shell debug yms poikkeuksia varten!
+[ -z "$NOTES_PATH" ] && NOTES_PATH="/home/c945fvc/notes"
 SEARCH_PATH="$NOTES_PATH/*"
 SCREEN_MAX_WIDTH=$(tput cols)
 SAFETY_FACTOR=19   ## tämä on viimeinen arvo joka toimii sekä "path" että ilman. Älä pliis käytä tähän enää sekuntiakaan!
-CACHE_VALID_MAX_SECONDS=5
+CACHE_VALID_MAX_SECONDS=7
 TASKS_FOR_AUTOCOMPLETE=()
 FILES_FOR_AUTOCOMPLETE=()
 
@@ -30,7 +23,7 @@ AUTOCOMPLETE_CACHE_FILE="$HOME/.cache/.tasks_edit_cache"
 
 ## ---- Funktiot ----
 printHelp() {
-  echo "        tasks.sh (v.1.20)"
+  echo "        tasks.sh (v.1.21)"
   echo "Näyttää auki olevat täskit. Niitä voi merkata käyttämällä § merkkiä, joka jostain ihmeen syystä"
   echo "näppiksestä löytyy. Tarkempaa tietoa löytyy tiedostosta ~/notes/koodaus/tasks.txt."
   echo
@@ -54,16 +47,19 @@ printHelp() {
 addMe() {
   thingToAdd="$1"
   [[ "$thingToAdd" == *"§"* ]] || fail "Muista käyttää syntaksimerkintöjä (esim. §)! Mitään ei tallennettu."
-  echo "$thingToAdd" >> "$NOTES_PATH/todo.txt"
+  echo "$thingToAdd" >> "$NOTES_PATH/todo/todo.txt"
 }
 
 printWithinScreenWithColors() {
   local beginningPart="  ${checkbox}  (${file}) "
   local endPart="$text"
   local finalPrintWithoutColor="${beginningPart}${endPart}"
-  [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && \
-    SAFETY_FACTOR=117  ## isompi on varovaisempi! (131 feilas!) (tosi leveällä 214) (kapealla 56)
-  
+  if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ]; then
+    quadraticWidthEmphasis=$(( (SCREEN_MAX_WIDTH * SCREEN_MAX_WIDTH) / 485 ))
+    SAFETY_FACTOR=$(( ( ( quadraticWidthEmphasis * 82 ) / 100) + 44 ))  ## ei voi käyttää 0.82 arvoa, siksi näin
+    ## Leveydellä 426 pitää olla 350 (82 %)! Leveydellä 100 taas 60 (60 %)! Tämä toteuttaa sen.
+  fi
+
   widthOfbeginningPart=${#beginningPart}
   maxSize=$((SCREEN_MAX_WIDTH - SAFETY_FACTOR))
   spaceLeftForEndPart=$((maxSize - widthOfbeginningPart))
@@ -94,9 +90,7 @@ printMatching() {
   local checkbox="$2"
   local offset="$3"
   [ -n "$4" ] && local color="$4"         || color="$NO_COLOR"
-  [ -n "$5" ] && local colorOff="$5"      || colorOff="$NO_COLOR"
-  [ -n "$6" ] && local textColor="$6"     || textColor="$color"
-  [ -n "$7" ] && local textColorOff="$7"  || textColorOff="$colorOff"
+  [ -n "$6" ] && local textColor="$5"     || textColor="$color"
   
   shopt -s lastpipe  ## Tämä vaaditaan tai muuten muutos näkyisi vain alishellissä (jonka pipe luo ja) joka exittaa
   grep -rEn --color=never --regexp="$regexp" $SEARCH_PATH | while read -r task; do
@@ -161,7 +155,7 @@ displayResultsForAutocomplete() {
 }
 
 editNote() {
-  local index="$((($indexToEditZsh - 1)))"  ## zsh indeksointi alkaa 1:stä eikä 0:sta
+  local index="$(($indexToEditZsh - 1))"  ## zsh indeksointi alkaa 1:stä eikä 0:sta
   local size="${#FILES_FOR_AUTOCOMPLETE[@]}"
   [ "$index" -ge $size ] && fail "Annettu indeksi on liian suuri!"
   [ "$index" -lt 0 ] && fail "Annettu indeksi ei voi olla alle yhden!"
@@ -169,7 +163,6 @@ editNote() {
   local fileWithRow="${FILES_FOR_AUTOCOMPLETE[$index]}"
   local komento=""
   
-  echo "EDITOR_IS_SUBL=$EDITOR_IS_SUBL  ja sekä $(where subl) ja $(command -v /bin/subl &> /dev/null)"
   if [ "$EDITOR_IS_SUBL" == true ] && command -v /bin/subl &> /dev/null; then
     komento="subl $fileWithRow"
   else
@@ -264,7 +257,7 @@ end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälk
 
 ## tärkeät
 [ "$showPriority" == true ] && \
-  printMatching "$start§{2}$end"  "[ ]"   1   "$PRIORITY"   "$NO_PRIORITY"
+  printMatching "$start§{2}$end"  "[ ]"   1   "$PRIORITY"
 
 ## tekemättömät
 [ "$showNormal" == true ] && \
@@ -272,14 +265,14 @@ end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälk
 
 ## ignore
 [ "$showIgnored" == true ] && \
-  printMatching "${start}_§$end"  "[ ]"   1   "$IGNORE"     "$NO_IGNORE"
+  printMatching "${start}_§$end"  "[ ]"   1   "$IGNORE"
 
 ## tehdyt
 [ "$showCompleted" == true ] && \
-  printMatching "$start!§$end"    "[x]"   1   "$GREEN"      "$NO_GREEN"   "$DONE"  "$NO_DONE"
+  printMatching "$start!§$end"    "[x]"   1   "$GREEN"    "$DONE"
 
 ## vanhat väärät
-  printMatching "$start§!$end"    "Virheellinen merkintä, poista!"  1   "$RED"  "$NO_RED"
+  printMatching "$start§!$end"    "Virheellinen merkintä, poista!"    1   "$RED"
 
 [ "$isCacheUsable" == false ] && writeToCache
 [ "$isEditNotes" == true ] && editNote && exit 0
