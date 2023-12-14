@@ -23,7 +23,7 @@ AUTOCOMPLETE_CACHE_FILE="$HOME/.cache/.tasks_edit_cache"
 
 ## ---- Funktiot ----
 printHelp() {
-  echo "        tasks.sh (v.1.21)"
+  echo "        tasks.sh (v.1.22)"
   echo "Näyttää auki olevat täskit. Niitä voi merkata käyttämällä § merkkiä, joka jostain ihmeen syystä"
   echo "näppiksestä löytyy. Tarkempaa tietoa löytyy tiedostosta ~/notes/koodaus/tasks.txt."
   echo
@@ -67,13 +67,13 @@ printWithinScreenWithColors() {
   
   if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && \
      [ "$isNormalOutputRendered" == false ] && [ "$COLORFUL_AUTOCOMPLETE" == false ]; then
-    local color=""; local NO_COLOR=""; local textColor=""; MAGENTA="";
+    local cbColor=""; local NO_COLOR=""; local textColor=""; MAGENTA="";
   fi
 
   widthOfFinalWithoutColor=${#finalPrintWithoutColor}
   if [[ $widthOfFinalWithoutColor -gt $maxSize ]]
-    then local finalPrint="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${endPart:0:$((spaceLeftForEndPart))} ...${NO_COLOR}"
-    else local finalPrint="  ${color}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}${NO_COLOR}"
+    then local finalPrint="  ${cbColor}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${endPart:0:$((spaceLeftForEndPart))} ...${NO_COLOR}"
+    else local finalPrint="  ${cbColor}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}${NO_COLOR}"
   fi
 
   if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ]; then  ## jos cache ei kunnossa, täytetään se
@@ -89,8 +89,8 @@ printMatching() {
   local regexp="$1"
   local checkbox="$2"
   local offset="$3"
-  [ -n "$4" ] && local color="$4"         || color="$NO_COLOR"
-  [ -n "$6" ] && local textColor="$5"     || textColor="$color"
+  [ -n "$4" ] && local cbColor="$4"   || cbColor="$NO_COLOR"
+  [ -n "$5" ] && local textColor="$5" || textColor="$cbColor"
   
   shopt -s lastpipe  ## Tämä vaaditaan tai muuten muutos näkyisi vain alishellissä (jonka pipe luo ja) joka exittaa
   grep -rEn --color=never --regexp="$regexp" $SEARCH_PATH | while read -r task; do
@@ -232,12 +232,14 @@ for arg in "$@"; do
 done
 
 NO_COLOR='\033[0;37m'
-GREEN='\033[0;92m'
-RED='\033[0;91m'
+NORMAL_CB='\033[1;90m'
+DONE_BOX='\033[1;92m'
+RED='\033[0;31m'
 MAGENTA='\033[0;95m'
-PRIORITY='\033[1;97m'
+PRIORITY='\033[1;37m'
+IGNORE_CB='\033[2;90m'
 IGNORE='\033[2;97m'
-DONE='\033[2;92m'
+DONE_TEXT='\033[0;92m'
 
 ## ---- Ohjelmalogiikka -----
 [ "$isNormalOutputRendered" == true ] && echo -e "Tämänhetkiset täskit"
@@ -261,18 +263,18 @@ end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälk
 
 ## tekemättömät
 [ "$showNormal" == true ] && \
-  printMatching "$start§{1}$end"  "[ ]"   0
+  printMatching "$start§{1}$end"  "[ ]"   0   "$NORMAL_CB"  "$NO_COLOR"
 
 ## ignore
 [ "$showIgnored" == true ] && \
-  printMatching "${start}_§$end"  "[ ]"   1   "$IGNORE"
+  printMatching "${start}_§$end"  "[ ]"   1   "$IGNORE_CB"  "$IGNORE"
 
 ## tehdyt
 [ "$showCompleted" == true ] && \
-  printMatching "$start!§$end"    "[x]"   1   "$GREEN"    "$DONE"
+  printMatching "$start!§$end"    "[x]"   1   "$DONE_BOX"   "$DONE_TEXT"
 
 ## vanhat väärät
-  printMatching "$start§!$end"    "Virheellinen merkintä, poista!"    1   "$RED"
+  printMatching "$start§!$end"    "Virheellinen merkintä! Katso --help"    1   "$RED"
 
 [ "$isCacheUsable" == false ] && writeToCache
 [ "$isEditNotes" == true ] && editNote && exit 0
