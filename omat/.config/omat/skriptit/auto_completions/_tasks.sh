@@ -6,6 +6,7 @@ _tasks_ehdotukset() {
   komennot=(
     edit:'Muokkaa aiempaa merkintää'
     path:'Näytä koko polku tiedostolle'
+    add:'Lisää uusi merkintä, toisena arugmenttina tiedosto (oletus todo.txt)'
     priority:'Näytä vain tärkeimmät tehtävät'
     all:'Näytä kaikki merkinnät'
     ignored:'Näytä vain "ignoratut" merkinnät'
@@ -23,13 +24,12 @@ _tasks_ehdotukset() {
     ;;
   *)
     case $words[1] in
+    
     edit)
-
-      ## Tällaisella karmealla loitsulla "paremmassa" zsh:ssä otetaan taulukko joka katkaistu \n kohdalta:
+      ## Tällaisella loitsulla zsh:ssä otetaan taulukko joka katkaistu \n kohdalta:
       IFS=$'\n' raakaData=($($HOME/.config/omat/skriptit/tasks.sh autocomplete_edit))
       size="${#raakaData}"
 
-      ## Oikeasti, kuka sanoi että zsh olisi yhtään parempi kuin bash... Tämä on jotain ihan hirveää.
       if [ "$size" -gt 99 ]
         then typeset -Z 3 j  ## Tällä luodaan kolmella 0:lla pädättävä numero
         else typeset -Z 2 j
@@ -43,8 +43,14 @@ _tasks_ehdotukset() {
       done
 
       _describe -t output 'Aiemman merkinnän editoimiseen' muokattavat
-
       ;;
+
+    add)
+      _arguments \
+        ':muistpano:()' \
+        "::polku:_files -W $NOTES_PATH"
+      ;;
+
     esac
     ;;
   esac

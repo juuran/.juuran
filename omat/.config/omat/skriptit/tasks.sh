@@ -39,15 +39,18 @@ printHelp() {
   echo "  all         myös merkinnät tulevat näkyviin"
   echo "  ignored     vain \"ignoratut\" merkinnät näytetään"
   echo "  undone      vain suorittamattomat merkinnät näytetään eli poistaa suoritetut näkymästä"
-  echo "  add         vaatii argumentin – lisää uuden merkinnän, käytetään: add \"pese pyykit!\""
+  echo "  add         vaatii argumentiksi merkinnän, jossa on käytettävä oikeaa syntaksia, toisena"
+  echo '              argumenttina vapaaehtoinen suhteellinen polku joka määritetty env varilla $NOTES_PATH'
   echo "  edit        muokkaa aiempaa merkintää tekstieditorissa (viittaa indeksillä 1:stä alkaen)"
   echo "  -h, --help  tulostaa tämän helpin"
 }
 
 addMe() {
   thingToAdd="$1"
+  pathToFile="$NOTES_PATH/$2"
+  [ -z "$pathToFile" ] && pathToFile="$NOTES_PATH/todo/todo.txt"
   [[ "$thingToAdd" == *"§"* ]] || fail "Muista käyttää syntaksimerkintöjä (esim. §)! Mitään ei tallennettu."
-  echo "$thingToAdd" >> "$NOTES_PATH/todo/todo.txt"
+  echo "$thingToAdd" >> "$pathToFile"  || fail "Merkintää ei voitu tallentaa."
 }
 
 printWithinScreenWithColors() {
@@ -208,7 +211,7 @@ for arg in "$@"; do
     showNormal=false
     showCompleted=false
   elif  [ "$arg" == "add" ]; then
-    addMe "$2"
+    addMe "$2" "$3"
     break;
   elif  [ "$arg" == "edit" ] || [ "$arg" == "autocomplete_edit" ]; then  ## autocomplete_edit on piilotettu vipu
     setIsCacheUsableOrClear
