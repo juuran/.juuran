@@ -48,7 +48,6 @@ printHelp() {
 addMe() {
   thingToAdd="$1"
   pathToFile="$NOTES_PATH/$2"
-  [ -z "$pathToFile" ] && pathToFile="$NOTES_PATH/todo/todo.txt"
   [[ "$thingToAdd" == *"§"* ]] || fail "Muista käyttää syntaksimerkintöjä (esim. §)! Mitään ei tallennettu."
   echo "$thingToAdd" >> "$pathToFile"  || fail "Merkintää ei voitu tallentaa."
 }
@@ -211,7 +210,10 @@ for arg in "$@"; do
     showNormal=false
     showCompleted=false
   elif  [ "$arg" == "add" ]; then
-    addMe "$2" "$3"
+    if [ -z "$3" ];
+      then addMe "$2" "todo/todo.txt"
+      else addMe "$2" "$3"
+    fi
     break;
   elif  [ "$arg" == "edit" ] || [ "$arg" == "autocomplete_edit" ]; then  ## autocomplete_edit on piilotettu vipu
     setIsCacheUsableOrClear
