@@ -26,6 +26,7 @@ alias f-f-f-find=~/.config/omat/skriptit/f-f-f-find.sh
 alias g-g-g-grep=~/.config/omat/skriptit/g-g-g-grep.sh
 alias show-usable-colors=~/.config/omat/skriptit/show-usable-colors.sh
 alias color-me-logs=~/.config/omat/skriptit/color-me-logs.sh
+alias clear=softClear
 
 ## käyttäjä- / ympäristökohtaiset asiat
 if [ $USER = c945fvc ]; then
@@ -61,4 +62,7 @@ function lad()    {
 }
 function lld()    {
   ls -d1 "$1"/*/
+}
+function softClear() {
+  for i in $(seq 1 $(tput lines)); do echo ""; done
 }
