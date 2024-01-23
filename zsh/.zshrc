@@ -174,6 +174,12 @@ if [ $USER = c945fvc ]; then
     export NOTES_PATH="/home/c945fvc/notes"
     export EDITOR_IS_SUBL=true
 
+    ## bash autocomplete search-logsia varten
+    autoload bashcompinit
+    bashcompinit
+    source /home/c945fvc/yms/lokilucia/.search-logs-completions.sh
+
+
   elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
     export NOTES_PATH="/home/juuran/notes"
