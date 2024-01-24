@@ -177,7 +177,7 @@ if [ $USER = c945fvc ]; then
     ## bash autocomplete search-logsia varten
     autoload bashcompinit
     bashcompinit
-    source /home/c945fvc/yms/lokilucia/.search-logs-completions.sh
+    source $HOME/yms/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
 
 
 elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
