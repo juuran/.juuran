@@ -111,11 +111,11 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
 fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
@@ -142,7 +142,7 @@ fi
 
 ## Svidduun se non-breaking space
 if [ $USER = c945fvc ]; then
-  setxkbmap -option "nbsp:none"
+    setxkbmap -option "nbsp:none"
 fi
 
 ## kun nvm asennettiin, lisäsi tämän
@@ -150,4 +150,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-source "$HOME/yms/lokilucia/.search-logs-completions.sh"
+source $HOME/yms/lokilucia/.ei-serverille/.search-logs-completions.sh

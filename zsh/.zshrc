@@ -1,12 +1,12 @@
 fpath+=( ~/.config/omat/skriptit/auto_completions )  ## tarvitaan komentojen syöttämiseksi
 
 if [ $USER = c945fvc ]; then
-  # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-  # Initialization code that may require console input (password prompts, [y/n]
-  # confirmations, etc.) must go above this block; everything else may go below.
-  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-  fi
+    # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+    # Initialization code that may require console input (password prompts, [y/n]
+    # confirmations, etc.) must go above this block; everything else may go below.
+    if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+        source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    fi
 fi
 
 # If you come from bash you might have to change your $PATH.
@@ -22,7 +22,7 @@ export ZSH="$HOME/.config/zsh/oh-my-zsh"
 if [ $USER = c945fvc ]; then
     ZSH_THEME="powerlevel10k/powerlevel10k"
 
-  else
+else
     ZSH_THEME="muse"
 fi
 
@@ -90,13 +90,13 @@ if [ $USER = c945fvc ]; then
     # Add wisely, as too many plugins slow down shell startup.
     plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions)
 
-  elif [ $USER = juuran ]; then
+elif [ $USER = juuran ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions)
-  elif [ $USER = ubuntu ]; then
+elif [ $USER = ubuntu ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
   
   ## default
-  else
+else
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 fi
 
@@ -111,9 +111,9 @@ source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nano'
+    export EDITOR='nano'
 else
-  export EDITOR='nano'
+    export EDITOR='nano'
 fi
 
 # Compilation flags
@@ -180,7 +180,7 @@ if [ $USER = c945fvc ]; then
     source /home/c945fvc/yms/lokilucia/.search-logs-completions.sh
 
 
-  elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
+elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
     export NOTES_PATH="/home/juuran/notes"
 fi
