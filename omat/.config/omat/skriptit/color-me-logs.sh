@@ -78,7 +78,11 @@ fi
       ## fn     file names prefixing any content line     36 Cyan     8 Hidden
       ## ln     line numbers                              37 White
       ##
-  GREP_COLORS="mt=0;36" grep --line-buffered --color=always -a -E -e "[0-9]{1,2}.[0-9]{1,2}.[0-9]{4} [0-9]{1,2}.[0-9]{1,2}.[0-9]{1,2}.[0-9]{0,3}" -e "**" \
+d="[/\.\-]" ## date delimiter
+t="[\.:]"   ## time delimiter
+timeStamp="[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{4} [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{0,6}"
+
+  GREP_COLORS="mt=0;36" grep --line-buffered --color=always -a -E -e "$timeStamp" -e "**" \
 | GREP_COLORS="mt=1;32" grep --line-buffered --color=always -a -E -e "$INFO"  -e "**" \
 | GREP_COLORS="mt=2;32" grep --line-buffered --color=always -a -E -e "$DEBUG" -e "**" \
 | GREP_COLORS="mt=2;36" grep --line-buffered --color=always -a -E -e "$TRACE" -e "**" \
