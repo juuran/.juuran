@@ -73,13 +73,15 @@ fi
       ## ms     matching text in selected line            31 Red      1 Bright
       ## mc     matching text in context line             32 Green    2 Dim
       ## sl     selected line                             33 Yellow   4 Underscore
-      ## cx     context line ???                          34 Blue     5 Blink
-      ## fn     file names prefixing any content line     35 Magenta  7 Reverse
-      ## ln     line numbers                              36 Cyan     8 Hidden
-      ##                                                  37 White
-    GREP_COLORS="mt=1;32:sl=0;37" grep --line-buffered --color=always -a -E -e "$INFO"  -e "**" \
-  | GREP_COLORS="mt=2;32:sl=0;37" grep --line-buffered --color=always -a -E -e "$DEBUG" -e "**" \
-  | GREP_COLORS="mt=2;36:sl=0;37" grep --line-buffered --color=always -a -E -e "$TRACE" -e "**" \
-  | GREP_COLORS="mt=1;33:sl=0;37" grep --line-buffered --color=always -a -E -e "$WARN"  -e "**" \
-  | GREP_COLORS="mt=1;31:sl=0;37" grep --line-buffered --color=always -a -E -e "$ERROR" -e "**" \
-  | GREP_COLORS="mt=5;31:sl=0;37" grep --line-buffered --color=always -a -E -e "$FATAL" -e "**"
+      ## se     separators inserted between sl fields     34 Blue     5 Blink
+      ## cx     context line ???                          35 Magenta  7 Reverse
+      ## fn     file names prefixing any content line     36 Cyan     8 Hidden
+      ## ln     line numbers                              37 White
+      ##
+  GREP_COLORS="mt=0;36" grep --line-buffered --color=always -a -E -e "[0-9]{1,2}.[0-9]{1,2}.[0-9]{4} [0-9]{1,2}.[0-9]{1,2}.[0-9]{1,2}.[0-9]{0,3}" -e "**" \
+| GREP_COLORS="mt=1;32" grep --line-buffered --color=always -a -E -e "$INFO"  -e "**" \
+| GREP_COLORS="mt=2;32" grep --line-buffered --color=always -a -E -e "$DEBUG" -e "**" \
+| GREP_COLORS="mt=2;36" grep --line-buffered --color=always -a -E -e "$TRACE" -e "**" \
+| GREP_COLORS="mt=1;33" grep --line-buffered --color=always -a -E -e "$WARN"  -e "**" \
+| GREP_COLORS="mt=1;31" grep --line-buffered --color=always -a -E -e "$ERROR" -e "**" \
+| GREP_COLORS="mt=1;31" grep --line-buffered --color=always -a -E -e "$FATAL" -e "**"

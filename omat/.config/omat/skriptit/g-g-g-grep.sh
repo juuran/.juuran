@@ -9,8 +9,8 @@ grepMode="normal"
 
 printHelp() {
   echo "\
-        g-g-g-grep.sh - grep for humans (v.1.00)
-Uses grep to search for contents of files recursively. Cannot access files outside user's privileges.
+        g-g-g-grep.sh - grep for humans (v.1.01)
+Uses grep to search for contents of files recursively. Cannot access files outside privileges of user.
 
 Usage:
     g-g-g-grep.sh [OPTION]... \"arg1\"                               search for arg1 (\"quoted\" if whitespace) from current dir
@@ -63,19 +63,24 @@ while getopts "idrcXEh" OPTION; do
       ;;
     *)
       ## Perään lisättävien argumenttien lisäksi Bash käyttää samaa OPTARG -muuttujaa myös virheellisille vivuille!
-      fail "Incorrect option '$OPTARG'. Type -h for help!" 3
+      fail "Incorrect option \"$OPTARG\". Type -h for help!" 3
       ;;
   esac
 done
 ## getopts käytön jälkeen täytyy "nollata" argumenttien indeksi, että saadaan "tavalliset" argumentit mukaan
 shift "$(($OPTIND -1))"
 
+if [[ "$HOSTNAME" == *kola* ]]  ## kola-koneille eri väriprofiili
+  then  export GREP_COLORS="mt=7;33:fn=2;34:ln=2;33:cx=0:bn=0:se=0"
+  else  export GREP_COLORS="mt=7;33:fn=2;37:ln=2;33:cx=0:bn=0:se=0"
+fi
 
 ## Ohjelmalogiikka (uudelleenkirjoitettu ja yksinkertaistettu)
 exitCode=0
 noOfArgs=$#
 if [ "$noOfArgs" -lt 1 ]; then
-  fail 'At least one argument is needed' 3
+  fail "At least one argument is needed" 3
+
 
 elif [ "$noOfArgs" -eq 1 ]; then
   if [ "$grepMode" == "normal" ]
@@ -86,7 +91,7 @@ elif [ "$noOfArgs" -eq 1 ]; then
 elif [ "$noOfArgs" -gt 1 ]; then
   arg="$1"
   eitherDirOrOpt="$2"
-  [ -z "$eitherDirOrOpt" ] && fail "The second argument can't be empty!" 3
+  [ -z "$eitherDirOrOpt" ] && fail "The second argument cannot be empty!" 3
 
   if [ "${eitherDirOrOpt:0:1}" == "-" ]; then
     possiblyDir="./*"
