@@ -1,10 +1,7 @@
 #!/bin/bash
 source "$(dirname "$0")/fail.sh"
 
-## TODO: Kirjoita skripti, joka muuttaa line breakit oikeanlaisiksi, witun windows!!!!!
-## Komento sille on: sed -i -e 's/\r$//' $fileName
-
-exactMatchesOnly=false  ## by default searches for names 'containing' search term
+exactMatchesOnly=false  ## oletuksena etsii "sisältää" periaatteella, tällä vain täsmälliset mätsit
 iC="--ignore-case"  ## tämä käytössä vain lessillä!
 isIgnoreCase=true
 type="iname"
@@ -13,22 +10,22 @@ l=""
 X=""
 
 printHelp() {
-  echo "        f-f-f-find.sh - find for humans (v.1.01)"
-  echo "Uses find to look for files by filename recursively. Cannot access files outside current user's privileges."
+  echo "        f-f-f-find.sh - find for humans (v.1.02)"
+  echo "Uses find to look for files by filename recursively. Cannot access files outside privileges of current user."
   echo 
-  echo 'Usage:'
-  echo '  f-f-f-find.sh [OPTION]... "ARG1"        find files with ARG1'\''s content from current directory'
-  echo '  f-f-f-find.sh [OPTION]... "ARG1" ARG2   find files with ARG1'\''s content from ARG2'\''s directory (only one path allowed!)'
+  echo "Usage:"
+  echo "  f-f-f-find.sh [OPTION]... \"ARG1\"        find files with \"ARG1\" content from current directory"
+  echo "  f-f-f-find.sh [OPTION]... \"ARG1\" ARG2   find files with \"ARG1\" content from \"ARG2\" directory (only one path allowed!)"
   echo
   echo "    ARG1:   >> search term <<"
   echo "    ARG2:   >> path to start from <<"
   echo 
-  echo 'Options (must be spelled out before "ARG1"):'
-  echo '  -h, --help  prints this help'
+  echo "Options (must be spelled out before "ARG1"):"
+  echo "  -h, --help  prints this help"
   echo "  -i          make case significant, by default case is ignored"
-  echo '  -e          exact matches only by removing wildcards  *  around words'
-  echo '  -p          for searching paths, e.g. -p ".git/" to look for paths with a pattern'
-  echo '  -m          maxdepth, i.e. the amount how deep to descend in path recursion (infinite by default)'
+  echo "  -e          exact matches only by removing wildcards  *  around words"
+  echo "  -p          for searching paths, e.g. -p ".git/" to look for paths with a pattern"
+  echo "  -m          maxdepth, i.e. the amount how deep to descend in path recursion (infinite by default)"
   echo "  -X          prints taller than terminal height are kept on screen if they occupy only one line (less -X)"
   exit
 }
@@ -70,7 +67,7 @@ while getopts "ieXhpm:" OPTION; do
       ;;
     *)
       ## Perään lisättävien argumenttien lisäksi Bash käyttää samaa OPTARG -muuttujaa myös virheellisille vivuille!
-      fail "Incorrect option '$OPTARG'. Type -h for help!"
+      fail "Incorrect option "$OPTARG". Type -h for help!"
       ;;
   esac
 done
@@ -86,7 +83,7 @@ findIt() {
   pathStringLength="${#path}"
   lastChar="${path:$((pathStringLength-1)):pathStringLength}"
   if [ -d "$path" ] && [ $lastChar != "/" ]; then
-    echo "( Path is a directory, appended '/' to it:  '$path/' )"
+    echo "( Path is a directory, appended \"/\" to it:  \"$path/\" )"
     path="${path}/"
   fi
 
@@ -135,7 +132,7 @@ if [ $noOfArgs -eq 1 ]; then
 elif [ $noOfArgs -eq 2 ]; then
     arg="$1"
     path="$2"
-    [ -d "$path" ] || fail "The path '$path' is not a valid directory." 2
+    [ -d "$path" ] || fail "The path \"$path\" is not a valid directory." 2
     findIt "$arg" "$path"
     exit 0
 else
