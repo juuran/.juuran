@@ -103,7 +103,7 @@ elif [ "$noOfArgs" -gt 1 ]; then
   paths=( "${possiblyDir[@]}" )
 
   ## grep usealle argumentille (kelan koneet ei tue zgrepin kanssa argumentteja loppuun, siksi tällä tyylillä)
-  if   [ "$grepMode" == "normal" ];     then  grep $patternSyntax $iC $recursive $color $e      "$arg" ${paths[@]} "$@" | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+  if   [ "$grepMode" == "normal" ];     then  grep $patternSyntax $iC $recursive $color      $e "$arg" ${paths[@]} "$@" | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
   elif [ "$grepMode" == "compressed" ]; then zgrep $patternSyntax $iC            $color "$@" $e "$arg" ${paths[@]}      | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
   fi
 
