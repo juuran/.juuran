@@ -175,7 +175,7 @@ if [ $USER = c945fvc ]; then
     export EDITOR_IS_SUBL=true
 
     ## bash autocomplete search-logsia varten
-    autoload bashcompinit
+    autoload -U +X bashcompinit
     bashcompinit
     source $HOME/yms/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
 
