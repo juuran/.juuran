@@ -13,7 +13,7 @@ CURRENT=$(git branch --show-current)
 NO_COLOR='\033[0m'
 GREEN=$(tput setaf 76)
 
-PAD="                                                                             "  ## (parempi liikaa kuin liian vähän)
+PAD="                                                                                                                            "  ## (parempi liikaa kuin liian vähän)
 BRANCH_MAX_LENGTH=90
 BRANCH_LENGTH=$(( $(tput cols) / 2 ))
 [ $BRANCH_LENGTH -gt $BRANCH_MAX_LENGTH ] && BRANCH_LENGTH=$BRANCH_MAX_LENGTH
