@@ -34,7 +34,7 @@ depthsOfHades='(0 1 2 3 4 5 6 7 8 9 99)'
 
 _arguments -s \
     '1:hakutermi:' \
-    '2::polku:_files' \
+    '2::polku:_files -/ -g "." -g ".."' \
     '(-h --help)'{-h,--help}'[display help]' \
     '-i[ignore case off, makes case significant]' \
     '-e[exact matches only]' \
