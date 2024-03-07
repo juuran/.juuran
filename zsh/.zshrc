@@ -109,13 +109,6 @@ source $ZSH/oh-my-zsh.sh
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-    export EDITOR='nano'
-else
-    export EDITOR='nano'
-fi
-
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -188,6 +181,13 @@ fi
 ## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
 if [ -f ~/.config/omat/skriptit/.aliases ]; then
     . ~/.config/omat/skriptit/.aliases
+fi
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+    export EDITOR='nano'
+else
+    export EDITOR='nano -lci'
 fi
 
 ## Enpäs nyt jaksa keksiä parempaa paikkaan näille muistiinpanoille, joten
