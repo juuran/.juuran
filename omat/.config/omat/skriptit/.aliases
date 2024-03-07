@@ -1,4 +1,5 @@
 #! /bin/bash
+source "$(dirname "$0")/fail.sh"
 ## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
 
 ## bashin järkevät oletus-aliakset
@@ -26,7 +27,6 @@ alias f-f-f-find=~/.config/omat/skriptit/f-f-f-find.sh
 alias g-g-g-grep=~/.config/omat/skriptit/g-g-g-grep.sh
 alias show-usable-colors=~/.config/omat/skriptit/show-usable-colors.sh
 alias color-me-logs=~/.config/omat/skriptit/color-me-logs.sh
-alias clear=softClear
 
 ## käyttäjä- / ympäristökohtaiset asiat
 if [ $USER = c945fvc ]; then
@@ -63,6 +63,21 @@ function lad()    {
 function lld()    {
   ls -d1 "$1"/*/
 }
-function softClear() {
-  for i in $(seq 1 $(tput lines)); do echo ""; done
+function clear() {
+  for i in $(seq 2 $(tput lines)); do echo ""; done
+}
+function libertyCleanRun() {  ## Raketista repäisty vaivansäästöloitsu
+  if [ -f "./pom.xml" ] && [ -d "./${PWD##*/}-ear" ]; then
+    mvn clean install
+    echo -e "\npuhdas build + testit tehty, käynnistetään open liberty...\n" && sleep 0.5
+    mvn -pl ${PWD##*/}-ear -e -P local liberty:run
+  else error "No pom.xml or -ear subdirectory found"
+  fi
+}
+function libertyRun() {
+  if [ -f "./pom.xml" ] && [ -d "./${PWD##*/}-ear" ]; then
+    echo -e "ei buildausta, käynnistetään open liberty...\n" && sleep 0.5
+    mvn -pl ${PWD##*/}-ear -e -P local liberty:run
+  else error "No pom.xml or -ear subdirectory found"
+  fi
 }
