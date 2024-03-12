@@ -1,7 +1,7 @@
 #! /bin/bash
-source "$(dirname "$0")/fail.sh"
-## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
+source "$HOME/.config/omat/skriptit/error.sh"
 
+## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
 ## bashin järkevät oletus-aliakset
 alias ls='ls --color=always'
 alias l='ls -CF'
@@ -27,9 +27,10 @@ alias f-f-f-find=~/.config/omat/skriptit/f-f-f-find.sh
 alias g-g-g-grep=~/.config/omat/skriptit/g-g-g-grep.sh
 alias show-usable-colors=~/.config/omat/skriptit/show-usable-colors.sh
 alias color-me-logs=~/.config/omat/skriptit/color-me-logs.sh
+alias clear='softClear'
 
 ## käyttäjä- / ympäristökohtaiset asiat
-if [ $USER = c945fvc ]; then
+if [ "$USER" = "c945fvc" ]; then
   alias fmanager='exo-open --launch FileManager'
   alias mvn='mvn --color always'
   alias koira='(~/mqjexplorer/mqjexplorer/MQJExplorer/runme.sh > /dev/null &); echo ""'               ## jostain helkatin syystä ...
@@ -44,40 +45,23 @@ if [ $USER = c945fvc ]; then
   alias git-pull-all=~/.config/omat/skriptit/git-pull-all.sh
   alias vaihda-java=~/.config/omat/skriptit/vaihda-java.sh
   alias fix-line-endings=~/.config/omat/skriptit/fix-line-endings.sh
+  alias liberty-run=~/.config/omat/skriptit/liberty-run.sh
   export BROWSER=temp_open_google
 
   function temp_open_google() {
     #! /bin/bash
     (exec google-chrome-stable --enable-blink-features=MiddleClickAutoscroll "$@" &>/dev/null &)
   }
-elif [ $USER = juuran ]; then
+elif [ "$USER" = "juuran" ]; then
   alias tasks=~/.config/omat/skriptit/tasks.sh
 fi
 
 ## aliaksen kaltaiset funktiot (kaikki ei taivu aliakseksi sen rajoitusten takia)
-function perse()  { [ -n "$1" ] && local space=", "; echo -e "\e[0;33m Jep, sanopa muuta$space$*! \e[0m"; }
+function perse()  {
+  [ -n "$1" ] && local pilkku=", "
+  echo -e "\e[0;33m Jep, sanopa muuta$pilkku$*! \e[0m"
+}
 function llss()   { ll "$@" | less ; }
-function lad()    {
-  ls -d "$1"/*/
-}
-function lld()    {
-  ls -d1 "$1"/*/
-}
-function clear() {
-  for i in $(seq 2 $(tput lines)); do echo ""; done
-}
-function libertyCleanRun() {  ## Raketista repäisty vaivansäästöloitsu
-  if [ -f "./pom.xml" ] && [ -d "./${PWD##*/}-ear" ]; then
-    mvn clean install
-    echo -e "\npuhdas build + testit tehty, käynnistetään open liberty...\n" && sleep 0.5
-    mvn -pl ${PWD##*/}-ear -e -P local liberty:run
-  else error "No pom.xml or -ear subdirectory found"
-  fi
-}
-function libertyRun() {
-  if [ -f "./pom.xml" ] && [ -d "./${PWD##*/}-ear" ]; then
-    echo -e "ei buildausta, käynnistetään open liberty...\n" && sleep 0.5
-    mvn -pl ${PWD##*/}-ear -e -P local liberty:run
-  else error "No pom.xml or -ear subdirectory found"
-  fi
-}
+function lad()    { ls -d "$1"/*/; }
+function lld()    { ls -d1 "$1"/*/; }
+function softClear() { for i in $(seq 2 $(tput lines)); do echo ""; done; }
