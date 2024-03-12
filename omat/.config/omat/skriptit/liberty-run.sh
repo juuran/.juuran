@@ -31,8 +31,12 @@ shift "$(($OPTIND -1))"
 
 if [ "$isCleanBuild" == true ]; then
     if [ "$isSkipTests" == true ]
-        then echo "tehdään puhdas build ilman testejä..." && mvn clean install -DskipTests
-        else echo "tehdään puhdas build..." && mvn clean install
+        then
+            echo "tehdään puhdas build ilman testejä..."
+            mvn clean install -DskipTests || fail "maven build epäonnistui!"
+        else 
+            echo "tehdään puhdas build..."
+            mvn clean install || fail "maven build epäonnistui!"
     fi
 else
     echo -e "käynnistetään open liberty...\n" && sleep 0.5
