@@ -33,13 +33,13 @@ if [ "$isCleanBuild" == true ]; then
     if [ "$isSkipTests" == true ]
         then
             echo "tehdään puhdas build ilman testejä..."
-            mvn clean install -DskipTests || fail "maven build epäonnistui!"
+            mvn clean install -DskipTests || fail "\nmaven build epäonnistui!"
         else 
             echo "tehdään puhdas build..."
-            mvn clean install || fail "maven build epäonnistui!"
+            mvn clean install || fail "\nmaven build epäonnistui!"
     fi
-else
-    echo -e "käynnistetään open liberty...\n" && sleep 0.5
+    echo -e "maven build onnistui!\n"
 fi
 
+echo -e "käynnistetään open liberty...\n" && sleep 0.5
 mvn -pl "${PWD##*/}-ear" -e -P local liberty:run
