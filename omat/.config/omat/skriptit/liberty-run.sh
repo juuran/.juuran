@@ -2,7 +2,7 @@
 source "$(dirname "$0")/fail.sh"
 
 handleSignals() {
-    echo -e "$(basename "$0") lopetettu"
+    echo -e "\n$(basename "$0") lopetettu"
     exit 1
 }
 
