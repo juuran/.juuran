@@ -2,7 +2,7 @@
 source "$(dirname "$0")/fail.sh"
 
 handleSignals() {
-    echo -e "\nkeskeytetään open libertyn käynnistys..."
+    echo -e "$(basename "$0") lopetettu"
     exit 1
 }
 
