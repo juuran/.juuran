@@ -7,7 +7,7 @@ COLORFUL_AUTOCOMPLETE=true
 SEARCH_PATH="$NOTES_PATH/*"
 SCREEN_MAX_WIDTH=$(tput cols)
 SAFETY_FACTOR=19   ## tämä on viimeinen arvo joka toimii sekä "path" että ilman. Älä pliis käytä tähän enää sekuntiakaan!
-CACHE_VALID_MAX_SECONDS=5
+CACHE_VALID_MAX_SECONDS=3
 TASKS_FOR_AUTOCOMPLETE=()
 FILES_FOR_AUTOCOMPLETE=()
 
