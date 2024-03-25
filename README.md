@@ -11,7 +11,10 @@ Alustat sa caiken tällä (lukien mucaan alimoduulit):
 
 Jos haluat sa kaiken stow'aa (paitsi tämän READMEen) – muistapa myös .juuran cansioon mennä!
 
-    stow */
+    if [ $USER != c945fvc ]; \
+        then stow */ --ignore=.ssh/config; \
+        else stow */; \
+    fi
 
 Ja jospa yhden vain
 
