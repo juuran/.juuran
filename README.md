@@ -23,14 +23,22 @@ Ja jospa yhden vain
 
 ## Yhden komennon asennus laiscoille
 
-    cd && git clone --recurse-submodules https://github.com/juuran/.juuran.git && cd .juuran && stow */ && cd
+    cd && \
+    git clone --recurse-submodules https://github.com/juuran/.juuran.git && \
+    cd .juuran && \
+    if [ $USER != c945fvc ]; \
+        then stow */ --ignore=.ssh/config; \
+        else stow */; \
+    fi && \
+    cd
 
 
 # Päivittää voit myös ilman tuscaa
 
     git pull --recurse-submodules
 tahi tiirailla wain
-    `git fetch --all --prune --recurse-submodules`
+
+    git fetch --all --prune --recurse-submodules
 
 
 ## _Loput löydät sa manuaalista!_
