@@ -28,6 +28,7 @@ while getopts "m:h" OPTION; do
       if   [ "$OPTARG" == "default" ];  then mode="default"
       elif [ "$OPTARG" == "holodeck" ]; then mode="holodeck"
       elif [ "$OPTARG" == "typical" ];  then mode="typical"
+      elif [ "$OPTARG" == "liberty" ];  then mode="liberty"
       else fail "Unkown mode '$OPTARG'!"
       fi
       ;;
@@ -43,14 +44,19 @@ done
 ## getopts käytön jälkeen täytyy "nollata" argumenttien indeksi, että saadaan "tavalliset" argumentit mukaan
 shift "$(($OPTIND -1))"
 
-if [ "$mode" == "default" ]; then
-   INFO=" INFO "
-  DEBUG=" DEBUG "
-  TRACE=" TRACE "
-   WARN=" WARN "
-  ERROR=" ERROR "
-  FATAL=" FATAL "
-elif [ "$mode" == "holodeck" ]; then
+d="[/\.\-]" ## date delimiter
+t="[\.:]"   ## time delimiter
+timeStamp="[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{4} [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{0,6}"
+
+## default
+  INFO=" INFO "
+DEBUG=" DEBUG "
+TRACE=" TRACE "
+  WARN=" WARN "
+ERROR=" ERROR "
+FATAL=" FATAL "
+
+if [ "$mode" == "holodeck" ]; then
    INFO="\[INFO \]"
   DEBUG="\[DEBUG\]"
   TRACE="\[TRACE\]"
@@ -64,8 +70,10 @@ elif [ "$mode" == "typical" ]; then
    WARN="\[ WARN \]"
   ERROR="\[ ERROR \]"
   FATAL="\[ FATAL \]"  ## värien takia näin
+elif [ "$mode" == "liberty" ]; then
+  # libertyssä timestamp näyttää tältä: [3/26/24, 13:44:56:815 EET]
+  timeStamp="\[[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{2}, [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{0,6} EET\]"
 fi
-
 
       ##                              VÄRIT JA EFEKTIT
       ## -----------------------------------------------------------------------------------
@@ -78,9 +86,6 @@ fi
       ## fn     file names prefixing any content line     36 Cyan     8 Hidden
       ## ln     line numbers                              37 White
       ##
-d="[/\.\-]" ## date delimiter
-t="[\.:]"   ## time delimiter
-timeStamp="[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{4} [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{0,6}"
 
   GREP_COLORS="mt=0;36" grep --line-buffered --color=always -a -E -e "$timeStamp" -e "**" \
 | GREP_COLORS="mt=1;32" grep --line-buffered --color=always -a -E -e "$INFO"  -e "**" \
