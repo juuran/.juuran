@@ -8,7 +8,10 @@ refsValue="refs/heads/"
 if [[ $dest == "remotes" ]]; then
   refsValue="refs/remotes/"
   dest="remotes"
-elif [[ $dest == "local" ]] || [[ -z $dest ]]; then
+elif [[ $dest == "local" ]]; then
+  dest="heads"
+elif [[ -z $dest ]]; then
+  echo "(No parameter given, showing local branches)"
   dest="heads"
 else
   >&2 echo "Unknown destination as parameter '$dest'"
