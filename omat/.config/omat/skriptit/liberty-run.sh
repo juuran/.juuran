@@ -33,10 +33,10 @@ if [ "$isCleanBuild" == true ]; then
     if [ "$isSkipTests" == true ]
         then
             echo "tehdään puhdas build ilman testejä..."
-            mvn clean install -DskipTests || fail "\nmaven build epäonnistui!"
+            mvn -e clean install -DskipTests || fail "\nmaven build epäonnistui!"
         else 
             echo "tehdään puhdas build..."
-            mvn clean install || fail "\nmaven build epäonnistui!"
+            mvn -e clean install || fail "\nmaven build epäonnistui!"
     fi
     echo -e "maven build onnistui!\n"
 fi
