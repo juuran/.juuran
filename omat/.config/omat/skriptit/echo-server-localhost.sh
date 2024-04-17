@@ -10,7 +10,7 @@ if [ -n "$1" ];
 fi
 
 echo -e "aloitetaan echo server paikallisesti portissa $PORT..."
-echo -e "(mikäli portti on käytössä ja tulee virhe, paina ENTER lopettaaksesi)\n"
+echo -e "(mikäli portti on käytössä tai tulee muu virhe, paina ENTER lopettaaksesi)\n"
 
 # Start the server and listen for incoming connections
 while true; do
