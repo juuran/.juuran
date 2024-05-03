@@ -158,6 +158,7 @@ HISTFILE=~/.shell_history
 if [ $USER = c945fvc ]; then
     ## Svidduun se non-breaking space
     setxkbmap -option "nbsp:none"
+
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -169,6 +170,7 @@ if [ $USER = c945fvc ]; then
     ## Add JBang to environment (ei kovin tärkeä)
     alias j!=jbang
     export PATH="$HOME/.jbang/bin:$PATH"
+
     ## Omien skriptien globaalit muuttujat
     export NOTES_PATH="/home/c945fvc/notes"
     export EDITOR_IS_SUBL=true
