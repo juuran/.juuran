@@ -6,7 +6,7 @@ _tasks_ehdotukset() {
   komennot=(
     edit:'Muokkaa aiempaa merkintää'
     path:'Näytä koko polku tiedostolle'
-    add:'Lisää uusi merkintä, toisena arugmenttina tiedosto (oletus todo.txt)'
+    add:'Lisää uusi taski – 1. arg.: itse täsk, 2. arg.: tiedosto, mihin (oletus todo.txt)'
     priority:'Näytä vain tärkeimmät tehtävät'
     all:'Näytä kaikki merkinnät'
     ignored:'Näytä vain "ignoratut" merkinnät'
