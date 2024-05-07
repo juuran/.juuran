@@ -94,7 +94,7 @@ if [ $USER = c945fvc ]; then
     # Custom plugins may be added to $ZSH_CUSTOM/plugins/
     # Example format: plugins=(rails git textmate ruby lighthouse)
     # Add wisely, as too many plugins slow down shell startup.
-    plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions)
+    plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
 
 elif [ $USER = juuran ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions)
