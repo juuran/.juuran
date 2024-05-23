@@ -6,6 +6,9 @@ recursive="--recursive"
 patternSyntax="--fixed-strings"
 color="--color=always"
 grepMode="normal"
+l=""
+A=""
+B=""
 
 printHelp() {
   echo "\
@@ -23,6 +26,7 @@ Options:
     -h, --help  prints this help
     -i          turn \"--ignore-case\" off which is on by default – makes case significant
     -d          change default \"--recursive\" into \"--dereference-recursive\", because it could help
+    -l          number of lines to print before and after (essentially -A \$samenumber -B \$samenumber given to grep)
     -r          turn all recursion off
     -c          zgrep is used to read compressed files which always disables unsupported recursion
     -E          changes the search argument to be interpreted as an extended regular expressions (ERE) instead of a string\
@@ -36,10 +40,16 @@ for arg in "$@"; do
 done
 
 ## Optioiden käsittely
-while getopts "idrcXEh" OPTION; do
+while getopts "il:drcXEh" OPTION; do
   case "$OPTION" in
     i)
       iC=""
+      ;;
+    l)
+      l="$OPTARG"
+      [ "$l" -eq "$l" ] || fail "Argument given must be a number!"
+      A="-A"
+      B="-B"
       ;;
     d)
       recursive="--dereference-recursive"
@@ -84,8 +94,8 @@ if [ "$noOfArgs" -lt 1 ]; then
 
 elif [ "$noOfArgs" -eq 1 ]; then
   if [ "$grepMode" == "normal" ]
-    then  grep $patternSyntax $iC $recursive $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
-    else zgrep $patternSyntax $iC            $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+    then  grep $patternSyntax $iC $B $l $A $l $recursive $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+    else zgrep $patternSyntax $iC $B $l $A $l            $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
   fi
 
 elif [ "$noOfArgs" -gt 1 ]; then
@@ -103,8 +113,8 @@ elif [ "$noOfArgs" -gt 1 ]; then
   paths=( "${possiblyDir[@]}" )
 
   ## grep usealle argumentille (kelan koneet ei tue zgrepin kanssa argumentteja loppuun, siksi tällä tyylillä)
-  if   [ "$grepMode" == "normal" ];     then  grep $patternSyntax $iC $recursive $color      $e "$arg" ${paths[@]} "$@" | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
-  elif [ "$grepMode" == "compressed" ]; then zgrep $patternSyntax $iC            $color "$@" $e "$arg" ${paths[@]}      | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+  if   [ "$grepMode" == "normal" ];     then  grep $patternSyntax $iC $B $l $A $l $recursive $color      $e "$arg" ${paths[@]} "$@" | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+  elif [ "$grepMode" == "compressed" ]; then zgrep $patternSyntax $iC $B $l $A $l            $color "$@" $e "$arg" ${paths[@]}      | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
   fi
 
 fi

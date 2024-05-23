@@ -5,6 +5,7 @@ _arguments -s \
     '2::polku:_files -/ -g "." -g ".."' \
     '(-h --help)'{-h,--help}'[display help]' \
     '-i[ignore case off, makes case significant]' \
+    '-l[number of context lines to show before and after]' \
     '-E[arguments are interpreted regular expressions (ERE)]' \
     '-d[default "--recursive" is changed into "--dereference-recursive"]' \
     '-r[turns all recursion off]' \
