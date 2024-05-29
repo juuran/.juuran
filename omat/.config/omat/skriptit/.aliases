@@ -46,6 +46,7 @@ if [ "$USER" = "c945fvc" ]; then
   alias vaihda-java=~/.config/omat/skriptit/vaihda-java.sh
   alias fix-line-endings=~/.config/omat/skriptit/fix-line-endings.sh
   alias liberty-run=~/.config/omat/skriptit/liberty-run.sh
+  alias oc-seal=~/.config/omat/skriptit/oc-seal.sh
   export BROWSER=temp_open_google
 
   function temp_open_google() {
