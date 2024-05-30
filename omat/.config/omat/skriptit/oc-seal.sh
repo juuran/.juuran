@@ -41,16 +41,15 @@ echo "---------------------------"
 echo "-- Sealed Secrets Script --"
 echo "---------------------------"
 
-echo "Check if backup dir for Secrets already exists..."
-
-DIR_BACKUP="secrets_backup"
-
-if [ -d "$DIR_BACKUP" ]; then
-  echo "Backup dir ${DIR_BACKUP} already exists"
-else
-  echo "Backup dir doesn't exists - creating dir ${DIR_BACKUP}"
-  mkdir secrets_backup
-fi
+## En osaa kuvitella mitä näillä tekisin...
+# echo "Check if backup dir for Secrets already exists..."
+# DIR_BACKUP="secrets_backup"
+# if [ -d "$DIR_BACKUP" ]; then
+#   echo "Backup dir ${DIR_BACKUP} already exists"
+# else
+#   echo "Backup dir doesn't exists - creating dir ${DIR_BACKUP}"
+#   mkdir secrets_backup
+# fi
 
 i=1;
 for s in "$@" 
@@ -60,14 +59,14 @@ do
     oc get secret $s -o yaml | kubeseal --controller-namespace sealed-secrets -o yaml --scope namespace-wide > $sealed \
       || fail "sealing failed, exiting with error..." 2
     echo "Sealed Secret - $i: $sealed";
-    oc get secret $s -o yaml > $DIR_BACKUP/$s.yaml
+    # oc get secret $s -o yaml > $DIR_BACKUP/$s.yaml
     echo "Delete Secret from namespace:"
-    oc delete secret $s
+    oc delete secret $s || error "could not delete secret $s from openshift, continuing nevertheless..."
     #oc apply -f $sealed;
     i=$((i + 1));
 done
 
 
 echo "---------------------------"
-echo "--  Secrets now sealed   --"
+echo "--  Secrets are sealed   --"
 echo "---------------------------"
