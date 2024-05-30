@@ -9,9 +9,14 @@ handleSignals() {
 trap 'handleSignals' SIGINT
 trap 'handleSignals' SIGQUIT
 
-if ! [ -f "./pom.xml" ] || ! [ -d "./${PWD##*/}-ear" ]; then
-    fail "No pom.xml or -ear subdirectory found"
+## vähän ruma fixi, kun aiemmassa oli hupsu oletus pää ja ear polun yhdennimisyydestä
+# "${PWD##*/}-ear"
+earPath="$(ls -d */ | grep *-ear | cut -d / -f 1)"
+
+if ! [ -f "./pom.xml" ] || ! [ -d "$earPath" ]; then
+    fail "Both pom.xml and -ear subdirectories are needed, condition not met"
 fi
+
 [ -n "$1" ] && [[ "$1" != *-* ]] && echo "(argumentti ohitettu, koska skripti ei käytä niitä)"
 
 while getopts "sc" OPTION; do
@@ -42,4 +47,4 @@ if [ "$isCleanBuild" == true ]; then
 fi
 
 echo -e "käynnistetään open liberty...\n" && sleep 0.5
-mvn -pl "${PWD##*/}-ear" -e -P local liberty:run
+mvn -pl "$earPath" -e -P local liberty:run
