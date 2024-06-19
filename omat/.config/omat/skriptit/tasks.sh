@@ -45,7 +45,7 @@ printHelp() {
   echo "  §     normaali merkintä                               näkyy normaalilla prioriteetilla"
   echo "  §§    TÄRKEÄ merkintä                                 näkyy ensimmäisenä ja boldattuna"
   echo "  !§    tehty merkintä                                  näkyy viimeisenä ja merkattu tehdyksi"
-  echo "  _§    ohitettu merkintä, jonka saatavissa näkyviin    näkyy himmeänä vivulla \"ignored\""
+  echo "  _§    ohitettu merkintä, joka saatavissa näkyviin     näkyy himmeänä vivulla \"ignored\""
   echo "  §     arkistoitu merkintä §                           ei näy ollenkaan millään vivulla"
 }
 
