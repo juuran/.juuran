@@ -23,7 +23,7 @@ AUTOCOMPLETE_CACHE_FILE="$HOME/.cache/.tasks_edit_cache"
 
 ## ---- Funktiot ----
 printHelp() {
-  echo "        tasks.sh (v.1.22)"
+  echo "        tasks.sh (v.1.23)"
   echo "Näyttää auki olevat täskit. Niitä voi merkata käyttämällä § merkkiä, joka jostain ihmeen syystä"
   echo "näppiksestä löytyy. Tarkempaa tietoa löytyy tiedostosta ~/notes/koodaus/tasks.txt."
   echo
@@ -46,9 +46,9 @@ printHelp() {
 }
 
 addMe() {
-  thingToAdd="$1"
-  pathToFile="$NOTES_PATH/$2"
-  [[ "$thingToAdd" == *"§"* ]] || fail "Muista käyttää syntaksimerkintöjä (esim. §)! Mitään ei tallennettu."
+  local thingToAdd; thingToAdd="$1"
+  local pathToFile; pathToFile="$NOTES_PATH/$2"
+  [[ "$thingToAdd" == *"§"* ]] || fail "Muista käyttää syntaksimerkintöjä, kuten merkkiä '§'. Mitään ei tallennettu."
   echo "$thingToAdd" >> "$pathToFile"  || fail "Merkintää ei voitu tallentaa."
 }
 
@@ -87,7 +87,7 @@ printWithinScreenWithColors() {
 
 ## -- Tärkein funktio! --
 printMatching() {
-  local -a tasks
+  local tasks; tasks=()
   local regexp="$1"
   local checkbox="$2"
   local offset="$3"
@@ -112,7 +112,7 @@ printMatching() {
     fi
     local text="${taskText:$((2+offset))}"
 
-    [ "$isCacheUsable" == true ] && [ "$isNormalOutputRendered" == false ] && break  ## TODO: Tarkista joskus onko tämä validi paikka tälle
+    [ "$isCacheUsable" == true ] && [ "$isNormalOutputRendered" == false ] && break
 
     printWithinScreenWithColors
 
@@ -284,3 +284,5 @@ end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälk
 [ "$isCacheUsable" == false ] && writeToCache
 [ "$isEditNotes" == true ] && editNote && exit 0
 [ "$isGatherValuesForAutocomplete" == true ] && displayResultsForAutocomplete
+  
+exit 0
