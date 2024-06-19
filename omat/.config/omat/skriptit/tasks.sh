@@ -27,13 +27,6 @@ printHelp() {
   echo "Näyttää auki olevat täskit. Niitä voi merkata käyttämällä § merkkiä, joka jostain ihmeen syystä"
   echo "näppiksestä löytyy. Tarkempaa tietoa löytyy tiedostosta ~/notes/koodaus/tasks.txt."
   echo
-  echo "SYNTAKSISTA:"
-  echo "    § normaali merkintä                                 näkyy normaalilla prioriteetilla"
-  echo "   §§ TÄRKEÄ merkintä                                   näkyy ensimmäisenä ja boldattuna"
-  echo "   !§ tehty merkintä                                    näkyy viimeisenä ja merkattu tehdyksi"
-  echo "   _§ ohitettu merkintä, jonka saatavissa näkyviin      näkyy himmeänä vivulla \"ignored\""
-  echo "    § arkistoitu merkintä §                             ei näy ollenkaan millään vivulla"
-  echo 
   echo "VIVUT:"
   echo "  path        näyttää koko polun tiedostoon"
   echo "  all         myös merkinnät tulevat näkyviin"
@@ -43,6 +36,17 @@ printHelp() {
   echo '              argumenttina vapaaehtoinen suhteellinen polku joka määritetty env varilla $NOTES_PATH'
   echo "  edit        muokkaa aiempaa merkintää tekstieditorissa (viittaa indeksillä 1:stä alkaen)"
   echo "  -h, --help  tulostaa tämän helpin"
+  echo
+  echo "tunnetut bugit:"
+  echo '  Jos tekstikenttä sisältää windows rivinvaihtoja "tasks edit" completionilla käytettynä (TAB)'
+  echo "  ei tulosta mitään. Ainoa korjaus on muuttaa rivinvaihdot LF tyylisiksi."
+  echo
+  echo "SYNTAKSISTA:"
+  echo "  §     normaali merkintä                               näkyy normaalilla prioriteetilla"
+  echo "  §§    TÄRKEÄ merkintä                                 näkyy ensimmäisenä ja boldattuna"
+  echo "  !§    tehty merkintä                                  näkyy viimeisenä ja merkattu tehdyksi"
+  echo "  _§    ohitettu merkintä, jonka saatavissa näkyviin    näkyy himmeänä vivulla \"ignored\""
+  echo "  §     arkistoitu merkintä §                           ei näy ollenkaan millään vivulla"
 }
 
 addMe() {
