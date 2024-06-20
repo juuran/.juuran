@@ -5,12 +5,12 @@ _tasks_ehdotukset() {
 
   komennot=(
     edit:'Muokkaa aiempaa merkintää'
-    path:'Näytä koko polku tiedostolle'
-    add:'Lisää uusi taski – 1. arg.: itse täsk, 2. arg.: tiedosto, mihin (oletus todo.txt)'
+    add:'Lisää uusi taski – 1. arg: itse täsk, 2. arg.: tiedosto mihin (oletus todo.txt)'
     priority:'Näytä vain tärkeimmät tehtävät'
     all:'Näytä kaikki merkinnät'
-    ignored:'Näytä vain "ignoratut" merkinnät'
     undone:'Vain tekemättömät näytetään'
+    ignored:'Näytä vain "ignoratut" merkinnät'
+    path:'Näytä koko polku tiedostolle'
     --help:"Näytä helppi"
   )
 
@@ -20,7 +20,7 @@ _tasks_ehdotukset() {
 
   case "$state" in
   starting_point)
-    _describe -t komennot 'commands' komennot
+    _describe -t komennot 'commands' komennot -o nosort
     ;;
   *)
     case $words[1] in
