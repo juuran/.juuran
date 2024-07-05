@@ -29,6 +29,7 @@ while getopts "m:h" OPTION; do
       elif [ "$OPTARG" == "holodeck" ]; then mode="holodeck"
       elif [ "$OPTARG" == "typical" ];  then mode="typical"
       elif [ "$OPTARG" == "liberty" ];  then mode="liberty"
+      elif [ "$OPTARG" == "rpi" ];  then mode="rpi"
       else fail "Unkown mode '$OPTARG'!"
       fi
       ;;
@@ -69,7 +70,12 @@ elif [ "$mode" == "typical" ]; then
   TRACE="\[ TRACE \]"
    WARN="\[ WARN \]"
   ERROR="\[ ERROR \]"
-  FATAL="\[ FATAL \]"  ## värien takia näin
+  FATAL="\[ FATAL \]"
+elif [ "$mode" == "rpi" ]; then
+    INFO="\[INFO\]"
+  ERROR="\[ERROR\]"
+  WARN=" : "
+  timeStamp="\[[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{4} [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}\]"
 elif [ "$mode" == "liberty" ]; then
   # libertyssä timestamp näyttää tältä: [3/26/24, 13:44:56:815 EET]
   timeStamp="\[[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{2}, [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{0,6} EET\]"
