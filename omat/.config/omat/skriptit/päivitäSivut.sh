@@ -7,7 +7,7 @@ DIR="/home/ubuntu/photoprism/sivut"                               ## skriptit ym
 GITHUB_SIVUT="/home/ubuntu/github-sivut/juuran.github.io"         ## julkinen internet
 GITHUB_KUVAT="/home/ubuntu/github-sivut/juuran.github.io/kuvat"   ## julkinen internet
 GITHUB_HAAT="/home/ubuntu/github-sivut/juuran.github.io/haat"     ## julkinen internet
-DATETIME="[$(date +%d.%m.%Y\ %H:%M:%S)]"
+DATETIME="$(date +%d.%m.%Y\ %H:%M:%S)"
 LAST_IP=$(cat $DIR/ip)
 STYLE="$(cat $DIR/style.txt)"
 REFRESH=4
@@ -15,11 +15,11 @@ VANHAT_PERHE="$(cat $GITHUB_KUVAT/index.html || echo '')"  ## vaikka polku muutt
 VANHAT_HAAT="$(cat $GITHUB_HAAT/index.html || echo '')"    ## ... silti toimii
 
 function logInfo() {
-    echo "$DATETIME [INFO]  : $1"
+    echo "[$DATETIME] [INFO]  : $1"
 }
 
 function logError() {
-    echo "$DATETIME [ERROR] : $1" >> /dev/stderr
+    echo "[$DATETIME] [ERROR] : $1" >> /dev/stderr
 }
 
 function fail() {
@@ -33,14 +33,21 @@ function failJaPalautaVanhatSivut() {
     fail "$1. Sivuja ei viety nettiin ja palautettu vanhat index.html:t."
 }
 
+function onkoIpValidi() {
+    local ip; ip="$1"
+    if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]];
+        then return 0
+        else return 1
+    fi
+}
+
 mkdir -p $GITHUB_KUVAT
 mkdir -p $GITHUB_HAAT
 
-# logInfo "ajetaan skripti github-sivujen päivittämiseksi"  ## vähän 0-informaatiota
-currentIp=$(curl -s -m 20 ifconfig.me 2> /dev/null) \
-    || currentIp=$(curl -s -m 20 api.ipify.org 2> /dev/null) \
-    || currentIp=$(curl -s -m 20 ipinfo.io/ip 2> /dev/null) \
-    || fail "keskeytetään, koska ei pääsyä nettiin tai kaikki ip tarkistus palvelut ovat alhaalla"
+                            currentIp=$(curl -s -m 20 ifconfig.me 2> /dev/null)
+onkoIpValidi $currentIp ||  currentIp=$(curl -s -m 20 api.ipify.org 2> /dev/null)
+onkoIpValidi $currentIp ||  currentIp=$(curl -s -m 20 ipinfo.io/ip 2> /dev/null)
+onkoIpValidi $currentIp ||  fail "keskeytetään, koska kolmen eri ip-palvelun jälkeen ei saatu validia ip-osoitetta, vaan: '$currentIp'"
 
 skripti="$(cat /home/ubuntu/häät/skripti.js)"
 urli="https://${currentIp}:42615"
@@ -90,16 +97,11 @@ sivutHaat="\
   </html>"
 
 if ! [ "$currentIp" = "$LAST_IP" ]; then
-    logInfo "ip osoite on vaihtunut vanhasta '$LAST_IP' uuteen '$currentIp', päivitetään sivutPerhe!"
+    logInfo "ip osoite on vaihtunut vanhasta '$LAST_IP' uuteen '$currentIp', ajetaan päivitys gitillä githubiin!"
 elif ! [ "$VANHAT_PERHE" = "$sivutPerhe" ] || ! [ "$VANHAT_HAAT" = "$sivutHaat" ]; then
     logInfo "nettisivut ovat päivittyneet, ajetaan päivitys gitillä githubiin!"
 else
     exit 0
-fi
-
-if [[ $currentIp =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]];
-    then logInfo "saatu ip osoite '$currentIp' on validi"
-    else fail "keskeytetään tallentamatta uutta ip osoitetta tai sivuja, koska saatu ip ei ole validi: '$currentIp'"
 fi
 
 ## Sivujen päivitys tehtävä ennen gittejä, mutta epäonnistuessa palautettava, että yritettäisiin uudestaan
