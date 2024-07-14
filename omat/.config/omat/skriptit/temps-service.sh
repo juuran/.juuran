@@ -9,15 +9,15 @@
 ##		    päivittää sivut joka 10. kerta tms
 ##		    nukkuu (toisin kuin minä)
 
-
 ## globaaleimmat muuttujat
-RIVIA_TULOSTETAAN=15 ## siis montako riviä temps-lokia nettisivuille tulostetaan
-INFOBOX_TIEM=6  ## kamalasta nimestään huolimatta se, monesko kerta tulostaa infoboksin, esim. joka 10. kerta
-REAL_SLEPTIEM=600  ## tavoite-aika unosille sekunteina
+RIVIA_TULOSTETAAN=14    ## siis montako riviä temps-lokia nettisivuille tulostetaan
+INFOBOX_TIEM=6          ## kamalasta nimestään huolimatta se, monesko kerta tulostaa infoboksin, esim. joka 10. kerta
+REAL_SLEPTIEM=7200      ## tavoite-aika unosille sekunteina (esim. 7200: 2h)
 SLEPTIEM=$((REAL_SLEPTIEM - 4)) ## todellisesta ajasta pitää poistaa topin viemä kakkupala (n. 4 sex)
 TEMPSLOG=/home/ubuntu/pp/juuson/sivut/temps.log
 LOKI=/home/ubuntu/pp/juuson/sivut/loki.log
 DATETIME="$(date +%d.%m.%Y\ %H:%M:%S)"
+show_temps="/home/ubuntu/.juuran/omat/.config/omat/skriptit/temps.sh"
 
 ## funktiot tästä alas
 function logInfo() {
@@ -43,26 +43,6 @@ trapWithArg() {
 handleSignals() {
     logInfo "signaali '$1' saatu - temps-service.sh lopetettu onnistuneesti"
     exit 0
-}
-
-show_temps() {
-    local gpuTemp=$(vcgencmd measure_temp)
-    ## Näyttäisivat olevan tismalleen sama arvo aina, paitsi joskus mittaushetken virheen takia
-    # cpuTempRaw=$(</sys/class/thermal/thermal_zone0/temp)
-    # cpuTemp="temp=$((cpuTempRaw/1000)).$(((cpuTempRaw%1000)/100))'C"
-    local clkRaw=$(</sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq)
-    local clk="$((clkRaw/1000000)).$(((clkRaw%1000000)/100000))GHz"
-
-    ## Napataan top:lta kahdesta "batch" arvosta vain jälkimmäinen, koska ensimmäisessä näkyy
-    ## topin käynnistysaika, mikä vääristää cpu:n käyttöä yllättävän paljon (5-8 prosenttia)
-    local topRaw="$(top -bn 2 | head -n 6)"
-    local cpuUsage="$(echo "$topRaw" | grep --color=never -i %cpu | grep -oE -e '^.*id' )"
-    local tasks="$(echo "$topRaw" | grep --color=never -i tasks)"
-    UPTIME="$(echo "$topRaw" | grep --color=never -i 'top - ')"
-    MEM="$(echo "$topRaw" | grep --color=never -i 'mib mem')"
-    SWAP="$(echo "$topRaw" | grep --color=never -i 'mib swap')"
-    DATETIME="$(date +%d.%m.%Y\ %H:%M:%S)"
-    echo "$DATETIME  [$gpuTemp]   [clock=$clk]   [$cpuUsage]   [$tasks]"
 }
 
 valiaikaTieto() {
@@ -134,7 +114,7 @@ main() {
     i=1
     while true
     do
-        show_temps >> $TEMPSLOG
+        $show_temps >> $TEMPSLOG || exit 1
         if [[ $((i % INFOBOX_TIEM)) == 0 ]]; then
             valiaikaTieto >> $TEMPSLOG
             laitaMinutNettiin
