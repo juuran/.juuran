@@ -1,15 +1,17 @@
 #!/bin/bash
 
 ## defaultit
-SLEEPING=5
+SLEEPING=1
 RUNNING=false
 GPU=false
 TOP=true
+MORE_INFO=false
 
 for arg in "$@"; do
-    [ "$arg" == "run" ]     && RUNNING=true
-    [ "$arg" == "gpu" ]     && GPU=true
-    [ "$arg" == "notop" ]   && TOP=false
+    [ "$arg" == "run" ]         && RUNNING=true
+    [ "$arg" == "gpu" ]         && GPU=true
+    [ "$arg" == "notop" ]       && TOP=false
+    [ "$arg" == "more_info" ]   && MORE_INFO=true
 done
 
 show_gpu_stats() {
@@ -57,9 +59,21 @@ show_temps() {
     echo "${DATETIME}${gpuTemp}${clk}${cpuUsage}${tasks}${GPU_STATS}"
 }
 
+show_more_info() {
+    echo "---------- Väliaikatietoja -----------"
+    echo "    uptime:           [$UPTIME]"
+    echo "    muistin käyttö:   [$MEM]"
+    echo "    swapin käyttö :   [$SWAP]"
+    echo "    RAID1:n kunto :   coming soon..."  ## TODO: tulossa on, mutta järki käteen (ja ostoksille!)
+    echo "    prismien kunto:   ehkä, ehkä, ehkä tulee..."
+    echo "--------------------------------------"
+}
+
+
 run_show_temps() {
     if [ $RUNNING == false ]; then
         show_temps
+        [ $MORE_INFO == true ] && show_more_info
         exit 0
     fi
 
@@ -68,7 +82,9 @@ run_show_temps() {
     do
         show_temps
         if [[ $((i % 10)) == 0 ]]; then
-            echo "--------------------------------------"
+            [ $MORE_INFO == true ] \
+                && show_more_info \
+                || echo "--------------------------------------"
         fi
         sleep $SLEEPING
         i=$((i+1))

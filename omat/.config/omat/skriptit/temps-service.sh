@@ -19,14 +19,20 @@ LOKI=/home/ubuntu/pp/juuson/sivut/loki.log
 DATETIME="$(date +%d.%m.%Y\ %H:%M:%S)"
 show_temps="/home/ubuntu/.juuran/omat/.config/omat/skriptit/temps.sh"
 
+upDate() {
+    DATETIME="$(date +%d.%m.%Y\ %H:%M:%S)"
+}
+
 ## funktiot tästä alas
 function logInfo() {
+    upDate
     local pulinat="[$DATETIME] [INFO]  [--statuksen päivitys--] :"
     echo -e "$pulinat $1"
     echo -e "$pulinat $1" >> $LOKI
 }
 
 function logError() {
+    upDate
     local pulinat="[$DATETIME] [ERROR] [--statuksen päivitys--] :"
     >&2 echo -e "$pulinat $1"
     echo -e "$pulinat $1" >> $LOKI
@@ -45,17 +51,9 @@ handleSignals() {
     exit 0
 }
 
-valiaikaTieto() {
-    echo "---------- Väliaikatietoja -----------"
-    echo "    uptime:           [$UPTIME]"
-    echo "    muistin käyttö:   [$MEM]"
-    echo "    swapin käyttö :   [$SWAP]"
-    echo "    RAID1:n kunto :   coming soon..."  ## TODO: tulossa on, mutta järki käteen (ja ostoksille!)
-    echo "    prismien kunto:   ehkä, ehkä, ehkä tulee..."
-    echo "--------------------------------------"
-}
 
 luoStatusSivut() {
+    upDate
     local status="$1"
     STATUS_SIVUT="\
 <head>
@@ -92,7 +90,7 @@ laitaMinutNettiin() {
     gitinTulosteet=$(>&2 cd $githubStatusPages \
         && git pull \
         && git add index.html \
-        && git commit -m "Status päivitetty automaattisesti" \
+        && git commit -m "Status päivitetty temps-servicellä ajalla $DATETIME" \
         && git push)
     gitExitCode="$?"
         
@@ -114,11 +112,13 @@ main() {
     i=1
     while true
     do
-        $show_temps >> $TEMPSLOG || exit 1
-        if [[ $((i % INFOBOX_TIEM)) == 0 ]]; then
-            valiaikaTieto >> $TEMPSLOG
+        if [[ $((i % INFOBOX_TIEM)) != 0 ]]; then
+            $show_temps >> $TEMPSLOG
+        else
+            $show_temps more_info >> $TEMPSLOG
             laitaMinutNettiin
         fi
+
         sleep $SLEPTIEM
         i=$((i+1))
     done
