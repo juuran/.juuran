@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## defaultit
-SLEEPING=1
+SLEEPING=2
 RUNNING=false
 GPU=false
 TOP=true
