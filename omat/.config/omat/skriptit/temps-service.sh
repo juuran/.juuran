@@ -12,7 +12,7 @@
 ## globaaleimmat muuttujat
 RIVIA_TULOSTETAAN=14    ## siis montako riviä temps-lokia nettisivuille tulostetaan
 INFOBOX_TIEM=6          ## kamalasta nimestään huolimatta se, monesko kerta tulostaa infoboksin, esim. joka 10. kerta
-REAL_SLEPTIEM=7200      ## tavoite-aika unosille sekunteina (esim. 7200: 2h)
+REAL_SLEPTIEM=43200     ## tavoite-aika unosille sekunteina (esim. 7200: 2h)
 SLEPTIEM=$((REAL_SLEPTIEM - 4)) ## todellisesta ajasta pitää poistaa topin viemä kakkupala (n. 4 sex)
 TEMPSLOG=/home/ubuntu/pp/juuson/sivut/temps.log
 LOKI=/home/ubuntu/pp/juuson/sivut/loki.log

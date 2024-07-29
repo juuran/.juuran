@@ -78,7 +78,7 @@ sivutPerhe="\
     </body>
   </html>"
 
-urli="http://${currentIp}:57820"
+urli="https://${currentIp}:57820"
 sivutHaat="\
   <!doctype html>
   <html lang='fi'>
@@ -92,11 +92,16 @@ sivutHaat="\
     <body>
       <br><br><br><br><br>
       <h1>Siirrytään <a href='$urli' target='_self'><strong>👰*Hääkuviin*🤵!</strong></a><strong></strong></h1>
+      <p>Julkinen profiili kuvien katseluun on alla (ilman \"hipsuja\" tottakai).
+        <pre>
+        name: \"katselija\"
+        password: \"ei salasanaa\"</pre>
+      </p>
       <button id='laskuri'>Javascript pois päältä. Siirry linkistä!</button>
       <script>
         'use strict';
         const urli = '$urli';
-        let secsLeft = $REFRESH;
+        let secsLeft = $((REFRESH+2));
         $SKRIPTI
       </script>
     </body>

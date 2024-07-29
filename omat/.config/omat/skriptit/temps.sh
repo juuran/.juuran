@@ -59,13 +59,29 @@ show_temps() {
     echo "${DATETIME}${gpuTemp}${clk}${cpuUsage}${tasks}${GPU_STATS}"
 }
 
+check_prisms() {
+    if curl --insecure "https://localhost:443" &> /dev/null
+        then PRISM_J="OK"
+        else PRISM_J="NOT OK"
+    fi
+    if curl --insecure "https://localhost:8443" &> /dev/null
+        then PRISM_V="OK"
+        else PRISM_V="NOT OK"
+    fi
+    if curl --insecure "https://localhost:3443" &> /dev/null
+        then PRISM_H="OK"
+        else PRISM_H="NOT OK"
+    fi
+}
+
 show_more_info() {
+    check_prisms
     echo "---------- Väliaikatietoja -----------"
     echo "    uptime:           [$UPTIME]"
     echo "    muistin käyttö:   [$MEM]"
     echo "    swapin käyttö :   [$SWAP]"
-    echo "    RAID1:n kunto :   coming soon..."  ## TODO: tulossa on, mutta järki käteen (ja ostoksille!)
-    echo "    prismien kunto:   ehkä, ehkä, ehkä tulee..."
+    echo "    prismien kunto:   [j: \"$PRISM_J\", v: \"$PRISM_V\", h: \"$PRISM_H\"]"
+    echo "    RAID1:n kunto :   on hold..."  ## TODO: tulossa on, mutta järki käteen (ja ostoksille!)
     echo "--------------------------------------"
 }
 
