@@ -29,6 +29,7 @@ alias show-usable-colors=~/.config/omat/skriptit/show-usable-colors.sh
 alias color-me-logs=~/.config/omat/skriptit/color-me-logs.sh
 alias clear='softClear'
 alias echo-server-localhost=~/.config/omat/skriptit/echo-server-localhost.sh
+alias sha-tarkistin=~/.config/omat/skriptit/sha-tarkistin.sh
 
 ## käyttäjä- / ympäristökohtaiset asiat
 if [ "$USER" = "c945fvc" ]; then
