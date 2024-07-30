@@ -13,10 +13,10 @@
 ##  n:message:action    n:näs normi argumentti 
 ##  n::message:action   kahdella kaksoipisteellä argumentti on valinnainen
 ##  :message:action     seuraava argumentti järjestyksessä, joka päätellään (numeroita ei tarvi ollenkaan)
-##  *:message:action    ???
+##  *:message:action    en tiedä virallisesti, mutta tätä näyttäisi voivan tarjota uudestaan vaikka jo kirjoitettu
 ##
 ## optspec
-##  SYMBOLI  ESIMERKKI   SELITE
+##  SYMBOLI  ESIMERKKI  SELITE
 ##  *       *optioni    tätä voidaan tarjota uudestaan, vaikka olisikin jo kirjoitettu
 ##  -       -optioni    tässä mahdollisen argumentin täytyy olla erotettuna välilyönnillä
 ##  +       -optioni+   nyt argumentti voi olla suoraan perässä esim.  -optionifile  tai  -optioni file
@@ -45,7 +45,4 @@ _arguments -s \
 ##      Huomioita ylemmästä
 ##      1. rivi: ei ole mielekästä antaa vaihtoehtoja, koska valittavana kaikki universumin sanat
 ##      2. rivi: _files on valmis funktio näihin tarkoituksiin
-##      
-##      
-##      
 ## )

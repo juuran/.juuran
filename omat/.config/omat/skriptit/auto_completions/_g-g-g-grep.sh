@@ -2,7 +2,7 @@
 
 _arguments -s \
     '1:hakutermi:' \
-    '2::polku:_files -/ -g "." -g ".."' \
+    '*:polku:_files' \
     '(-h --help)'{-h,--help}'[display help]' \
     '-i[ignore case off, makes case significant]' \
     '-l[number of context lines to show before and after]' \
