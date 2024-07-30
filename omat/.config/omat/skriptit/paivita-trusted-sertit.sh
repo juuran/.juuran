@@ -16,12 +16,13 @@ printHelp() {
     echo "skripti päivittää trusted sertin annetu(i)lle kone(e/i)lle"
     echo
     echo "käyttö:"
-    echo "  ./$(basename "$0") koneen_nimi..."
+    echo "  ./$(basename "$0") KONEEN_NIMI..."
     echo
     echo "toiminta:"
     echo "- skripti tarvitsee vähintään yhden argumentin: koneen nimen (muodossa, jota ssh syö)"
     echo "    - jos käytetään useampaa konetta, erotetaan ne välilyönnillä"
-    echo "- päivittää (kullekin) koneelle sertin, jonka löydyttävä alikansiosta nimellä: ./varmenne/trustedcerts.jks"
+    echo "- päivittää (kullekin) koneelle (yhden ja saman) sertin, jonka löydyttävä alikansiosta"
+    echo "  tismalleen nimellä: ./varmenne/trustedcerts.jks"
     exit 0
 }
 
@@ -41,7 +42,7 @@ echo "ok!"
 
 echo
 echo "uusi varmenne kopioidaan alikansiosta vain nimellä './varmenne/trustedcerts.jks', onhan kaikki oikein?"
-echo "ls -alFh --color=always ./varmenne"
+echo "tulostetaan kansio komennolla: ls -alFh --color=always ./varmenne"
 ls -alFh --color=always ./varmenne
 echo "    (paina \"enter\" jos ok, \"ctrl + c\" jos haluat keskeyttää)"
 read
@@ -79,7 +80,7 @@ for kone in $KONEET; do
             sleep 10                                                                                                             ;\
             systemctl status spring-service-opap-gateway.service | less -EX" || exit 0                                           ;\
         echo                                                                                                                     ;\
-        '  || fail "sertin päivittäminen epäonnistui"
+        ' || fail "sertin päivittäminen epäonnistui"
         echo "=== sertti päivitetty onnistuneesti koneelle '$kone' ==="
 done
 
