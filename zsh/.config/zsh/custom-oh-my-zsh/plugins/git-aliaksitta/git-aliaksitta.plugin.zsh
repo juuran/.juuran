@@ -35,7 +35,7 @@ function git_develop_branch() {
 function git_main_branch() {
   command git rev-parse --git-dir &>/dev/null || return
   local ref
-  for ref in refs/{heads,remotes/{origin,upstream}}/{main,trunk,mainline,default,master}; do
+  for ref in refs/{heads,remotes/{origin,upstream}}/{main,trunk,mainline,default,stable,master}; do
     if command git show-ref -q --verify $ref; then
       echo ${ref:t}
       return 0
@@ -147,8 +147,8 @@ function work_in_progress() {
 #     done
 # }
 # 
-# alias gbgd='LANG=C git branch --no-color -vv | grep ": gone\]" | awk '"'"'{print $1}'"'"' | xargs git branch -d'
-# alias gbgD='LANG=C git branch --no-color -vv | grep ": gone\]" | awk '"'"'{print $1}'"'"' | xargs git branch -D'
+# alias gbgd='LANG=C git branch --no-color -vv | grep ": gone\]" | cut -c 3- | awk '"'"'{print $1}'"'"' | xargs git branch -d'
+# alias gbgD='LANG=C git branch --no-color -vv | grep ": gone\]" | cut -c 3- | awk '"'"'{print $1}'"'"' | xargs git branch -D'
 # alias gbm='git branch --move'
 # alias gbnm='git branch --no-merged'
 # alias gbr='git branch --remote'
@@ -157,6 +157,7 @@ function work_in_progress() {
 # alias gco='git checkout'
 # alias gcor='git checkout --recurse-submodules'
 # alias gcb='git checkout -b'
+# alias gcB='git checkout -B'
 # alias gcd='git checkout $(git_develop_branch)'
 # alias gcm='git checkout $(git_main_branch)'
 # alias gcp='git cherry-pick'
@@ -164,8 +165,11 @@ function work_in_progress() {
 # alias gcpc='git cherry-pick --continue'
 # alias gclean='git clean --interactive -d'
 # alias gcl='git clone --recurse-submodules'
+# alias gclf='git clone --recursive --shallow-submodules --filter=blob:none --also-filter-submodules'
 # 
 # function gccd() {
+#   setopt localoptions extendedglob
+# 
 #   # get repo URI from args based on valid formats: https://git-scm.com/docs/git-clone#URLS
 #   local repo="${${@[(r)(ssh://*|git://*|ftp(s)#://*|http(s)#://*|*@*)(.git/#)#]}:-$_}"
 # 
@@ -191,6 +195,7 @@ function work_in_progress() {
 # alias gca!='git commit --verbose --all --amend'
 # alias gcan!='git commit --verbose --all --no-edit --amend'
 # alias gcans!='git commit --verbose --all --signoff --no-edit --amend'
+# alias gcann!='git commit --verbose --all --date=now --no-edit --amend'
 # alias gc!='git commit --verbose --amend'
 # alias gcn!='git commit --verbose --no-edit --amend'
 # alias gcf='git config --list'
@@ -215,8 +220,8 @@ function work_in_progress() {
 # alias gf='git fetch'
 # # --jobs=<n> was added in git 2.8
 # is-at-least 2.8 "$git_version" \
-#   && alias gfa='git fetch --all --prune --jobs=10' \
-#   || alias gfa='git fetch --all --prune'
+#   && alias gfa='git fetch --all --tags --prune --jobs=10' \
+#   || alias gfa='git fetch --all --tags --prune'
 # alias gfo='git fetch origin'
 # alias gg='git gui citool'
 # alias gga='git gui citool --amend'
@@ -248,6 +253,7 @@ function work_in_progress() {
 # alias gfg='git ls-files | grep'
 # alias gm='git merge'
 # alias gma='git merge --abort'
+# alias gmc='git merge --continue'
 # alias gms="git merge --squash"
 # alias gmom='git merge origin/$(git_main_branch)'
 # alias gmum='git merge upstream/$(git_main_branch)'
@@ -331,6 +337,7 @@ function work_in_progress() {
 # alias grbd='git rebase $(git_develop_branch)'
 # alias grbm='git rebase $(git_main_branch)'
 # alias grbom='git rebase origin/$(git_main_branch)'
+# alias grf='git reflog'
 # alias gr='git remote'
 # alias grv='git remote --verbose'
 # alias gra='git remote add'
@@ -344,12 +351,15 @@ function work_in_progress() {
 # alias grhk='git reset --keep'
 # alias grhs='git reset --soft'
 # alias gpristine='git reset --hard && git clean --force -dfx'
+# alias gwipe='git reset --hard && git clean --force -df'
 # alias groh='git reset origin/$(git_current_branch) --hard'
 # alias grs='git restore'
 # alias grss='git restore --source'
 # alias grst='git restore --staged'
 # alias gunwip='git rev-list --max-count=1 --format="%s" HEAD | grep -q "\--wip--" && git reset HEAD~1'
 # alias grev='git revert'
+# alias greva='git revert --abort'
+# alias grevc='git revert --continue'
 # alias grm='git rm'
 # alias grmc='git rm --cached'
 # alias gcount='git shortlog --summary --numbered'
@@ -411,4 +421,4 @@ function work_in_progress() {
 #     print -Pu2 \"%F{yellow}[oh-my-zsh] '%F{red}${old_alias}%F{yellow}' is a deprecated alias, using '%F{green}${new_alias}%F{yellow}' instead.%f\"
 #     $new_alias"
 # done
- unset old_alias new_alias
+# unset old_alias new_alias
