@@ -58,6 +58,8 @@ if [ "$USER" = "c945fvc" ]; then
   }
 elif [ "$USER" = "juuran" ]; then
   alias tasks=~/.config/omat/skriptit/tasks.sh
+elif [ "$USER" = "vilmasilvennoinen" ]; then
+  alias nano='nano'
 fi
 
 ## aliaksen kaltaiset funktiot (kaikki ei taivu aliakseksi sen rajoitusten takia)

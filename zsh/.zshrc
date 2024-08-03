@@ -94,7 +94,7 @@ if [ $USER = c945fvc ]; then
     # Custom plugins may be added to $ZSH_CUSTOM/plugins/
     # Example format: plugins=(rails git textmate ruby lighthouse)
     # Add wisely, as too many plugins slow down shell startup.
-    plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
+    plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-whighlighting zsh-autosuggestions oc)
 
 elif [ $USER = juuran ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions)
@@ -184,6 +184,9 @@ if [ $USER = c945fvc ]; then
 elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
     export NOTES_PATH="/home/juuran/notes"
+
+elif [ $USER = vilmasilvennoinen ]; then
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 fi
 
 ## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
@@ -193,6 +196,8 @@ fi
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
+    export EDITOR='nano'
+elif [ $USER = vilmasilvennoinen ]; then
     export EDITOR='nano'
 else
     export EDITOR='nano -lci'
