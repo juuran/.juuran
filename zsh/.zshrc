@@ -1,11 +1,5 @@
 fpath+=( ~/.config/omat/skriptit/auto_completions )  ## tarvitaan komentojen syöttämiseksi
 
-## tulostetaan neofetchillä kauniihko inhvo-ruutu kerran päivässä (jos neofetch löytyy)
-if [ -x "$(bash -c "which neofetch")" ] && [ "$(date +%j)" != "$(cat ~/.neofetched 2>/dev/null)" ]; then
-    date +%j > ~/.neofetched  # day of year
-    neofetch
-fi
-
 if [ $USER = c945fvc ]; then
     # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
     # Initialization code that may require console input (password prompts, [y/n]
@@ -13,6 +7,12 @@ if [ $USER = c945fvc ]; then
     if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
         source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
     fi
+fi
+
+## tulostetaan neofetchillä kauniihko inhvo-ruutu kerran päivässä (jos neofetch löytyy)
+if [ -x "$(bash -c "which neofetch")" ] && [ "$(date +%j)" != "$(cat ~/.neofetched 2>/dev/null)" ]; then
+    date +%j > ~/.neofetched  # day of year
+    neofetch
 fi
 
 # If you come from bash you might have to change your $PATH.
@@ -94,7 +94,7 @@ if [ $USER = c945fvc ]; then
     # Custom plugins may be added to $ZSH_CUSTOM/plugins/
     # Example format: plugins=(rails git textmate ruby lighthouse)
     # Add wisely, as too many plugins slow down shell startup.
-    plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-whighlighting zsh-autosuggestions oc)
+    plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
 
 elif [ $USER = juuran ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions)
@@ -202,6 +202,9 @@ elif [ $USER = vilmasilvennoinen ]; then
 else
     export EDITOR='nano -lci'
 fi
+
+## Laita tästä päälle, jos powerlevel alkaa ulisemaan!
+# typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 ## Enpäs nyt jaksa keksiä parempaa paikkaan näille muistiinpanoille, joten
 ## muistiin panen ne tänne.
