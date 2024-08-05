@@ -30,6 +30,7 @@ while getopts "m:h" OPTION; do
       elif [ "$OPTARG" == "typical" ];  then mode="typical"
       elif [ "$OPTARG" == "liberty" ];  then mode="liberty"
       elif [ "$OPTARG" == "rpi" ];  then mode="rpi"
+      elif [ "$OPTARG" == "oc-liberty" ];  then mode="oc-liberty"
       else fail "Unkown mode '$OPTARG'!"
       fi
       ;;
@@ -79,6 +80,14 @@ elif [ "$mode" == "rpi" ]; then
 elif [ "$mode" == "liberty" ]; then
   # libertyssä timestamp näyttää tältä: [3/26/24, 13:44:56:815 EET]
   timeStamp="\[[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{2}, [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{0,6} EET\]"
+elif [ "$mode" == "oc-liberty" ]; then
+   INFO=" I "
+  DEBUG="   A "
+  TRACE=" TRACE "
+   WARN=" W "
+  ERROR=" E "
+  FATAL=" FATAL "
+  timeStamp="\[[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{4} [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}:[0-9]{1,3} EEST\]"
 fi
 
       ##                              VÄRIT JA EFEKTIT
@@ -93,7 +102,7 @@ fi
       ## ln     line numbers                              37 White
       ##
 
-  GREP_COLORS="mt=0;36" grep --line-buffered --color=always -a -E -e "$timeStamp" -e "**" \
+  GREP_COLORS="mt=0;94" grep --line-buffered --color=always -a -E -e "$timeStamp" -e "**" \
 | GREP_COLORS="mt=1;32" grep --line-buffered --color=always -a -E -e "$INFO"  -e "**" \
 | GREP_COLORS="mt=2;32" grep --line-buffered --color=always -a -E -e "$DEBUG" -e "**" \
 | GREP_COLORS="mt=2;36" grep --line-buffered --color=always -a -E -e "$TRACE" -e "**" \
