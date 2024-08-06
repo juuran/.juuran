@@ -83,7 +83,7 @@ elif [ "$mode" == "liberty" ]; then
 elif [ "$mode" == "oc-liberty" ]; then
    INFO=" I "
   DEBUG="   A "
-  TRACE=" TRACE "
+  TRACE=" O "
    WARN=" W "
   ERROR=" E "
   FATAL=" FATAL "
