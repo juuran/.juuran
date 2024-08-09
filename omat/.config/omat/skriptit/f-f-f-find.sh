@@ -2,9 +2,9 @@
 source "$(dirname "$0")/fail.sh"
 
 exactMatchesOnly=false  ## oletuksena etsii "sisältää" periaatteella, tällä vain täsmälliset mätsit
-iC="--ignore-case"  ## tämä käytössä vain lessillä!
-isIgnoreCase=true
-type="iname"
+iCLess="--ignore-case"
+iCFind="i"
+type="wholename"
 maxdepth=""
 l=""
 X=""
@@ -24,7 +24,6 @@ printHelp() {
   echo "  -h, --help  prints this help"
   echo "  -i          make case significant, by default case is ignored"
   echo "  -e          exact matches only by removing wildcards  *  around words"
-  echo "  -p          for searching paths, e.g. -p ".git/" to look for paths with a pattern"
   echo "  -m          maxdepth, i.e. the amount how deep to descend in path recursion (infinite by default)"
   echo "  -X          prints taller than terminal height are kept on screen if they occupy only one line (less -X)"
   exit
@@ -36,29 +35,23 @@ for arg in "$@"; do
 done
 
 ## Optioiden käsittely
-while getopts "ieXhpm:" OPTION; do
+while getopts "ieXhm:" OPTION; do
   case "$OPTION" in
     i)
       echo "        -- Case is significant --"
-      isIgnoreCase=false
-      iC=""
-      type="name"
+      iCLess=""
+      iCFind=""
       ;;
     e)
       echo "        -- Exact matches only --"
       exactMatchesOnly=true
+      type="name"
       ;;
     X)
       X="X"
       ;;
     h)
       printHelp
-      ;;
-    p)
-      if [ "$isIgnoreCase" == true ]
-        then type="ipath"
-        else type="path"
-      fi
       ;;
     m)
       maxdepth="-maxdepth"
@@ -83,7 +76,7 @@ findIt() {
   pathStringLength="${#path}"
   lastChar="${path:$((pathStringLength-1)):pathStringLength}"
   if [ -d "$path" ] && [ $lastChar != "/" ]; then
-    echo "( Path is a directory, appended \"/\" to it:  \"$path/\" )"
+    ## kyseessä polku, lisätään / perään
     path="${path}/"
   fi
 
@@ -95,12 +88,12 @@ findIt() {
     then
       if [[ "$term" == *"*"* ]];  ## *1
         then
-          find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FR$X $iC  ## *2
+          find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FR$X $iCLess  ## *2
         
         else
           outputHeight=$(find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | wc -l)
           if [ $outputHeight -gt $screenHeight ]
-            then find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FR$X $iC -p "$term"
+            then find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FR$X $iCLess -p "$term"
             else find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null  ## *3
           fi
       fi
@@ -108,12 +101,12 @@ findIt() {
     else
       if [[ "$term" == *"*"* ]];
         then
-          find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FR$X $iC
+          find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FR$X $iCLess
 
         else
           outputHeight=$(find "$path" -$type "$term" $maxdepth $l 2> /dev/null | wc -l)
           if [ $outputHeight -gt $screenHeight ]
-            then find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FR$X $iC -p "$term"
+            then find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FR$X $iCLess -p "$term"
             else find "$path" -$type "$term" $maxdepth $l 2> /dev/null
           fi
       fi
@@ -123,7 +116,7 @@ findIt() {
 ## *2 Tämä on kompromissi. Monimutkaiset haut, joissa on * merkkejä eivät kuitenkaan tulostuisi samannäköisinä, joten valmis maalaus pois.
 ## *3 Samaten kompromissi. Jos alle ruudun olevalle löydökselle ajettaisiin less maalaus, tulostuisi rumasti ~ merkkejä.
 
-
+type="${iCFind}${type}"
 noOfArgs=$#
 if [ $noOfArgs -eq 1 ]; then
     findIt "$1" "./"
