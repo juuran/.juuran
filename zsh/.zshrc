@@ -203,8 +203,9 @@ else
     export EDITOR='nano -lci'
 fi
 
-## Laita tästä päälle, jos powerlevel alkaa ulisemaan!
-# typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+## Laita tästä päälle, jos powerlevel alkaa ulisemaan
+## neofetch alkoi
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 ## Enpäs nyt jaksa keksiä parempaa paikkaan näille muistiinpanoille, joten
 ## muistiin panen ne tänne.
