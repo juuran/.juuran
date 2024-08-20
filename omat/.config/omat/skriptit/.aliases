@@ -10,7 +10,7 @@ alias la='ls -AF'
 alias grep='grep --color=force'
 
 ## oikeat ohjelmat
-alias less='less --RAW-CONTROL-CHARS --quit-if-one-screen --no-init --ignore-case'
+alias less='less --RAW-CONTROL-CHARS --quit-if-one-screen --no-init --ignore-case --LONG-PROMPT'
 alias tree='tree -C'
 alias cd..='cd ..'
 alias diff='diff --color=always'

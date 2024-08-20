@@ -94,8 +94,8 @@ if [ "$noOfArgs" -lt 1 ]; then
 
 elif [ "$noOfArgs" -eq 1 ]; then
   if [ "$grepMode" == "normal" ]
-    then  grep $patternSyntax $iC $B $l $A $l $recursive $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
-    else zgrep $patternSyntax $iC $B $l $A $l            $color $e "$1" ./  | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+    then  grep $patternSyntax $iC $B $l $A $l $recursive $color $e "$1" ./  | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
+    else zgrep $patternSyntax $iC $B $l $A $l            $color $e "$1" ./  | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
   fi
 
 elif [ "$noOfArgs" -gt 1 ]; then
@@ -113,8 +113,8 @@ elif [ "$noOfArgs" -gt 1 ]; then
   paths=( "${possiblyDir[@]}" )
 
   ## grep usealle argumentille (kelan koneet ei tue zgrepin kanssa argumentteja loppuun, siksi tällä tyylillä)
-  if   [ "$grepMode" == "normal" ];     then  grep $patternSyntax $iC $B $l $A $l $recursive $color      $e "$arg" ${paths[@]} "$@" | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
-  elif [ "$grepMode" == "compressed" ]; then zgrep $patternSyntax $iC $B $l $A $l            $color "$@" $e "$arg" ${paths[@]}      | less -FR$X $iC;  exitCode="${PIPESTATUS[0]}"
+  if   [ "$grepMode" == "normal" ];     then  grep $patternSyntax $iC $B $l $A $l $recursive $color      $e "$arg" ${paths[@]} "$@" | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
+  elif [ "$grepMode" == "compressed" ]; then zgrep $patternSyntax $iC $B $l $A $l            $color "$@" $e "$arg" ${paths[@]}      | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
   fi
 
 fi

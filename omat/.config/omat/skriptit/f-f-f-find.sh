@@ -88,12 +88,12 @@ findIt() {
     then
       if [[ "$term" == *"*"* ]];  ## *1
         then
-          find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FR$X $iCLess  ## *2
+          find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FRM$X $iCLess  ## *2
         
         else
           outputHeight=$(find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | wc -l)
           if [ $outputHeight -gt $screenHeight ]
-            then find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FR$X $iCLess -p "$term"
+            then find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null | less -FRM$X $iCLess -p "$term"
             else find "$path" -$type "*$term*" $maxdepth $l 2> /dev/null  ## *3
           fi
       fi
@@ -101,12 +101,12 @@ findIt() {
     else
       if [[ "$term" == *"*"* ]];
         then
-          find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FR$X $iCLess
+          find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FRM$X $iCLess
 
         else
           outputHeight=$(find "$path" -$type "$term" $maxdepth $l 2> /dev/null | wc -l)
           if [ $outputHeight -gt $screenHeight ]
-            then find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FR$X $iCLess -p "$term"
+            then find "$path" -$type "$term" $maxdepth $l 2> /dev/null | less -FRM$X $iCLess -p "$term"
             else find "$path" -$type "$term" $maxdepth $l 2> /dev/null
           fi
       fi
