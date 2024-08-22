@@ -93,9 +93,10 @@ if [ "$noOfArgs" -lt 1 ]; then
 
 
 elif [ "$noOfArgs" -eq 1 ]; then
-  if [ "$grepMode" == "normal" ]
+  if [ "$grepMode" == "normal" ]; then
     [ -z "$recursive" ] && fail "Missing path! When using -r flag, a file or list of files must be given. Otherwise grep would try to search from ./ which is a path in itself."
-    then  grep $patternSyntax $iC $B $l $A $l $recursive $color $e "$1" ./  | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
+    
+         grep $patternSyntax $iC $B $l $A $l $recursive $color $e "$1" ./  | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
     else zgrep $patternSyntax $iC $B $l $A $l            $color $e "$1" ./  | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
   fi
 
