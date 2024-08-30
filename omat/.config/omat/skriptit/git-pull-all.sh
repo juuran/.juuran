@@ -56,6 +56,11 @@ runGitCommand() {
   fi
 }
 
+handleSignals() {
+    echo -e "\n$(basename "$0") lopetettu"
+    exit 1
+}
+
 for arg in "$@"; do
   [ "$arg" == "--help" ] && showHelp
 done
@@ -96,6 +101,9 @@ shift "$(($OPTIND -1))"
 
 
 main() {
+
+  trap 'handleSignals' SIGINT
+  trap 'handleSignals' SIGQUIT
 
   [ $parallel == true ] && [ $runCustomCommand == true ] && fail "Parallel running is not allowed with option 'do' because it skews the logs and could do damage to all projects with unsafe parameters." 1
 
