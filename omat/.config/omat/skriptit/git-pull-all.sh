@@ -25,9 +25,35 @@ function showHelp() {
   echo "OPTIONS:"
   echo "    -p      parallel (switch)       Runs commands faster but doesn't produce clear logs."
   echo "    -f      fetch (switch)          Only fetches (using --all --prune) instead of also merging as with 'git pull'."
-  echo "    -d      do (argument needed)    It's used for custom commands. Start without 'git' and write all params in \"quotes\"."
+  echo "    -d      do (argument needed)    Used for custom commands. Put all in \"quotes\". Doesn't need to be git related."
   echo "    -s      skip (argument needed)  Skips the path(s) specified after this switch. If multiple, use \"quotes\"."
   exit 0
+}
+
+runGitCommand() {
+  if      [ $parallel == true ];      then  echo "** Working on $shortPath **"
+  elif [ $runCustomCommand == true ]; then  echo -e "** --->  Entering '$shortPath' **"
+  else                                      echo -e "\n** Working on $shortPath **"
+  fi
+
+  if [ $onlyFetch == true ]; then
+    git -C "$fullPath" fetch --all --prune || fail "The given git fetch command failed!" 2
+  elif [ $runCustomCommand == true ]; then
+    cd "$fullPath" || fail "Couldn't cd into subdir"
+    $doToAll
+    echo -e "** <---  Exiting '$shortPath' **\n\n"
+    cd .. || fail "Couldn't cd out of subdir"
+  
+  else
+  ## Run git pull (the default)
+    local currentBranch
+    currentBranch=$(git -C "$fullPath" branch --show-current)
+    git -C "$fullPath" checkout $pullBranch && \
+      git -C "$fullPath" pull \
+      || fail "Either git pull or git checkout failed!" 2
+
+    [ "$currentBranch" != "$pullBranch" ] && git -C "$fullPath" checkout $currentBranch || true  ## Tämä olikin erikoinen keissi... Ilman tuota viimeistä truea, kuvittelee ohjelman päättyneen virheeseen. Johtunee siitä että ajetaan  &  eli forkataan(?) ja test komento palauttaa false, joka sitten siirtyy viimeisenä suorituksena kys shellille(?).
+  fi
 }
 
 for arg in "$@"; do
@@ -42,7 +68,7 @@ while getopts "pfd:s:h" OPTION; do
       ;;
     f)
       onlyFetch="true"
-      echo -e ":: Performing 'fetch --all --prune' on all projects ::"
+      echo -e "** Performing 'fetch --all --prune' on all projects **"
       ;;
     d)
       doToAll="$OPTARG"
@@ -69,72 +95,58 @@ done
 shift "$(($OPTIND -1))"
 
 
-[ $parallel == true ] && [ $runCustomCommand == true ] && fail "Parallel running is not allowed with option 'do' because it skews the logs and could do damage to all projects with unsafe parameters." 1
+main() {
 
-runGitCommand() {
-  [ $parallel == true ] && echo ":: Working on $shortPath ::" || echo -e "\n:: Working on $shortPath ::"
+  [ $parallel == true ] && [ $runCustomCommand == true ] && fail "Parallel running is not allowed with option 'do' because it skews the logs and could do damage to all projects with unsafe parameters." 1
 
-  if [ $onlyFetch == true ]; then
-    git -C "$fullPath" fetch --all --prune || fail "The given git fetch command failed!" 2
-  elif [ $runCustomCommand == true ]; then
-    echo ":: Running command: git -C $fullPath $doToAll ::"
-    git -C "$fullPath" $doToAll || fail "The given custom command failed!" 2   ## Ei toimi jos "$doToAll", vain noin. Veikkaan että yrittäisi antaa silloin tarjota esim. git "branch --show-current" kun git taas osaa lukea vain git "branch" "--show-current". Mene ja tiedä!
-  
-  else
-  ## Run git pull (the default)
-    local currentBranch
-    currentBranch=$(git -C "$fullPath" branch --show-current)
-    git -C "$fullPath" checkout $pullBranch && \
-      git -C "$fullPath" pull \
-      || fail "Either git pull or git checkout failed!" 2
+  [ "$runCustomCommand" == true ] && echo "** Running command in all subdirectories: $doToAll **"
 
-    [ "$currentBranch" != "$pullBranch" ] && git -C "$fullPath" checkout $currentBranch || true  ## Tämä olikin erikoinen keissi... Ilman tuota viimeistä truea, kuvittelee ohjelman päättyneen virheeseen. Johtunee siitä että ajetaan  &  eli forkataan(?) ja test komento palauttaa false, joka sitten siirtyy viimeisenä suorituksena kys shellille(?).
+  projects=$(find . -mindepth 1 -maxdepth 1 -type d)
+  pathsToSkip+=( "EESSITestingki" "yms" "salt" )  ## skipataan aina vähintään nämä!
+  for path in $projects; do
+    shortPath="${path:2}"
+    fullPath="$(pwd)/$shortPath"
+    pullBranch="develop"
+    isSkipped=false
+    
+    ## Skipattavat kansiot
+    if [ -n "${pathsToSkip[*]}" ]; then  ## Tässä tähti teknisesti oikeampi kuin miukumauku, koska antaa yhtenä stringinä ulos
+      for skipped in "${pathsToSkip[@]}"; do
+        [ "$shortPath" == "$skipped" ] && echo -e "\n** Skipping '$skipped' **" && isSkipped=true && break ## -s(kip) vivulla skipataan
+      done
+    fi
+
+    [ "$isSkipped" == true ] && continue
+    
+    ## Muut erikoistapaukset
+    [ "$shortPath" == "cpi-token-test" ] && pullBranch="master" && echo -e "\n** Setting default branch as 'master' for cpi-token-test **"
+
+    if [ "$parallel" == true ]; then
+        runGitCommand &
+      else
+        runGitCommand
+    fi
+    
+    pids+=" $!"           ## $! on viimeisimmän uuden taustaprosessin pid (olettaisin että tajuaa hakea vain kys. bash istunnon pidejä...?)
+  done
+
+
+  ## odotetaan että kaikki meni maaliin
+  for p in $pids; do
+      if wait $p; then true
+      else
+        echo -e "\n** Process $p exited with nonzero exit code **"
+        failures=$((failures+1))
+      fi
+  done
+
+  if [ $failures -gt 0 ]; then
+      fail "** Out of all the projects, $failures failed. Exiting with error. Run without parallel processing to get clearer logs! **" 1
+    else
+      [ $runCustomCommand == true ] || [ $onlyFetch == true ] && echo -e "\n** All projects processed successfully! **" || \
+      echo -e "\n** All projects were pulled successfully! **"  
   fi
+
 }
 
-
-projects=$(find . -mindepth 1 -maxdepth 1 -type d)
-pathsToSkip+=( "EESSITestingki" "yms" "salt" )  ## skipataan aina vähintään nämä!
-for path in $projects; do
-  shortPath="${path:2}"
-  fullPath="$(pwd)/$shortPath"
-  pullBranch="develop"
-  isSkipped=false
-  
-  ## Skipattavat kansiot
-  if [ -n "${pathsToSkip[*]}" ]; then  ## Tässä tähti teknisesti oikeampi kuin miukumauku, koska antaa yhtenä stringinä ulos
-    for skipped in "${pathsToSkip[@]}"; do
-      [ "$shortPath" == "$skipped" ] && echo -e "\n:: Skipping '$skipped' ::" && isSkipped=true && break ## -s(kip) vivulla skipataan
-    done
-  fi
-
-  [ "$isSkipped" == true ] && continue
-  
-  ## Muut erikoistapaukset
-  [ "$shortPath" == "cpi-token-test" ] && pullBranch="master" && echo -e "\n:: Setting default branch as 'master' for cpi-token-test ::"
-
-  if [ "$parallel" == true ]; then
-      runGitCommand &
-    else
-      runGitCommand
-  fi
-  
-  pids+=" $!"           ## $! on viimeisimmän uuden taustaprosessin pid (olettaisin että tajuaa hakea vain kys. bash istunnon pidejä...?)
-done
-
-
-## odotetaan että kaikki meni maaliin
-for p in $pids; do
-    if wait $p; then true
-    else
-      echo -e "\n:: Process $p exited with nonzero exit code ::"
-      failures=$((failures+1))
-    fi
-done
-
-if [ $failures -gt 0 ]; then
-    fail ":: Out of all the projects, $failures failed. Exiting with error. Run without parallel processing to get clearer logs! ::" 1
-  else
-    [ $runCustomCommand == true ] || [ $onlyFetch == true ] && echo -e "\n:: All projects processed successfully! ::" || \
-    echo -e "\n:: All projects were pulled successfully! ::"  
-fi
+main
