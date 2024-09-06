@@ -11,17 +11,26 @@ CACHE_VALID_MAX_SECONDS=3
 TASKS_FOR_AUTOCOMPLETE=()
 FILES_FOR_AUTOCOMPLETE=()
 
-## Tämä tiedosto vaaditaan jo funktioissa!
+NO_COLOR='\033[0;37m'
+NORMAL_CB='\033[1;90m'
+DONE_BOX='\033[1;92m'
+RED='\033[0;31m'
+MAGENTA='\033[0;95m'
+PRIORITY='\033[1;37m'
+IGNORE_CB='\033[2;90m'
+IGNORE='\033[2;97m'
+DONE_TEXT='\033[0;92m'
+
+## ---- Funktiot ----
 clearCache() {
   echo -n "" > "$AUTOCOMPLETE_CACHE_FILE"
   echo -n "" > "$AUTOCOMPLETE_CACHE_FILE.files"
 }
 
+## Tämä alustus pakko sijoittaa tähän (clearCache määritetty, mutta muita funktioita ei)!
 AUTOCOMPLETE_CACHE_FILE="$HOME/.cache/.tasks_edit_cache"
 ! [ -e "$AUTOCOMPLETE_CACHE_FILE" ] && clearCache  ## jos ei ole cachea, luo cachen (ja toki myös tyhjää sen)
 
-
-## ---- Funktiot ----
 printHelp() {
   echo "        tasks.sh (v.1.23)"
   echo "Näyttää auki olevat täskit. Niitä voi merkata käyttämällä § merkkiä, joka jostain ihmeen syystä"
@@ -98,7 +107,7 @@ printMatching() {
   [ -n "$4" ] && local cbColor="$4"   || cbColor="$NO_COLOR"
   [ -n "$5" ] && local textColor="$5" || textColor="$cbColor"
   
-  shopt -s lastpipe  ## Tämä vaaditaan tai muuten muutos näkyisi vain alishellissä (jonka pipe luo ja) joka exittaa
+  shopt -s lastpipe  ## <- tämä vaaditaan tai muuten muutos näkyisi vain alishellissä (jonka pipe luo ja) joka exittaa
   grep -rEn --color=never --regexp="$regexp" $SEARCH_PATH | while read -r task; do
       tasks+=( "$task" )
   done
@@ -182,8 +191,8 @@ editNote() {
   return 0  ## Palautetaan onnistunut suoritus vaikka komento feilaisikin (esim. editori ei asennettuna)
 }
 
-
-## ---- Optionit eli tässä tapauksessa vivut ym esiehdot ----
+## ---- Funktiot päättyy ----
+## Optioiden käsittely
 for arg in "$@"; do  ## Hjälp on short-circuiting eli voi laittaa mihin vaan ja luottaa että vain tulostaa helpin
   [ "$arg" == "--help" ] || [ "$arg" == "-h" ] && printHelp && exit 0
 done
@@ -240,53 +249,48 @@ for arg in "$@"; do
   fi
 done
 
-NO_COLOR='\033[0;37m'
-NORMAL_CB='\033[1;90m'
-DONE_BOX='\033[1;92m'
-RED='\033[0;31m'
-MAGENTA='\033[0;95m'
-PRIORITY='\033[1;37m'
-IGNORE_CB='\033[2;90m'
-IGNORE='\033[2;97m'
-DONE_TEXT='\033[0;92m'
 
-## ---- Ohjelmalogiikka -----
-[ "$isNormalOutputRendered" == true ] && echo -e "Tämänhetkiset täskit"
+main() {
+  [ "$isNormalOutputRendered" == true ] && echo -e "Tämänhetkiset täskit"
 
-## Käytetään ohituskaistaa jos juuri cachetettu tulokset, että toimisi nopeammin!
-if [ "$isCacheUsable" == true ]; then
-  readCache
+  ## Käytetään ohituskaistaa jos juuri cachetettu tulokset, että toimisi nopeammin!
+  if [ "$isCacheUsable" == true ]; then
+    readCache
+    [ "$isEditNotes" == true ] && editNote && exit 0
+    displayResultsForAutocomplete
+    exit 0
+  fi
+
+
+  ## regexp
+  start="^[^§_!]*"  ## rivin alussa ei saa syntaksimerkkejä ennen vars. sääntöä
+  end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälkeen (käytetään arkistointiin = poistamiseen tuloksista)
+
+  ## tärkeät
+  [ "$showPriority" == true ] && \
+    printMatching "$start§{2}$end"  "[ ]"   1   "$PRIORITY"
+
+  ## tekemättömät
+  [ "$showNormal" == true ] && \
+    printMatching "$start§{1}$end"  "[ ]"   0   "$NORMAL_CB"  "$NO_COLOR"
+
+  ## ignore
+  [ "$showIgnored" == true ] && \
+    printMatching "${start}_§$end"  "[ ]"   1   "$IGNORE_CB"  "$IGNORE"
+
+  ## tehdyt
+  [ "$showCompleted" == true ] && \
+    printMatching "$start!§$end"    "[x]"   1   "$DONE_BOX"   "$DONE_TEXT"
+
+  ## vanhat väärät
+    printMatching "$start§!$end"    "Virheellinen merkintä! Katso --help"    1   "$RED"
+
+  [ "$isCacheUsable" == false ] && writeToCache
   [ "$isEditNotes" == true ] && editNote && exit 0
-  displayResultsForAutocomplete
+  [ "$isGatherValuesForAutocomplete" == true ] && displayResultsForAutocomplete
+    
   exit 0
-fi
 
+}
 
-## regexp
-start="^[^§_!]*"  ## rivin alussa ei saa syntaksimerkkejä ennen vars. sääntöä
-end="[^§]*$"      ## pykälä ei saa esiintyä uudestaan vars. säännön jälkeen (käytetään arkistointiin = poistamiseen tuloksista)
-
-## tärkeät
-[ "$showPriority" == true ] && \
-  printMatching "$start§{2}$end"  "[ ]"   1   "$PRIORITY"
-
-## tekemättömät
-[ "$showNormal" == true ] && \
-  printMatching "$start§{1}$end"  "[ ]"   0   "$NORMAL_CB"  "$NO_COLOR"
-
-## ignore
-[ "$showIgnored" == true ] && \
-  printMatching "${start}_§$end"  "[ ]"   1   "$IGNORE_CB"  "$IGNORE"
-
-## tehdyt
-[ "$showCompleted" == true ] && \
-  printMatching "$start!§$end"    "[x]"   1   "$DONE_BOX"   "$DONE_TEXT"
-
-## vanhat väärät
-  printMatching "$start§!$end"    "Virheellinen merkintä! Katso --help"    1   "$RED"
-
-[ "$isCacheUsable" == false ] && writeToCache
-[ "$isEditNotes" == true ] && editNote && exit 0
-[ "$isGatherValuesForAutocomplete" == true ] && displayResultsForAutocomplete
-  
-exit 0
+main
