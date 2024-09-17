@@ -19,7 +19,7 @@ fi
 
 [ -n "$1" ] && [[ "$1" != *-* ]] && echo "(argumentti ohitettu, koska skripti ei käytä niitä)"
 
-while getopts "sc" OPTION; do
+while getopts "scn" OPTION; do
     case "$OPTION" in
     s)
         isSkipTests=true
