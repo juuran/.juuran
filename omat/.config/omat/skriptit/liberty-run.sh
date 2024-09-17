@@ -27,8 +27,11 @@ while getopts "sc" OPTION; do
     c)
         isCleanBuild=true
         ;;
+    n)
+        isDontRunLiberty=true
+        ;;
     *)
-        fail "vain seuraavia vipuja tuetaan: \n-s (skippaa testit)\n-c (clean build)"
+        fail "vain seuraavia vipuja tuetaan: \n-s (skippaa testit)\n-c (clean build)\n-n (no liberty be run)"
         ;;
     esac
 done
@@ -45,6 +48,8 @@ if [ "$isCleanBuild" == true ]; then
     fi
     echo -e "maven build onnistui!\n"
 fi
+
+[ "$isDontRunLiberty" == true ] && exit 0
 
 echo -e "käynnistetään open liberty...\n" && sleep 0.5
 mvn -pl "$earPath" -e -P local liberty:run
