@@ -19,13 +19,24 @@ fi
 
 [ -n "$1" ] && [[ "$1" != *-* ]] && echo "(argumentti ohitettu, koska skripti ei käytä niitä)"
 
-while getopts "scn" OPTION; do
+## defaultit
+isSkipTests=false
+isBuild=false
+isDontRunLiberty=false
+while getopts "sbcn" OPTION; do
     case "$OPTION" in
     s)
         isSkipTests=true
         ;;
+    b)
+        isBuild=true
+        clean=""
+        puhdas=""
+        ;;
     c)
-        isCleanBuild=true
+        isBuild=true
+        clean="clean"
+        puhdas="puhdas "
         ;;
     n)
         isDontRunLiberty=true
@@ -37,14 +48,14 @@ while getopts "scn" OPTION; do
 done
 shift "$(($OPTIND -1))"
 
-if [ "$isCleanBuild" == true ]; then
+if [ "$isBuild" == true ]; then
     if [ "$isSkipTests" == true ]
         then
-            echo "tehdään puhdas build ilman testejä..."
-            mvn -e clean install -DskipTests || fail "\nmaven build epäonnistui!"
+            echo "tehdään ${puhdas}buildi ilman testejä..."
+            mvn -e $clean install -DskipTests || fail "\nmaven build epäonnistui!"
         else 
-            echo "tehdään puhdas build..."
-            mvn -e clean install || fail "\nmaven build epäonnistui!"
+            echo "tehdään ${puhdas}buildi..."
+            mvn -e $clean install || fail "\nmaven build epäonnistui!"
     fi
     echo -e "maven build onnistui!\n"
 fi
