@@ -11,16 +11,21 @@ trap 'handleSignals' SIGQUIT
 
 ## vähän ruma fixi, kun aiemmassa oli hupsu oletus pää ja ear polun yhdennimisyydestä
 # "${PWD##*/}-ear"
-earPaths="$(ls -d */ | grep -ear | cut -d / -f 1)"
+earPaths="$(ls -d */ | grep "\-ear" | cut -d / -f 1)"
 
 earPathFound=false
 for path in $earPaths; do
-    [ -d "$path" ] && earPathFound=true
+    if [ -d "$path" ]; then
+        earPathFound=true
+        earPath="$path"
+    fi
 done
 
 if ! [ -f "./pom.xml" ] || [ $earPathFound == false ]; then
     fail "Both pom.xml and -ear subdirectories are needed, condition not met"
 fi
+
+echo "heuristisesti päätelty, että earin polku on: $earPath"
 
 [ -n "$1" ] && [[ "$1" != *-* ]] && echo "(argumentti ohitettu, koska skripti ei käytä niitä)"
 
