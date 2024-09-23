@@ -56,16 +56,20 @@ for s in "$@"
 do
     echo "Secret - $i: $s";
     sealed="sealed-$s.yaml";
-    oc get secret $s -o yaml | kubeseal --controller-namespace sealed-secrets -o yaml --scope namespace-wide > $sealed \
-      || fail "sealing failed, exiting with error..." 2
-    echo "Sealed Secret - $i: $sealed";
-    # oc get secret $s -o yaml > $DIR_BACKUP/$s.yaml
-    echo "Delete Secret from namespace:"
-    oc delete secret $s || error "could not delete secret $s from openshift, continuing nevertheless..."
-    #oc apply -f $sealed;
+    secretYaml=$(oc get secrets $s -o yaml) || fail "Could not find secret, exiting with error..." 2
+    echo "$secretYaml" | kubeseal --controller-namespace sealed-secrets -o yaml --scope namespace-wide > $sealed \
+      || fail "Could not produce a sealed secret file, exiting with error..." 2
+    echo "Sealed Secret file created - $i: $sealed";
+    # oc get secret $s -o yaml > $DIR_BACKUP/$s.yaml  ## ei ole tarpeen, kiitos!
+
+    echo "Deleting Secret from namespace:"
+    oc delete secrets $s || error "could not delete secret $s from openshift, continuing nevertheless..."
+    #oc apply -f $sealed;  ## miksi tehtäisiin näin, kun kerran versionhallinnan kautta viedään?!
+
+    echo "Deleting the secret file locally (if it exists)"
+    rm -f $s.yaml || echo "The secret file did not exist (or did not share the same exact name), continuing"
     i=$((i + 1));
 done
-
 
 echo "---------------------------"
 echo "--  Secrets are sealed   --"
