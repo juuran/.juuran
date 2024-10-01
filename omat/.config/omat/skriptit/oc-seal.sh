@@ -67,7 +67,7 @@ do
     #oc apply -f $sealed;  ## miksi tehtäisiin näin, kun kerran versionhallinnan kautta viedään?!
 
     echo "Deleting the secret file locally (if it exists)"
-    rm -f $s.yaml || echo "The secret file did not exist (or did not share the same exact name), continuing"
+    rm -Iv $s || rm -Iv $s.y*ml || echo "The secret file did not exist (or did not share the same exact name), continuing"
     i=$((i + 1));
 done
 
