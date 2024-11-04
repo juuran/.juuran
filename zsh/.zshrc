@@ -180,6 +180,8 @@ if [ $USER = c945fvc ]; then
     bashcompinit
     source $HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
 
+    ## diodon hoitamaan windowsmainen clipboardin hallinta
+    diodon & disown
 
 elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
