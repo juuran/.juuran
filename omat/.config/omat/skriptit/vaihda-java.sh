@@ -6,11 +6,16 @@ noOfArgs=$#
 defaultJavaSymbolink="/opt/kela/java/default"
 java11="/opt/kela/java/openJDK/jdk-11.0.15+10"
 java17="/opt/kela/java/openJDK/jdk-17.0.3+7"
+java8="/opt/kela/java/ibm/java-x86_64-80/"
 javaToSet=""
 
 echo "Vaihdetaan oletus java versio. Mikä laitetaan oletukseksi?"
-select java in "Java-11" "Java-17" "Nykyinen?" "Peruuta"; do
+select java in "Java-8" "Java-11" "Java-17" "Nykyinen?" "Peruuta"; do
     case $java in
+        Java-8)
+            javaToSet="$java8"
+            break;
+        ;;
         Java-11)
             javaToSet="$java11"
             break;
