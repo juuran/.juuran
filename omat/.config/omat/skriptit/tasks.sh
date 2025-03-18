@@ -11,15 +11,18 @@ CACHE_VALID_MAX_SECONDS=3
 TASKS_FOR_AUTOCOMPLETE=()
 FILES_FOR_AUTOCOMPLETE=()
 
+## Värit, cb = checkbox
 NO_COLOR='\033[0;37m'
+NORMAL_TEXT='\033[1;37m'
 NORMAL_CB='\033[1;90m'
-DONE_BOX='\033[1;92m'
-RED='\033[0;31m'
-MAGENTA='\033[0;95m'
-PRIORITY='\033[1;37m'
-IGNORE_CB='\033[2;90m'
-IGNORE='\033[2;97m'
 DONE_TEXT='\033[0;92m'
+DONE_CB='\033[2;92m'
+RED='\033[0;31m'          ## error
+MAGENTA='\033[0;95m'
+PRIORITY='\033[1;33m'
+PRIORITY_CB='\033[2;33m'
+IGNORE_CB='\033[2;37m'
+IGNORE='\033[1;30m'
 
 ## ---- Funktiot ----
 clearCache() {
@@ -268,11 +271,11 @@ main() {
 
   ## tärkeät
   [ "$showPriority" == true ] && \
-    printMatching "$start§{2}$end"  "[ ]"   1   "$PRIORITY"
+    printMatching "$start§{2}$end"  "[ ]"   1   "$PRIORITY_CB"   "$PRIORITY"
 
   ## tekemättömät
   [ "$showNormal" == true ] && \
-    printMatching "$start§{1}$end"  "[ ]"   0   "$NORMAL_CB"  "$NO_COLOR"
+    printMatching "$start§{1}$end"  "[ ]"   0   "$NORMAL_CB"  "$NORMAL_TEXT"
 
   ## ignore
   [ "$showIgnored" == true ] && \
@@ -280,7 +283,7 @@ main() {
 
   ## tehdyt
   [ "$showCompleted" == true ] && \
-    printMatching "$start!§$end"    "[x]"   1   "$DONE_BOX"   "$DONE_TEXT"
+    printMatching "$start!§$end"    "[x]"   1   "$DONE_CB"   "$DONE_TEXT"
 
   ## vanhat väärät
     printMatching "$start§!$end"    "Virheellinen merkintä! Katso --help"    1   "$RED"
