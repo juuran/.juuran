@@ -44,6 +44,8 @@ if ! $shaSum --version &> /dev/null; then
     fail "The required $shaSum not found!" 2
 fi
 
+echo "This could take a while if the file is large..."
+
 if [ -z "$shaToCheck" ]
     then $shaSum -c "$fileToCheck"
     else echo "$shaToCheck $fileToCheck" | $shaSum -c
