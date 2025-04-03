@@ -58,6 +58,7 @@ if [ "$USER" = "c945fvc" ]; then
   }
 elif [ "$USER" = "juuran" ]; then
   alias tasks=~/.config/omat/skriptit/tasks.sh
+  alias note='/mnt/c/Program\ Files/Notepad++/notepad++.exe'
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='nano'
 fi
