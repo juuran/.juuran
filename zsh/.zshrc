@@ -97,7 +97,7 @@ if [ $USER = c945fvc ]; then
     plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
 
 elif [ $USER = juuran ]; then
-    plugins=(git-aliaksitta sudo zsh-autosuggestions)
+    plugins=(git-aliaksitta sudo zsh-autosuggestions mvn)
 elif [ $USER = ubuntu ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
   
