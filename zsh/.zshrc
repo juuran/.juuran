@@ -193,6 +193,18 @@ elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
 
     export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
+    ## Näillä taikasanoilla saadaan winkkari ymmärtämään, missä pwd:ssä (winkkarissa CWD) kulloinkin
+    ## ollaan. Nyt just ei jaksa kiinnostaa, mutta näin se toimii: The precmd_functions hook tells
+    ## zsh what commands to run before displaying the prompt. "The printf statement is what we're using
+    ## to append the sequence for setting the working directory with the Terminal. The
+    ## $(wslpath -w "$PWD") bit will invoke the wslpath executable to convert the current directory into
+    ## its Windows-like path. Using precmd_functions+= make sure we append the keep_current_path function
+    ## to any existing function already defined for this hook."
+    keep_current_path() {
+        printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+    }
+    precmd_functions+=(keep_current_path)
+
 elif [ $USER = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 fi
