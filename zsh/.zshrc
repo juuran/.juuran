@@ -130,7 +130,8 @@ source $ZSH/oh-my-zsh.sh
 
 
 ## -------------------- omat -------------------- ##
-
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
+SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
 
 ## Eri värit tohon virheenkorjaajaan pitäis saada näin
 grayish='fg=240'
