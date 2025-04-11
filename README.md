@@ -26,9 +26,9 @@ Ja jospa yhden vain
     cd && \
     git clone --recurse-submodules https://github.com/juuran/.juuran.git && \
     cd .juuran && \
-    if [ $USER != c945fvc ]; \
-        then stow */ --ignore=.ssh/config; \
-        else stow */; \
+    if [ $USER = c945fvc ]; \
+        then stow */; \
+        else stow */ '--ignore=.ssh/*'; \
     fi && \
     cd
 
