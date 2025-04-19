@@ -194,6 +194,7 @@ elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
 
     export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
+elif [ $USER = juuran ]; then
     ## Näillä taikasanoilla saadaan winkkari ymmärtämään, missä pwd:ssä (winkkarissa CWD) kulloinkin
     ## ollaan. Nyt just ei jaksa kiinnostaa, mutta näin se toimii: The precmd_functions hook tells
     ## zsh what commands to run before displaying the prompt. "The printf statement is what we're using
