@@ -1,6 +1,6 @@
 fpath+=( ~/.config/omat/skriptit/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
-if [ $USER = c945fvc ]; then
+if [ $USER = c945fvc ] || [ $USER = juuran ]; then
     # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
     # Initialization code that may require console input (password prompts, [y/n]
     # confirmations, etc.) must go above this block; everything else may go below.
@@ -26,6 +26,9 @@ export ZSH="$HOME/.config/zsh/oh-my-zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 if [ $USER = c945fvc ]; then
+    ZSH_THEME="powerlevel10k/powerlevel10k"
+
+elif [ $USER = juuran ]; then
     ZSH_THEME="powerlevel10k/powerlevel10k"
 
 else
@@ -181,25 +184,28 @@ if [ $USER = c945fvc ]; then
     bashcompinit
     source $HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
 
-elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
+    ## Laita tästä päälle, jos powerlevel alkaa ulisemaan
+    ## neofetch alkoi
+    typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
+elif [ $USER = juuran ]; then
+    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
     export NOTES_PATH="/home/juuran/notes"
 
     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
     autoload -U +X bashcompinit
     bashcompinit
+
+    ## nvm jutskat
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
     export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
-elif [ $USER = vilmasilvennoinen ]; then
-    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
-fi
-
-## WSL spesifiset asiat erikseen!
-if [ $USER = juuran ]; then
     ## Näillä taikasanoilla saadaan winkkari ymmärtämään, missä pwd:ssä (winkkarissa CWD) kulloinkin
     ## ollaan. Nyt just ei jaksa kiinnostaa, mutta näin se toimii: The precmd_functions hook tells
     ## zsh what commands to run before displaying the prompt. "The printf statement is what we're using
@@ -211,6 +217,16 @@ if [ $USER = juuran ]; then
         printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
     }
     precmd_functions+=(keep_current_path)
+
+elif [ $USER = ubuntu ]; then
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
+
+    ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
+    autoload -U +X bashcompinit
+    bashcompinit
+
+elif [ $USER = vilmasilvennoinen ]; then
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 fi
 
 # Preferred editor for local and remote sessions
@@ -226,10 +242,6 @@ fi
 if [ -f ~/.config/omat/skriptit/.aliases ]; then
     . ~/.config/omat/skriptit/.aliases
 fi
-
-## Laita tästä päälle, jos powerlevel alkaa ulisemaan
-## neofetch alkoi
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 ## Enpäs nyt jaksa keksiä parempaa paikkaan näille muistiinpanoille, joten
 ## muistiin panen ne tänne.
