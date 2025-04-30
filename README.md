@@ -7,14 +7,20 @@ _This repo exists to make life with Unix configs and scripts "fun", or at least 
 
 Alustat sa caiken tällä (lukien mucaan alimoduulit):
 
-    git clone --recurse-submodules https://github.com/juuran/.juuran.git
+```
+git clone --recurse-submodules https://github.com/juuran/.juuran.git
+```
+
+tahi tilalle `git@github.com:juuran/.juuran.git`
 
 Jos haluat sa kaiken stow'aa (paitsi tämän READMEen) – muistapa myös .juuran cansioon mennä!
 
-    if [ $USER != c945fvc ]; \
-        then stow */ --ignore=.ssh/config; \
-        else stow */; \
-    fi
+```
+if [ $USER != c945fvc ]; \
+    then stow */ --ignore=.ssh/config; \
+    else stow */; \
+fi
+```
 
 Ja jospa yhden vain
 
@@ -22,23 +28,28 @@ Ja jospa yhden vain
 
 
 ## Yhden komennon asennus laiscoille
-
-    cd && \
-    git clone --recurse-submodules https://github.com/juuran/.juuran.git && \
-    cd .juuran && \
-    if [ $USER = c945fvc ]; \
-        then stow */; \
-        else stow */ '--ignore=.ssh/*'; \
-    fi && \
-    cd
+```
+cd && \
+git clone --recurse-submodules git@github.com:juuran/.juuran.git && \
+cd .juuran && \
+if [ $USER = c945fvc ]; \
+	then stow */; \
+	else stow */ '--ignore=.ssh/*'; \
+fi && \
+cd
+```
 
 
 # Päivittää voit myös ilman tuscaa
 
-    git pull --recurse-submodules
+```
+git pull --recurse-submodules
+```
+
 tahi tiirailla wain
 
-    git fetch --all --prune --recurse-submodules
-
+```
+git fetch --all --prune --recurse-submodules
+```
 
 ## _Loput löydät sa manuaalista!_
