@@ -194,7 +194,12 @@ elif [ $USER = juuran ] || [ $USER = ubuntu ]; then
 
     export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
-elif [ $USER = juuran ]; then
+elif [ $USER = vilmasilvennoinen ]; then
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
+fi
+
+## WSL spesifiset asiat erikseen!
+if [ $USER = juuran ]; then
     ## Näillä taikasanoilla saadaan winkkari ymmärtämään, missä pwd:ssä (winkkarissa CWD) kulloinkin
     ## ollaan. Nyt just ei jaksa kiinnostaa, mutta näin se toimii: The precmd_functions hook tells
     ## zsh what commands to run before displaying the prompt. "The printf statement is what we're using
@@ -206,14 +211,6 @@ elif [ $USER = juuran ]; then
         printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
     }
     precmd_functions+=(keep_current_path)
-
-elif [ $USER = vilmasilvennoinen ]; then
-    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
-fi
-
-## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
-if [ -f ~/.config/omat/skriptit/.aliases ]; then
-    . ~/.config/omat/skriptit/.aliases
 fi
 
 # Preferred editor for local and remote sessions
@@ -223,6 +220,11 @@ elif [ $USER = vilmasilvennoinen ]; then
     export EDITOR='nano'
 else
     export EDITOR='nano -lci'
+fi
+
+## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
+if [ -f ~/.config/omat/skriptit/.aliases ]; then
+    . ~/.config/omat/skriptit/.aliases
 fi
 
 ## Laita tästä päälle, jos powerlevel alkaa ulisemaan
