@@ -30,6 +30,8 @@ if [ $USER = c945fvc ]; then
 
 elif [ $USER = juuran ]; then
     ZSH_THEME="powerlevel10k/powerlevel10k"
+    ## hyviä: lukerandall, lambda, muse, zhann, sunaku, norm, macovsky, miloshadzic, avit, fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
+    #ZSH_THEME="random"
 
 else
     ZSH_THEME="muse"
@@ -39,7 +41,7 @@ fi
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
 # If set to an empty array, this variable will have no effect.
-ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" "simple" "murilasso" "muse" "wuffers" "half-life")
+ZSH_THEME_RANDOM_CANDIDATES=( "lukerandall" "lambda" "muse" "zhann" "sunaku" "norm" "macovsky" "miloshadzic" "avit" "fletcherm" "agnoster" "half-life" )
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -91,6 +93,7 @@ HIST_STAMPS="dd.mm.yyyy"
 # Would you like to use another custom folder than $ZSH/custom?
 ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
 
+## eri koneiden pluginit
 if [ $USER = c945fvc ]; then
     # Which plugins would you like to load?
     # Standard plugins can be found in $ZSH/plugins/
@@ -100,10 +103,11 @@ if [ $USER = c945fvc ]; then
     plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
 
 elif [ $USER = juuran ]; then
-    plugins=(git-aliaksitta sudo zsh-autosuggestions mvn)
+    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm)
+
 elif [ $USER = ubuntu ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
-  
+
   ## default
 else
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
@@ -157,8 +161,17 @@ typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayish
 unsetopt EXTENDED_HISTORY
 HISTFILE=~/.shell_history
 
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+    export EDITOR='nano'
+elif [ $USER = vilmasilvennoinen ]; then
+    export EDITOR='nano'
+else
+    export EDITOR='nano -lci'
+fi
 
-## ERI KONEIDEN MUUTTUJAT (muut kuin pluginit)
+
+## eri koneiden muuttujat (muut kuin plugarit)
 if [ $USER = c945fvc ]; then
     ## Svidduun se non-breaking space
     setxkbmap -option "nbsp:none"
@@ -227,15 +240,6 @@ elif [ $USER = ubuntu ]; then
 
 elif [ $USER = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
-fi
-
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-    export EDITOR='nano'
-elif [ $USER = vilmasilvennoinen ]; then
-    export EDITOR='nano'
-else
-    export EDITOR='nano -lci'
 fi
 
 ## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
