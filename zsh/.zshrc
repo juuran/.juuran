@@ -31,10 +31,12 @@ if [ $USER = c945fvc ]; then
 elif [ $USER = juuran ]; then
     ZSH_THEME="powerlevel10k/powerlevel10k"
     ## hyviä: lukerandall, lambda, muse, zhann, sunaku, norm, macovsky, miloshadzic, avit, fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
-    #ZSH_THEME="random"
+
+elif [ $USER = ubuntu ]; then
+    ZSH_THEME="lambda"  ## oma-lambda ei vielä toimi
 
 else
-    ZSH_THEME="muse"
+    ZSH_THEME="random"
 fi
 
 # Set list of themes to pick from when loading at random
