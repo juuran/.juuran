@@ -33,7 +33,7 @@ elif [ $USER = juuran ]; then
     ## hyviä: lukerandall, lambda, muse, zhann, sunaku, norm, macovsky, miloshadzic, avit, fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
 
 elif [ $USER = ubuntu ]; then
-    ZSH_THEME="lambda"  ## oma-lambda ei vielä toimi
+    ZSH_THEME="lukerandall"
 
 else
     ZSH_THEME="random"
@@ -43,7 +43,7 @@ fi
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
 # If set to an empty array, this variable will have no effect.
-ZSH_THEME_RANDOM_CANDIDATES=( "lukerandall" "lambda" "muse" "zhann" "sunaku" "norm" "macovsky" "miloshadzic" "avit" "fletcherm" "agnoster" "half-life" )
+ZSH_THEME_RANDOM_CANDIDATES=( "lukerandall" "lambda" "macovsky" ) #"zhann" "sunaku" "norm" "miloshadzic" "avit" "fletcherm" "agnoster" "half-life" )
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
