@@ -2,23 +2,28 @@
 ## This script pretty prints the local or remote branches based
 ## on date last updated.
 
+source "$(dirname "$0")/fail.sh"
+
 dest=$1
-## The default value is "local" branches
-refsValue="refs/heads/"
 if [[ $dest == "remotes" ]]; then
   refsValue="refs/remotes/"
-  dest="remotes"
-elif [[ $dest == "local" ]]; then
+elif [[ $dest == "heads" ]]; then
+  refsValue="refs/heads/"
+elif [[ -z $dest ]] || [[ $dest == "local" ]]; then
+  echo "No parameter or 'local' given, showing local branches"
   dest="heads"
-elif [[ -z $dest ]]; then
-  echo "(No parameter given, showing local branches)"
-  dest="heads"
+  refsValue="refs/heads/"
 else
-  >&2 echo "Unknown destination as parameter '$dest'"
-  exit 2
+  fail "Unknown destination as parameter '$dest'" 2
 fi
 
-echo -e "Printing last edited branches for destination '$dest'...\n"
+echo -e "Printing last edited branches for destination $dest ('$refsValue')...\n"
 lines=$(git for-each-ref --sort='-committerdate:iso8601' --format='%(committerdate:relative)|%(refname:short)|%(committername)|%(authorname)' $refsValue)
-[[ $dest == "remotes" ]] &&  echo -e "last edited|remote branch|committer|author\n$lines" | column -s '|' -t
-[[ $dest == "heads" ]] &&    echo -e "last edited|local branch|committer|author\n$lines" | column -s '|' -t
+## error value ei tässä kerro mitään, joten katsotaan onko tullut printtiä
+[[ -z $lines ]] && fail "Nothing was received from 'git for-each-ref' so exiting with error"
+
+if [ $dest == "remotes" ]; then
+  echo -e "last edited|remote branch|committer|author\n$lines" | column -s '|' -t
+elif [ $dest == "heads" ]; then
+  echo -e "last edited|local branch|committer|author\n$lines" | column -s '|' -t
+fi
