@@ -35,6 +35,9 @@ elif [ $USER = juuran ]; then
 elif [ $USER = ubuntu ]; then
     ZSH_THEME="lukerandall"
 
+elif [ $USER = juuso ]; then
+    ZSH_THEME="macovsky"
+
 else
     ZSH_THEME="random"
 fi
