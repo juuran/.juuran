@@ -3,7 +3,7 @@
 ## Kopioitu ja parannettu Kelan templates reposta: 
 ## https://bitbucket-alm.kela.fi/projects/TEMPLATES/repos/misc/browse/
 
-source "$(dirname "$0")/fail.sh"
+source "$SKRIPTIT_POLKU/fail.sh"
 
 printHelp() {
     echo "\

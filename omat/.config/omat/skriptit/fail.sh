@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname "$0")/error.sh"
+source "$SKRIPTIT_POLKU/error.sh"
 
 ## Elämää helpottava skripti, joka printtaa virheen syserr:iin ja poistuu virhekoodilla.
 ##   1. argumentti on viesti

@@ -1,5 +1,5 @@
 #!/bin/bash
-source "$(dirname "$0")/fail.sh"
+source "$SKRIPTIT_POLKU/fail.sh"
 
 exactMatchesOnly=false  ## oletuksena etsii "sisältää" periaatteella, tällä vain täsmälliset mätsit
 iCLess="--ignore-case"

@@ -2,7 +2,7 @@
 ## This script pretty prints the local or remote branches based
 ## on date last updated.
 
-source "$(dirname "$0")/fail.sh"
+source "$SKRIPTIT_POLKU/fail.sh"
 
 dest=$1
 if [[ $dest == "remotes" ]]; then

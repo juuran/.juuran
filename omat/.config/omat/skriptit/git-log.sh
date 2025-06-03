@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname "$0")/fail.sh"
+source "$SKRIPTIT_POLKU/fail.sh"
 
 viewMode=1
 branch=""

@@ -27,7 +27,7 @@ _tasks_ehdotukset() {
     
     edit)
       ## Tällaisella loitsulla zsh:ssä otetaan taulukko joka katkaistu \n kohdalta:
-      IFS=$'\n' raakaData=($($HOME/.config/omat/skriptit/tasks.sh autocomplete_edit))
+      IFS=$'\n' raakaData=($($SKRIPTIT_POLKU/tasks.sh autocomplete_edit))
       size="${#raakaData}"
 
       if [ "$size" -gt 99 ]

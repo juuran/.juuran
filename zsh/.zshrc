@@ -1,6 +1,6 @@
-fpath+=( ~/.config/omat/skriptit/auto_completions ) ## tarvitaan komentojen syöttämiseksi
+fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
-if [ $USER = c945fvc ] || [ $USER = juuran ]; then
+if [ $USER = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
     # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
     # Initialization code that may require console input (password prompts, [y/n]
     # confirmations, etc.) must go above this block; everything else may go below.
@@ -36,7 +36,7 @@ elif [ $USER = ubuntu ]; then
     ZSH_THEME="lukerandall"
 
 elif [ $USER = juuso ]; then
-    ZSH_THEME="macovsky"
+    ZSH_THEME="powerlevel10k/powerlevel10k"
 
 else
     ZSH_THEME="random"
@@ -113,6 +113,9 @@ elif [ $USER = juuran ]; then
 elif [ $USER = ubuntu ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 
+elif [ $USER = juuso ]; then
+    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm)
+
   ## default
 else
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
@@ -143,7 +146,7 @@ source $ZSH/oh-my-zsh.sh
 
 ## -------------------- omat -------------------- ##
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
-SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
+export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
 
 ## Eri värit tohon virheenkorjaajaan pitäis saada näin
 grayish='fg=240'
@@ -243,13 +246,23 @@ elif [ $USER = ubuntu ]; then
     autoload -U +X bashcompinit
     bashcompinit
 
+elif [ $USER = juuso ]; then
+    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+    export NOTES_PATH="/home/juuran/notes"
+
+    ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
+    autoload -U +X bashcompinit
+    bashcompinit
+
 elif [ $USER = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 fi
 
 ## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
-if [ -f ~/.config/omat/skriptit/.aliases ]; then
-    . ~/.config/omat/skriptit/.aliases
+if [ -f $SKRIPTIT_POLKU/.aliases ]; then
+    . $SKRIPTIT_POLKU/.aliases
 fi
 
 ## Enpäs nyt jaksa keksiä parempaa paikkaan näille muistiinpanoille, joten
@@ -273,3 +286,5 @@ fi
 ##         echo ${taul[1]}
 ##         ## tulostaa jotainMuuta
 ##
+
+#alias sudo='su'

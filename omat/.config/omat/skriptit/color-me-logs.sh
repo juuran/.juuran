@@ -1,5 +1,5 @@
 #!/bin/bash
-source "$(dirname "$0")/fail.sh"
+source "$SKRIPTIT_POLKU/fail.sh"
 
 printHelp() {
   echo "        color-me-logs.sh - log colorizer (v.1.02)"

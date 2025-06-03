@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname "$0")/fail.sh"
+source "$SKRIPTIT_POLKU/fail.sh"
 
 COLORFUL_AUTOCOMPLETE=true
 [ -z "$NOTES_PATH" ] && NOTES_PATH="/home/c945fvc/notes"

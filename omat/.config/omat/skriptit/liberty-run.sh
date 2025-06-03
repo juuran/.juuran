@@ -1,5 +1,5 @@
 #!/bin/bash
-source "$(dirname "$0")/fail.sh"
+source "$SKRIPTIT_POLKU/fail.sh"
 
 printHelp() {
     echo "vain seuraavia vipuja tuetaan:"

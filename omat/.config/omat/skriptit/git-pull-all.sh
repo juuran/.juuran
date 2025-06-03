@@ -5,7 +5,7 @@
 ## siis polusta yksi ylöspäin (vai onko se sitten alaspäin) kaikkien kansioiden
 ## develop haarat, ellei tuolla for-luupissa muuta aseteta.
 
-source "$(dirname "$0")/fail.sh"
+source "$SKRIPTIT_POLKU/fail.sh"
 
 pids=""
 failures=0

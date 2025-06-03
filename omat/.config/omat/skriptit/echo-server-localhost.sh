@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname "$0")/fail.sh"
+source "$SKRIPTIT_POLKU/fail.sh"
 
 handleSignals() {
     echo -e "\n$(basename "$0") lopetettu"

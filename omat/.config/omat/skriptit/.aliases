@@ -1,5 +1,5 @@
 #! /bin/bash
-source "$HOME/.config/omat/skriptit/error.sh"
+source "$SKRIPTIT_POLKU/error.sh"
 
 ## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
 ## bashin järkevät oletus-aliakset
@@ -18,18 +18,18 @@ alias watch='watch --color'
 alias nano='nano -lci'
 
 ## omat skriptit tästä alaspäin
-alias git-log=~/.config/omat/skriptit/git-log.sh
-alias git-branch-descriptions=~/.config/omat/skriptit/git-branch-descriptions.sh
-alias git-log=~/.config/omat/skriptit/git-log.sh
-alias git-modified-branches=~/.config/omat/skriptit/git-modified-branches.sh
+alias git-log=$SKRIPTIT_POLKU/git-log.sh
+alias git-branch-descriptions=$SKRIPTIT_POLKU/git-branch-descriptions.sh
+alias git-log=$SKRIPTIT_POLKU/git-log.sh
+alias git-modified-branches=$SKRIPTIT_POLKU/git-modified-branches.sh
 
-alias f-f-f-find=~/.config/omat/skriptit/f-f-f-find.sh
-alias g-g-g-grep=~/.config/omat/skriptit/g-g-g-grep.sh
-alias show-usable-colors=~/.config/omat/skriptit/show-usable-colors.sh
-alias color-me-logs=~/.config/omat/skriptit/color-me-logs.sh
+alias f-f-f-find=$SKRIPTIT_POLKU/f-f-f-find.sh
+alias g-g-g-grep=$SKRIPTIT_POLKU/g-g-g-grep.sh
+alias show-usable-colors=$SKRIPTIT_POLKU/show-usable-colors.sh
+alias color-me-logs=$SKRIPTIT_POLKU/color-me-logs.sh
 alias clear='softClear'
-alias echo-server-localhost=~/.config/omat/skriptit/echo-server-localhost.sh
-alias sha-tarkistin=~/.config/omat/skriptit/sha-tarkistin.sh
+alias echo-server-localhost=$SKRIPTIT_POLKU/echo-server-localhost.sh
+alias sha-tarkistin=$SKRIPTIT_POLKU/sha-tarkistin.sh
 
 ## käyttäjä- / ympäristökohtaiset asiat
 if [ "$USER" = "c945fvc" ]; then
@@ -44,12 +44,12 @@ if [ "$USER" = "c945fvc" ]; then
   alias mqexplorer='(/opt/ibm/MQ_Explorer/MQExplorer &> /dev/null &)'
   alias mqexplorerWithLogging='/opt/ibm/MQ_Explorer/runwithtrace'
   alias jconsole='(jconsole &> /dev/null &)'
-  alias tasks=~/.config/omat/skriptit/tasks.sh
-  alias git-pull-all=~/.config/omat/skriptit/git-pull-all.sh
-  alias vaihda-java=~/.config/omat/skriptit/vaihda-java.sh
-  alias fix-line-endings=~/.config/omat/skriptit/fix-line-endings.sh
-  alias liberty-run=~/.config/omat/skriptit/liberty-run.sh
-  alias oc-seal=~/.config/omat/skriptit/oc-seal.sh
+  alias tasks=$SKRIPTIT_POLKU/tasks.sh
+  alias git-pull-all=$SKRIPTIT_POLKU/git-pull-all.sh
+  alias vaihda-java=$SKRIPTIT_POLKU/vaihda-java.sh
+  alias fix-line-endings=$SKRIPTIT_POLKU/fix-line-endings.sh
+  alias liberty-run=$SKRIPTIT_POLKU/liberty-run.sh
+  alias oc-seal=$SKRIPTIT_POLKU/oc-seal.sh
   export BROWSER=temp_open_google
 
   function temp_open_google() {
@@ -57,10 +57,18 @@ if [ "$USER" = "c945fvc" ]; then
     (exec google-chrome-stable --enable-blink-features=MiddleClickAutoscroll "$@" &>/dev/null &)
   }
 elif [ "$USER" = "juuran" ]; then
-  alias tasks=~/.config/omat/skriptit/tasks.sh
+  alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias note='/mnt/c/Program\ Files/Notepad++/notepad++.exe'
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='nano'
+elif [ "$USER" = "juuso" ]; then
+  alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
+  function startNautilus() { (nautilus "$*" 1> /dev/null 2> /dev/null &) }
+  alias nautilus='startNautilus'
+  alias fmanager='startNautilus'
+  alias tasks=$SKRIPTIT_POLKU/tasks.sh
+  alias intelliJ="(~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea > /dev/null 2>&1 &)"
+  alias intelliJWithLogging="~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea"
 fi
 
 ## aliaksen kaltaiset funktiot (kaikki ei taivu aliakseksi sen rajoitusten takia)
