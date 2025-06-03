@@ -61,7 +61,7 @@ ZSH_THEME_RANDOM_CANDIDATES=( "lukerandall" "lambda" "macovsky" ) #"zhann" "suna
 zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
-zstyle ':omz:update' frequency 180
+zstyle ':omz:update' frequency 210
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
@@ -105,7 +105,7 @@ if [ $USER = c945fvc ]; then
     # Custom plugins may be added to $ZSH_CUSTOM/plugins/
     # Example format: plugins=(rails git textmate ruby lighthouse)
     # Add wisely, as too many plugins slow down shell startup.
-    plugins=(git-aliaksitta sudo web-search mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
+    plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
 
 elif [ $USER = juuran ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm)
@@ -114,7 +114,7 @@ elif [ $USER = ubuntu ]; then
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 
 elif [ $USER = juuso ]; then
-    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm)
+    plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions)
 
   ## default
 else
@@ -264,27 +264,3 @@ fi
 if [ -f $SKRIPTIT_POLKU/.aliases ]; then
     . $SKRIPTIT_POLKU/.aliases
 fi
-
-## Enpäs nyt jaksa keksiä parempaa paikkaan näille muistiinpanoille, joten
-## muistiin panen ne tänne.
-##   - ei ole haittaa siitä, että zsh skriptissäkin kirjoittaa "$muuttuja",
-##     se ei vain ole pakollista, koska ei splittaa
-##   - jos halutaan splittailla, niin aseta skriptin alussa:
-##         setopt shwordsplit
-##   - tällainen on mahdollista:
-##         citytext="New York
-##         Rio
-##         Tokyo"
-##
-##         cityarray=( ${(f)citytext} )
-##         - nyt cityarray on splitattu enttereiden kohdalta!
-##   - jostain neronleimauksesta taulukot on 1-indeksisiä zsh:ssä... Niinpä, joten
-##     todellisuudessa taulukoita käytellään zsh:ssä näin:
-##         setopt KSH_ARRAYS
-##         echo ${taul[0]}
-##         ## tulostaa jotain
-##         echo ${taul[1]}
-##         ## tulostaa jotainMuuta
-##
-
-#alias sudo='su'
