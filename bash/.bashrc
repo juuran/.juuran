@@ -1,3 +1,6 @@
+## -------------- omat muuttujat -------------- ##
+export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
+
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -151,8 +154,14 @@ fi
 
 ## Svidduun se non-breaking space
 if [ $USER = c945fvc ]; then
-    setxkbmap -option "nbsp:none"
-    source $HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
+    if command -v setxkbmap &> /dev/null; then
+        setxkbmap -option "nbsp:none"
+    fi
+
+    slcPolku="$HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
+    if [ -e "$slcPolku" ]; then
+        source "$slcPolku"
+    fi
     export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 fi
 

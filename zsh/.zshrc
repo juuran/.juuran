@@ -1,3 +1,7 @@
+## -------------- omat muuttujat -------------- ##
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
+export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
+
 fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
 if [ $USER = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
@@ -144,10 +148,7 @@ source $ZSH/oh-my-zsh.sh
 
 
 
-## -------------------- omat -------------------- ##
-ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
-export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
-
+## ------------- omat määrittelyt ------------- ##
 ## Eri värit tohon virheenkorjaajaan pitäis saada näin
 grayish='fg=240'
 greenish='fg=191'
@@ -181,8 +182,10 @@ fi
 
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ $USER = c945fvc ]; then
-    ## Svidduun se non-breaking space
-    setxkbmap -option "nbsp:none"
+    ## jos ohjelma olemassa, niin svidduun se non-breaking space
+    if command -v setxkbmap &> /dev/null; then
+        setxkbmap -option "nbsp:none"
+    fi
 
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -203,7 +206,10 @@ if [ $USER = c945fvc ]; then
     ## bash autocomplete search-logsia varten
     autoload -U +X bashcompinit
     bashcompinit
-    source $HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
+    slcPolku="$HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
+    if [ -e "$slcPolku" ]; then
+        source $HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
+    fi
 
     ## Laita tästä päälle, jos powerlevel alkaa ulisemaan
     ## neofetch alkoi

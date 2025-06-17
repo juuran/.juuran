@@ -76,7 +76,7 @@ function perse()  {
   [ -n "$1" ] && local pilkku=", "
   echo -e "\e[0;33m Jep, sanopa muuta$pilkku$*! \e[0m"
 }
-function llss()   { ll "$@" | less ; }
-function lad()    { ls -d "$1"/*/; }
-function lld()    { ls -d1 "$1"/*/; }
+function llss() { ll "$@" | less ; }
+function lad() { ls -d "$1"/*/; }
+function lld() { ls -d1 "$1"/*/; }
 function softClear() { for i in $(seq 2 $(tput lines)); do echo ""; done; }
