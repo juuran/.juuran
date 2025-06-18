@@ -14,7 +14,7 @@ if [ $USER = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
 fi
 
 ## tulostetaan neofetchillä kauniihko inhvo-ruutu kerran päivässä (jos neofetch löytyy)
-if [ -x "$(bash -c "which neofetch")" ] && [ "$(date +%j)" != "$(cat ~/.neofetched 2>/dev/null)" ]; then
+if command -v neofetch && [ "$(date +%j)" != "$(cat ~/.neofetched 2>/dev/null)" ]; then
     date +%j > ~/.neofetched  # day of year
     neofetch
 fi
@@ -103,25 +103,28 @@ HIST_STAMPS="dd.mm.yyyy"
 ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
 
 ## eri koneiden pluginit
-if [ $USER = c945fvc ]; then
-    # Which plugins would you like to load?
-    # Standard plugins can be found in $ZSH/plugins/
-    # Custom plugins may be added to $ZSH_CUSTOM/plugins/
-    # Example format: plugins=(rails git textmate ruby lighthouse)
-    # Add wisely, as too many plugins slow down shell startup.
+    # ( Which plugins would you like to load?
+    #   Standard plugins can be found in $ZSH/plugins/
+    #   Custom plugins may be added to $ZSH_CUSTOM/plugins/
+    #   Example format: plugins=(rails git textmate ruby lighthouse)
+    #   Add wisely, as too many plugins slow down shell startup. )
+if [ $HOST = dev047tools1.kela.fi ]; then  ## kehityspalvelin
+    plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions yum)
+
+elif [ $USER = c945fvc ]; then  ## kolaamo
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
 
-elif [ $USER = juuran ]; then
+elif [ $USER = juuran ]; then  ## oma windows
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm)
 
-elif [ $USER = ubuntu ]; then
+elif [ $USER = ubuntu ]; then  ## rpi
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 
-elif [ $USER = juuso ]; then
+elif [ $USER = juuso ]; then  ## oma debian
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions)
 
   ## default
-else
+else  ## muut, esim. vilman kone
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 fi
 
@@ -181,7 +184,28 @@ fi
 
 
 ## eri koneiden muuttujat (muut kuin plugarit)
-if [ $USER = c945fvc ]; then
+if [ $HOST = dev047tools1.kela.fi ]; then
+    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+    ## Lisäsin tämän nyt manuaalisesti .bashrc:stä
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+    ## Omien skriptien globaalit muuttujat
+    export NOTES_PATH="/home/c945fvc/notes"
+    export EDITOR_IS_SUBL=false
+
+    ## bash autocomplete search-logsia varten
+    autoload -U +X bashcompinit
+    bashcompinit
+    slcPolku="$HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
+    if [ -e "$slcPolku" ]; then
+        source $HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
+    fi
+
+elif [ $USER = c945fvc ]; then
     ## jos ohjelma olemassa, niin svidduun se non-breaking space
     if command -v setxkbmap &> /dev/null; then
         setxkbmap -option "nbsp:none"
