@@ -30,6 +30,7 @@ alias color-me-logs=$SKRIPTIT_POLKU/color-me-logs.sh
 alias clear='softClear'
 alias echo-server-localhost=$SKRIPTIT_POLKU/echo-server-localhost.sh
 alias sha-tarkistin=$SKRIPTIT_POLKU/sha-tarkistin.sh
+alias recursive-do=$SKRIPTIT_POLKU/recursive-do.sh
 
 ## käyttäjä- / ympäristökohtaiset asiat
 if [ "$USER" = "c945fvc" ]; then

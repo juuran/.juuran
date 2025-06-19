@@ -38,7 +38,7 @@ _arguments -s \
     '(-h --help)'{-h,--help}'[display help]' \
     '-i[ignore case off, makes case significant]' \
     '-e[exact matches only]' \
-    '-p[to look for paths with a pattern]' \
+    '-p[to look for paths with a pattern treating "/" specially]' \
     '-X[to make less use its switch -X]' \
     "-m+[set maximum depth to descend to in recursion]:number:($depthsOfHades)" \
 ## (

@@ -26,6 +26,7 @@ printHelp() {
   echo "  -e          exact matches only by removing wildcards  *  around words"
   echo "  -m          maxdepth, i.e. the amount how deep to descend in path recursion (infinite by default)"
   echo "  -X          prints taller than terminal height are kept on screen if they occupy only one line (less -X)"
+  echo "  -p          makes find use the \"path\" search pattern which treats '/' characters specially"
   exit
 }
 
@@ -35,7 +36,7 @@ for arg in "$@"; do
 done
 
 ## Optioiden käsittely
-while getopts "ieXhm:" OPTION; do
+while getopts "ieXhm:p" OPTION; do
   case "$OPTION" in
     i)
       echo "        -- Case is significant --"
@@ -58,9 +59,12 @@ while getopts "ieXhm:" OPTION; do
       l="$OPTARG"
       [ "$l" -eq "$l" ] || fail "The value for maxdepth must be a number!"
       ;;
+    p)
+      type="path"
+      ;;
     *)
       ## Perään lisättävien argumenttien lisäksi Bash käyttää samaa OPTARG -muuttujaa myös virheellisille vivuille!
-      fail "Incorrect option "$OPTARG". Type -h for help!"
+      fail "Incorrect option '"$OPTARG"'. Type -h for help!"
       ;;
   esac
 done
