@@ -16,15 +16,14 @@ tahi tilalle `git@github.com:juuran/.juuran.git`
 Jos haluat sa kaiken stow'aa (paitsi tämän READMEen) – muistapa myös .juuran cansioon mennä!
 
 ```
-if [ $USER != c945fvc ]; \
-    then stow */ --ignore=.ssh/config; \
-    else stow */; \
-fi
+stow */ --ignore=.ssh/config
 ```
 
 Ja jospa yhden vain
 
-    stow yksi
+```
+stow yksi
+```
 
 
 ## Yhden komennon asennus laiscoille
@@ -32,12 +31,12 @@ Ja jospa yhden vain
 cd && \
 git clone --recurse-submodules git@github.com:juuran/.juuran.git && \
 cd .juuran && \
-if [ $USER = c945fvc ]; \
-	then stow */; \
-	else stow */ '--ignore=.ssh/*'; \
-fi && \
+stow */ '--ignore=.ssh/*'
 cd
 ```
+
+Jos välttämättä haluat tuon ssh:n kutaleen (josta rehellisesti enemmän haittaa on
+kuin hyötyä, ollut), niin sitten jätä pois --ignore.
 
 
 # Päivittää voit myös ilman tuscaa
