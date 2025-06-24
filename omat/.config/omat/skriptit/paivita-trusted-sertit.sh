@@ -12,7 +12,9 @@ function fail() {
 }
 
 printHelp() {
-    echo "        paivita-trusted-sertit.sh (v. $VERSION)"
+    echo ""
+    echo "paivita-trusted-sertit.sh (v. $VERSION)"
+    echo ""
     echo "skripti päivittää trusted sertin annetu(i)lle kone(e/i)lle"
     echo
     echo "käyttö:"

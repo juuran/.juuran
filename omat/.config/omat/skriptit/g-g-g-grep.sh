@@ -11,27 +11,28 @@ A=""
 B=""
 
 printHelp() {
-  echo "\
-        g-g-g-grep.sh - grep for humans (v.1.01)
-Uses grep to search for contents of files recursively. Cannot access files outside of user's privileges.
-
-Usage:
-    g-g-g-grep.sh [OPTION]... \"arg1\"                               search for arg1 (\"quoted\" if whitespace) from current dir
-    g-g-g-grep.sh [OPTION]... \"arg1\" [OPTION_TO_GREP]...           search for arg1 from current dir with n options given to grep
-    g-g-g-grep.sh [OPTION]... \"arg1\" \"argN\" [OPTION_TO_GREP]...  search for arg1 from argN paths with n options given to grep
-
-ATTENZION! Options in the beginning are handled by this script but options after args are fed straight to grep!
-
-Options:
-    -h, --help  prints this help
-    -i          turn \"--ignore-case\" off which is on by default – makes case significant
-    -d          change default \"--recursive\" into \"--dereference-recursive\", because it could help
-    -l          number of lines to print before and after (essentially -A \$samenumber -B \$samenumber given to grep)
-    -r          turn all recursion off - useful when feeding a list of filenames and are unsure if directories are involved
-    -c          zgrep is used to read compressed files which always disables unsupported recursion
-    -E          changes the search argument to be interpreted as an extended regular expressions (ERE) instead of a string
-    -X          keeps printed text on screen (usually) – controls whether -X option is given to less
-"
+  echo ""
+  echo "g-g-g-grep.sh - grep for humans (v.1.01)"
+  echo ""
+  echo "Uses grep to search for contents of files recursively. Cannot access files outside of user's privileges."
+  echo ""
+  echo "Usage:"
+  echo '    g-g-g-grep.sh [OPTION]... "arg1"                               search for arg1 ("quoted" if whitespace) from current dir'
+  echo '    g-g-g-grep.sh [OPTION]... "arg1" [OPTION_TO_GREP]...           search for arg1 from current dir with n options given to grep'
+  echo '    g-g-g-grep.sh [OPTION]... "arg1" "argN" [OPTION_TO_GREP]...    search for arg1 from argN paths with n options given to grep'
+  echo ""
+  echo "ATTENZION! Options in the beginning are handled by this script but options after args are fed straight to grep!"
+  echo ""
+  echo "Options:"
+  echo "    -h, --help  prints this help"
+  echo "    -i          turn \"--ignore-case\" off which is on by default – makes case significant"
+  echo "    -d          change default \"--recursive\" into \"--dereference-recursive\", because it could help"
+  echo "    -l          number of lines to print before and after (essentially -A \$samenumber -B \$samenumber given to grep)"
+  echo "    -r          turn all recursion off - useful when feeding a list of filenames and are unsure if directories are involved"
+  echo "    -c          zgrep is used to read compressed files which always disables unsupported recursion"
+  echo "    -E          changes the search argument to be interpreted as an extended regular expressions (ERE) instead of a string"
+  echo "    -X          keeps printed text on screen (usually) – controls whether -X option is given to less"
+  echo ""
   exit 0
 }
 

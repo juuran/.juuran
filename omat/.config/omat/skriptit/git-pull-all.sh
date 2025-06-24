@@ -16,6 +16,7 @@ pathsToSkip=()
 doToAll=""
 
 function showHelp() {
+  echo ""
   echo "git-pull-all.sh (v.1.00)"
   echo
   echo "USAGE"

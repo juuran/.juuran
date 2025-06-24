@@ -3,11 +3,11 @@
 source "$SKRIPTIT_POLKU/fail.sh"
 
 function showHelp() {
+  echo ""
   echo "recursive-do (v.1.00)"
   echo
   echo "USAGE"
   echo '    recursive-do.sh [OPTION]... "[TASK]"    The task must be placed after options and wrapped in "quotes".'
-  # shellcheck disable=SC2016
   echo '                                            Note that the caller can access the immediate pwd with $shortPath'
   echo
   echo "OPTIONS:"
@@ -37,9 +37,7 @@ while getopts "ps:h" OPTION; do
     PARALLEL="true"
     ;;
     s)
-    # shellcheck disable=SC2068
     for path in ${OPTARG[@]}; do
-        # shellcheck disable=SC2206
         PATHS_TO_SKIP+=( $path )
     done
     [ -z "${PATHS_TO_SKIP[*]}" ] && fail "The paths to skip was empty!" 1
@@ -54,7 +52,6 @@ while getopts "ps:h" OPTION; do
     esac
 done
 ## getopts käytön jälkeen täytyy "nollata" argumenttien indeksi, että saadaan "tavalliset" argumentit mukaan
-# shellcheck disable=SC2004
 shift "$(($OPTIND -1))"
 
 THING_TO_DO="$1"

@@ -2,7 +2,9 @@
 source "$SKRIPTIT_POLKU/fail.sh"
 
 printHelp() {
-  echo "        color-me-logs.sh - log colorizer (v.1.02)"
+  echo ""
+  echo "color-me-logs.sh - log colorizer (v.1.02)"
+  echo ""
   echo "Adds a little sparkle to your day!"
   echo
   echo "Usage example:"

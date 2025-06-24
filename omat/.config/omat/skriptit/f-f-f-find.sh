@@ -10,7 +10,9 @@ l=""
 X=""
 
 printHelp() {
-  echo "        f-f-f-find.sh - find for humans (v.1.02)"
+  echo ""
+  echo "f-f-f-find.sh - find for humans (v.1.03)"
+  echo ""
   echo "Uses find to look for files by filename recursively. Cannot access files outside privileges of current user."
   echo 
   echo "Usage:"
@@ -27,7 +29,7 @@ printHelp() {
   echo "  -m          maxdepth, i.e. the amount how deep to descend in path recursion (infinite by default)"
   echo "  -X          prints taller than terminal height are kept on screen if they occupy only one line (less -X)"
   echo "  -p          makes find use the \"path\" search pattern which treats '/' characters specially"
-  exit
+  exit 0
 }
 
 ## Hjälp

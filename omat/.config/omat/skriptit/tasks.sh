@@ -35,7 +35,9 @@ AUTOCOMPLETE_CACHE_FILE="$HOME/.cache/.tasks_edit_cache"
 ! [ -e "$AUTOCOMPLETE_CACHE_FILE" ] && clearCache  ## jos ei ole cachea, luo cachen (ja toki myös tyhjää sen)
 
 printHelp() {
-  echo "        tasks.sh (v.1.23)"
+  echo ""
+  echo "tasks.sh (v.1.23)"
+  echo ""
   echo "Näyttää auki olevat täskit. Niitä voi merkata käyttämällä § merkkiä, joka jostain ihmeen syystä"
   echo "näppiksestä löytyy. Tarkempaa tietoa löytyy tiedostosta ~/notes/koodaus/tasks.txt."
   echo

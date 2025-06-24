@@ -3,7 +3,9 @@
 source "$SKRIPTIT_POLKU/fail.sh"
 
 printHelp() {
-  echo "        sha-tarkistin.sh"
+  echo ""
+  echo "sha-tarkistin.sh"
+  echo ""
   echo "Shan tarkistus \"helposti\", no ainakin helpommin"
   echo 
   echo "Käyttö:"

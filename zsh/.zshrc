@@ -205,6 +205,9 @@ if [ $HOST = dev047tools1.kela.fi ]; then
         source $HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
     fi
 
+    ## että edes git pull toimisi nginx kautta
+    export GIT_SSL_NO_VERIFY=true
+
 elif [ $USER = c945fvc ]; then
     ## jos ohjelma olemassa, niin svidduun se non-breaking space
     if command -v setxkbmap &> /dev/null; then

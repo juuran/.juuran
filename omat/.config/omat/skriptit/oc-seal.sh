@@ -6,13 +6,14 @@
 source "$SKRIPTIT_POLKU/fail.sh"
 
 printHelp() {
-    echo "\
-    oc-seal.sh - seals openshift secrets
-Usage:
-  oc-seal [SECRET]...       seal one or more secrets as sealed secrets to be added to git
-Options:
-  -h, --help                prints this help
-"
+  echo ""
+  echo "oc-seal.sh - seals openshift secrets"
+  echo ""
+  echo "Usage:"
+  echo "  oc-seal [SECRET]...       seal one or more secrets as sealed secrets to be added to git"
+  echo "Options:"
+  echo "  -h, --help                prints this help"
+  exit 0
 }
 
 for arg in "$@"; do
