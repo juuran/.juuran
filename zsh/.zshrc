@@ -211,6 +211,9 @@ if [ $HOST = dev047tools1.kela.fi ]; then
     ## että edes git pull toimisi nginx kautta
     export GIT_SSL_NO_VERIFY=true
 
+    ## tämä suotta ulisee, nyt käynnistyy aavistuksen hitaammin mutta se on ok!
+    typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+
 elif [ $USER = c945fvc ]; then
     ## jos ohjelma olemassa, niin svidduun se non-breaking space
     if command -v setxkbmap &> /dev/null; then
