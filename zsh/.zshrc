@@ -185,6 +185,9 @@ fi
 
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ $HOST = dev047tools1.kela.fi ]; then
+    ## Ei tee tätä oletuksena git bashin kanssa
+    export TERM=xterm-256color
+
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
