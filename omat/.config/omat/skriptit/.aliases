@@ -33,7 +33,11 @@ alias sha-tarkistin=$SKRIPTIT_POLKU/sha-tarkistin.sh
 alias recursive-do=$SKRIPTIT_POLKU/recursive-do.sh
 
 ## käyttäjä- / ympäristökohtaiset asiat
-if [ "$USER" = "c945fvc" ]; then
+if [ $HOST = dev047tools1.kela.fi ]; then
+  alias tasks=$SKRIPTIT_POLKU/tasks.sh
+  alias git-pull-all=$SKRIPTIT_POLKU/git-pull-all.sh
+
+elif [ "$USER" = "c945fvc" ]; then
   alias fmanager='exo-open --launch FileManager'
   alias mvn='mvn --color always'
   alias koira='(~/mqjexplorer/mqjexplorer/MQJExplorer/runme.sh > /dev/null &); echo ""'               ## jostain helkatin syystä ...
@@ -57,11 +61,14 @@ if [ "$USER" = "c945fvc" ]; then
     #! /bin/bash
     (exec google-chrome-stable --enable-blink-features=MiddleClickAutoscroll "$@" &>/dev/null &)
   }
+
 elif [ "$USER" = "juuran" ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias note='/mnt/c/Program\ Files/Notepad++/notepad++.exe'
+
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='nano'
+
 elif [ "$USER" = "juuso" ]; then
   alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
   function startNautilus() { (nautilus "$*" 1> /dev/null 2> /dev/null &) }
