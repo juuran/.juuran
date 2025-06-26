@@ -14,7 +14,7 @@ if [ $USER = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
 fi
 
 ## tulostetaan neofetchillä kauniihko inhvo-ruutu kerran päivässä (jos neofetch löytyy)
-if command -v neofetch && [ "$(date +%j)" != "$(cat ~/.neofetched 2>/dev/null)" ]; then
+if command -v neofetch > /dev/null && [ "$(date +%j)" != "$(cat ~/.neofetched 2>/dev/null)" ]; then
     date +%j > ~/.neofetched  # day of year
     neofetch
 fi
@@ -216,7 +216,7 @@ if [ $HOST = dev047tools1.kela.fi ]; then
 
 elif [ $USER = c945fvc ]; then
     ## jos ohjelma olemassa, niin svidduun se non-breaking space
-    if command -v setxkbmap &> /dev/null; then
+    if command -v setxkbmap > /dev/null &> /dev/null; then
         setxkbmap -option "nbsp:none"
     fi
 
