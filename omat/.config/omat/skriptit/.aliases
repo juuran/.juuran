@@ -32,6 +32,9 @@ alias echo-server-localhost=$SKRIPTIT_POLKU/echo-server-localhost.sh
 alias sha-tarkistin=$SKRIPTIT_POLKU/sha-tarkistin.sh
 alias recursive-do=$SKRIPTIT_POLKU/recursive-do.sh
 
+## tämä mahdollistaa omien skriptien ajon /usr/local/bin kautta
+alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
+
 ## käyttäjä- / ympäristökohtaiset asiat
 if [ $HOST = dev047tools1.kela.fi ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
@@ -70,7 +73,6 @@ elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='nano'
 
 elif [ "$USER" = "juuso" ]; then
-  alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
   function startNautilus() { (nautilus "$*" 1> /dev/null 2> /dev/null &) }
   alias nautilus='startNautilus'
   alias fmanager='startNautilus'
