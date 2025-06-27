@@ -185,8 +185,10 @@ fi
 
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ $HOST = dev047tools1.kela.fi ]; then
-    ## ei jostain syystä asennus oletuksena tehnyt tätä
-    export JAVA_HOME=/usr/bin/java
+    ## asetettava JAVA_HOME, mutta update-alternatives linkkaa virheellisesti java ohjelmaan, ei kansioon
+    local java_home; java_home=$(readlink -f /usr/bin/java)
+    java_home=${java_home:0:-9}
+    JAVA_HOME=$java_home
     PATH+=$PATH:$JAVA_HOME/bin
 
     ## Ei tee tätä oletuksena git bashin kanssa
