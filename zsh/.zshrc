@@ -185,6 +185,9 @@ fi
 
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ $HOST = dev047tools1.kela.fi ]; then
+    ## ei jostain syystä asennus oletuksena tehnyt tätä
+    export JAVA_HOME=/usr/bin/java
+
     ## Ei tee tätä oletuksena git bashin kanssa
     export TERM=xterm-256color
 
