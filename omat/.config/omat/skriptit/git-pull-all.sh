@@ -111,7 +111,7 @@ main() {
   [ "$runCustomCommand" == true ] && echo "** Running command in all subdirectories: $doToAll **"
 
   projects=$(find . -mindepth 1 -maxdepth 1 -type d)
-  pathsToSkip+=( "EESSITestingki" "yms" "salt" )  ## skipataan aina vähintään nämä!
+  pathsToSkip+=( "EESSITestingki" "yms" "salt" "opap-tester" )  ## skipataan aina vähintään nämä!
   for path in $projects; do
     shortPath="${path:2}"
     fullPath="$(pwd)/$shortPath"
