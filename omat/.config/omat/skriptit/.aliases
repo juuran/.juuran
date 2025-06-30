@@ -1,6 +1,8 @@
 #! /bin/bash
 source "$SKRIPTIT_POLKU/error.sh"
 
+## TODO: tee linkki .shell_aliases, sen verran usein tätäkin käpistellään!
+
 ## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
 ## bashin järkevät oletus-aliakset
 alias ls='ls --color=always'
@@ -37,6 +39,10 @@ alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
 
 ## käyttäjä- / ympäristökohtaiset asiat
 if [ $HOST = dev047tools1.kela.fi ]; then
+  function superUserDo() {
+    sudo env "PATH=$PATH" /bin/bash -c "$@"
+  }
+  alias sudo='superUserDo'
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias git-pull-all=$SKRIPTIT_POLKU/git-pull-all.sh
 
