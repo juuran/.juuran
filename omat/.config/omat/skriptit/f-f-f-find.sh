@@ -1,4 +1,7 @@
 #!/bin/bash
+
+echo "DEBUG: 1=$1 2=$2 3=$3 4=$4 *=$*"
+
 source "$SKRIPTIT_POLKU/fail.sh"
 
 exactMatchesOnly=false  ## oletuksena etsii "sisältää" periaatteella, tällä vain täsmälliset mätsit
