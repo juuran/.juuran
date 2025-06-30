@@ -40,7 +40,7 @@ alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
 ## käyttäjä- / ympäristökohtaiset asiat
 if [ $HOST = dev047tools1.kela.fi ]; then
   function superUserDo() {
-    sudo env "PATH=$PATH" /bin/bash -c "$@"
+    'sudo env "PATH=$PATH" /bin/bash -c "$@"'
   }
   alias sudo='superUserDo'
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
