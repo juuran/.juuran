@@ -182,14 +182,17 @@ else
     export EDITOR='nano -lci'
 fi
 
-
-## eri koneiden muuttujat (muut kuin plugarit)
-if [ $HOST = dev047tools1.kela.fi ]; then
-    ## asetettava JAVA_HOME, mutta update-alternatives linkkaa virheellisesti java ohjelmaan, ei kansioon
+function paivitaJavaHome() {
     local java_home; java_home=$(readlink -f /usr/bin/java)
     java_home=${java_home:0:-9}
     JAVA_HOME=$java_home
     PATH+=$PATH:$JAVA_HOME/bin
+}
+
+## eri koneiden muuttujat (muut kuin plugarit)
+if [ $HOST = dev047tools1.kela.fi ]; then
+    ## asetettava JAVA_HOME, mutta update-alternatives linkkaa virheellisesti java ohjelmaan, ei kansioon
+    paivitaJavaHome
 
     ## Ei tee tätä oletuksena git bashin kanssa
     export TERM=xterm-256color
