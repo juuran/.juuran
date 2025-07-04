@@ -214,9 +214,9 @@ if [ $HOST = dev047tools1.kela.fi ]; then
     ## bash autocomplete search-logsia varten
     autoload -U +X bashcompinit
     bashcompinit
-    slcPolku="$HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
+    slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
     if [ -e "$slcPolku" ]; then
-        source $HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
+        source $HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
     fi
 
     ## että edes git pull toimisi nginx kautta

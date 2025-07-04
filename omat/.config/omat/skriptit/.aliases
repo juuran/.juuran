@@ -45,6 +45,7 @@ if [ $HOST = dev047tools1.kela.fi ]; then
   alias sudo='superUserDo'
   alias nano='nano -Alciz'
   alias nano-without-linenumbers='nano -Aciz'
+  alias search-logs=$HOME/koodi/omat/lokilucia/search-logs.sh
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias git-pull-all=$SKRIPTIT_POLKU/git-pull-all.sh
   alias liberty-run=$SKRIPTIT_POLKU/liberty-run.sh
