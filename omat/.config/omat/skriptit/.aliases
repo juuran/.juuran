@@ -49,6 +49,7 @@ if [ $HOST = dev047tools1.kela.fi ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias git-pull-all=$SKRIPTIT_POLKU/git-pull-all.sh
   alias liberty-run=$SKRIPTIT_POLKU/liberty-run.sh
+  alias oc-seal=$SKRIPTIT_POLKU/oc-seal.sh
 
 elif [ "$USER" = "c945fvc" ]; then
   alias fmanager='exo-open --launch FileManager'
