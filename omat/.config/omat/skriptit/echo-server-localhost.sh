@@ -23,9 +23,15 @@ echoserve() {
   ## Tämäpä ei olekaan niin helppo ongelma kuin voisi kuvitella! Älä käytä tähän enää aikaa, jooko?
   ## Toimii ekalle viestille, mutta sen jälkeen pitää käynnistää uudestaan. Thumbs down.
   while true; do
-  (echo -ne "HTTP/1.1 200 OK\r\n\r\n"; cat) \
-    | nc -l -p $PORT -q 1 -w 2 \
-    || fail "porttinumero ei ole sallittu."
+    if [ $HOSTNAME = "dev047tools1.kela.fi" ]; then
+      (echo -ne "HTTP/1.1 200 OK\r\n\r\n"; cat) | nc -l -p $PORT -w 2 -i 2 \
+      || fail "porttinumero ei ole sallittu."
+    
+    else
+      (echo -ne "HTTP/1.1 200 OK\r\n\r\n"; cat) | nc -l -p $PORT -q 1 -w 2 \
+      || fail "porttinumero ei ole sallittu."
+
+    fi
   done
 }
 
