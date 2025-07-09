@@ -1,10 +1,9 @@
 #! /bin/bash
+## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
+
 source "$SKRIPTIT_POLKU/error.sh"
 
-## TODO: tee linkki .shell_aliases, sen verran usein tätäkin käpistellään!
-
-## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
-## bashin järkevät oletus-aliakset
+## jonkin random .bashrc:n järkevät oletus-aliakset
 alias ls='ls --color=always'
 alias l='ls -CF'
 alias ll='ls -alFh'

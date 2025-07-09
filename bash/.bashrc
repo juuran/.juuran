@@ -139,8 +139,8 @@ export SDKMAN_DIR="/home/juuran/.sdkman"
 
 
 # Yeah, fuck those
-if [ -f ~/.config/omat/skriptit/.aliases ]; then
-    . ~/.config/omat/skriptit/.aliases
+if [ -f $HOME/.shell_aliases ]; then
+    . $HOME/.shell_aliases
 fi
 
 # Preferred editor for local and remote sessions

@@ -311,6 +311,6 @@ elif [ $USER = vilmasilvennoinen ]; then
 fi
 
 ## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
-if [ -f $SKRIPTIT_POLKU/.aliases ]; then
-    . $SKRIPTIT_POLKU/.aliases
+if [ -f $HOME/.shell_aliases ]; then
+    . $HOME/.shell_aliases
 fi
