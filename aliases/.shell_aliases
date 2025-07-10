@@ -89,6 +89,9 @@ elif [ "$USER" = "juuso" ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias intelliJ="(~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea > /dev/null 2>&1 &)"
   alias intelliJWithLogging="~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea"
+  alias nano='\nano -Alci'
+  alias nano-without-linenumbers='\nano -Aci'
+
 fi
 
 ## aliaksen kaltaiset funktiot (kaikki ei taivu aliakseksi sen rajoitusten takia)
