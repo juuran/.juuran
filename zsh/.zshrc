@@ -109,7 +109,7 @@ ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
     #   Example format: plugins=(rails git textmate ruby lighthouse)
     #   Add wisely, as too many plugins slow down shell startup. )
 if [ $HOST = dev047tools1.kela.fi ]; then  ## kehityspalvelin
-    plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions yum)
+    plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions yum docker)
 
 elif [ $USER = c945fvc ]; then  ## kolaamo
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
