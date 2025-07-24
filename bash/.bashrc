@@ -158,7 +158,7 @@ if [ "$USER" = c945fvc ]; then
         setxkbmap -option "nbsp:none"
     fi
 
-    slcPolku="$HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
+    slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
     if [ -e "$slcPolku" ]; then
         source "$slcPolku"
     fi
