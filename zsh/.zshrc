@@ -4,7 +4,7 @@ export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
 
 fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
-if [ $USER = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
+if [ "$USER" = c945fvc ] || [ "$USER" = juuran ] || [ "$USER" = juuso ]; then
     # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
     # Initialization code that may require console input (password prompts, [y/n]
     # confirmations, etc.) must go above this block; everything else may go below.
@@ -29,17 +29,17 @@ export ZSH="$HOME/.config/zsh/oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-if [ $USER = c945fvc ]; then
+if [ "$USER" = c945fvc ]; then
     ZSH_THEME="powerlevel10k/powerlevel10k"
 
-elif [ $USER = juuran ]; then
+elif [ "$USER" = juuran ]; then
     ZSH_THEME="powerlevel10k/powerlevel10k"
     ## hyviä: lukerandall, lambda, muse, zhann, sunaku, norm, macovsky, miloshadzic, avit, fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
 
-elif [ $USER = ubuntu ]; then
+elif [ "$USER" = ubuntu ]; then
     ZSH_THEME="lukerandall"
 
-elif [ $USER = juuso ]; then
+elif [ "$USER" = juuso ]; then
     ZSH_THEME="powerlevel10k/powerlevel10k"
 
 else
@@ -108,19 +108,19 @@ ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
     #   Custom plugins may be added to $ZSH_CUSTOM/plugins/
     #   Example format: plugins=(rails git textmate ruby lighthouse)
     #   Add wisely, as too many plugins slow down shell startup. )
-if [ $HOST = dev047tools1.kela.fi ]; then  ## kehityspalvelin
+if [ "$HOST" = dev047tools1.kela.fi ]; then  ## kehityspalvelin
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions yum docker)
 
-elif [ $USER = c945fvc ]; then  ## kolaamo
+elif [ "$USER" = c945fvc ]; then  ## kolaamo
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
 
-elif [ $USER = juuran ]; then  ## oma windows
+elif [ "$USER" = juuran ]; then  ## oma windows
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm)
 
-elif [ $USER = ubuntu ]; then  ## rpi
+elif [ "$USER" = ubuntu ]; then  ## rpi
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 
-elif [ $USER = juuso ]; then  ## oma debian
+elif [ "$USER" = juuso ]; then  ## oma debian
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions)
 
   ## default
@@ -176,7 +176,7 @@ HISTFILE=~/.shell_history
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
     export EDITOR='nano'
-elif [ $USER = vilmasilvennoinen ]; then
+elif [ "$USER" = vilmasilvennoinen ]; then
     export EDITOR='nano'
 else
     export EDITOR='nano -lci'
@@ -192,7 +192,7 @@ function paivitaJavaHome() {
 }
 
 ## eri koneiden muuttujat (muut kuin plugarit)
-if [ $HOST = dev047tools1.kela.fi ]; then
+if [ "$HOST" = dev047tools1.kela.fi ]; then
     ## asetettava JAVA_HOME, mutta update-alternatives linkkaa virheellisesti java ohjelmaan, ei kansioon
     paivitaJavaHome
 
@@ -216,7 +216,7 @@ if [ $HOST = dev047tools1.kela.fi ]; then
     bashcompinit
     slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
     if [ -e "$slcPolku" ]; then
-        source $HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
+        source "$slcPolku"
     fi
 
     ## että edes git pull toimisi nginx kautta
@@ -225,7 +225,7 @@ if [ $HOST = dev047tools1.kela.fi ]; then
     ## tämä suotta ulisee, nyt käynnistyy aavistuksen hitaammin mutta se on ok!
     typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 
-elif [ $USER = c945fvc ]; then
+elif [ "$USER" = c945fvc ]; then
     ## jos ohjelma olemassa, niin svidduun se non-breaking space
     if command -v setxkbmap > /dev/null &> /dev/null; then
         setxkbmap -option "nbsp:none"
@@ -252,14 +252,14 @@ elif [ $USER = c945fvc ]; then
     bashcompinit
     slcPolku="$HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
     if [ -e "$slcPolku" ]; then
-        source $HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh
+        source "$slcPolku"
     fi
 
     ## Laita tästä päälle, jos powerlevel alkaa ulisemaan
     ## neofetch alkoi
     typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
-elif [ $USER = juuran ]; then
+elif [ "$USER" = juuran ]; then
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -289,14 +289,14 @@ elif [ $USER = juuran ]; then
     }
     precmd_functions+=(keep_current_path)
 
-elif [ $USER = ubuntu ]; then
+elif [ "$USER" = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
 
     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
     autoload -U +X bashcompinit
     bashcompinit
 
-elif [ $USER = juuso ]; then
+elif [ "$USER" = juuso ]; then
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -306,11 +306,11 @@ elif [ $USER = juuso ]; then
     autoload -U +X bashcompinit
     bashcompinit
 
-elif [ $USER = vilmasilvennoinen ]; then
+elif [ "$USER" = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 fi
 
 ## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
-if [ -f $HOME/.shell_aliases ]; then
+if [ -f "$HOME/.shell_aliases" ]; then
     . $HOME/.shell_aliases
 fi
