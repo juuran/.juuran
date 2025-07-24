@@ -37,7 +37,7 @@ alias recursive-do=$SKRIPTIT_POLKU/recursive-do.sh
 alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
 
 ## käyttäjä- / ympäristökohtaiset asiat
-if [ $HOST = dev047tools1.kela.fi ]; then
+if [ "$HOST" = dev047tools1.kela.fi ]; then
   function superUserDo() {
     sudo env "PATH=$PATH" /bin/bash -c "$*"
   }

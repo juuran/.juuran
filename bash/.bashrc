@@ -146,14 +146,14 @@ fi
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
     export EDITOR='nano'
-elif [ $USER = vilmasilvennoinen ]; then
+elif [ "$USER" = vilmasilvennoinen ]; then
     export EDITOR='nano'
 else
     export EDITOR='nano -lci'
 fi
 
 ## Svidduun se non-breaking space
-if [ $USER = c945fvc ]; then
+if [ "$USER" = c945fvc ]; then
     if command -v setxkbmap &> /dev/null; then
         setxkbmap -option "nbsp:none"
     fi
