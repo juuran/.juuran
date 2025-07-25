@@ -172,6 +172,7 @@ typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayish
 # Pistetääns yhtenäinen historia molempaisiin shelleihin
 unsetopt EXTENDED_HISTORY
 HISTFILE=~/.shell_history
+setopt histsavenodups
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
