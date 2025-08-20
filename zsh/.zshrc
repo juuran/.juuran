@@ -29,20 +29,20 @@ export ZSH="$HOME/.config/zsh/oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-if [ "$USER" = c945fvc ]; then
+if [ "$USER" = c945fvc ]; then   ## kela
     ZSH_THEME="powerlevel10k/powerlevel10k"
 
-elif [ "$USER" = juuran ]; then
+elif [ "$USER" = juuran ]; then  ## windows oma kone
     ZSH_THEME="powerlevel10k/powerlevel10k"
     ## hyviä: lukerandall, lambda, muse, zhann, sunaku, norm, macovsky, miloshadzic, avit, fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
 
-elif [ "$USER" = ubuntu ]; then
+elif [ "$USER" = ubuntu ]; then  ## rpi
     ZSH_THEME="lukerandall"
 
-elif [ "$USER" = juuso ]; then
+elif [ "$USER" = juuso ]; then   ## debian oma kone
     ZSH_THEME="powerlevel10k/powerlevel10k"
 
-else
+else                             ## muut koneet (mm. vilma)
     ZSH_THEME="random"
 fi
 
@@ -111,20 +111,20 @@ ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
 if [ "$HOST" = dev047tools1.kela.fi ]; then  ## kehityspalvelin
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions yum docker)
 
-elif [ "$USER" = c945fvc ]; then  ## kolaamo
+elif [ "$USER" = c945fvc ]; then             ## kolaamo (deprekoitu!)
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
 
-elif [ "$USER" = juuran ]; then  ## oma windows
-    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm)
+elif [ "$USER" = juuran ]; then              ## oma windows
+    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm web-search)
 
-elif [ "$USER" = ubuntu ]; then  ## rpi
+elif [ "$USER" = ubuntu ]; then              ## rpi
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 
-elif [ "$USER" = juuso ]; then  ## oma debian
+elif [ "$USER" = juuso ]; then               ## oma debian
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions)
 
   ## default
-else  ## muut, esim. vilman kone
+else                                         ## muut (esim. vilman kone)
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 fi
 
