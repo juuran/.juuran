@@ -78,6 +78,8 @@ elif [ "$USER" = "c945fvc" ]; then
 elif [ "$USER" = "juuran" ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias note='/mnt/c/Program\ Files/Notepad++/notepad++.exe'
+  alias nano='\nano -Acil'
+  alias nano-without-linenumbers='\nano -Aci'
 
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='\nano'
