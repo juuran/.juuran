@@ -9,7 +9,8 @@
 ## - gitin tiedot kattavasti kys. hakemistolle
 ##
 
-color_error="%{${(%):-"%F{9}"}%}"         ## punainen, (124, 197, 160, 9)
+color_error_bold="%{$fg_bold[red]%}"      ## bold punainen
+color_error="%{${(%):-"%F{1}"}%}"         ## punainen, (124, 197, 160, 9, 1)
 color_git_good="%{${(%):-"%F{41}"}%}"     ## vihreä (47, 120, 41)
 color_git_neutral="%{${(%):-"%F{43}"}%}"  ## sinisempi (43, 44, 81)
 color_dotdotdot="%{${(%):-"%F{244}"}%}"   ## harmaa (244, 247)
@@ -54,7 +55,7 @@ prompt_status_context() {
   if [[ $RETVAL -eq 0 ]]; then
     prompt_segment ${color_lambda} "λ"
   else
-    prompt_segment ${color_error} "λ"
+    prompt_segment ${color_error_bold} "λ"
   fi
 
   if [[ "$HOST" == "KANALANMANAT" ]]; then
@@ -109,7 +110,7 @@ prompt_git() {
   fi
 
   if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-    mode="${color_git_neutral} <B>"
+    mode="${color_git_neutral} <B>" 
   elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
     mode="${color_git_neutral} >M<"
   elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
