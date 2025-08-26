@@ -37,7 +37,7 @@ elif [ "$USER" = juuran ]; then  ## windows oma kone
     ## hyviä: lukerandall, lambda, muse, zhann, sunaku, norm, macovsky, miloshadzic, avit, fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
 
 elif [ "$USER" = ubuntu ]; then  ## rpi
-    ZSH_THEME="lukerandall"
+    ZSH_THE;E="lambda-valimaa"
 
 elif [ "$USER" = juuso ]; then   ## debian oma kone
     ZSH_THEME="powerlevel10k/powerlevel10k"

@@ -18,6 +18,7 @@ color_lambda="%{$fg_bold[white]%}"        ## kirkkaan valkoinen (231, 256)
 color_warn="%{${(%):-"%F{227}"}%}"        ## keltainen (227, 142)
 color_warner="%{${(%):-"%F{208}"}%}"      ## oranssi (208, 130)
 color_god="%{${(%):-"%F{226}"}%}"         ## väri jos olet root, kultainen (226)
+color_context="%{${(%):-"%F{139}"}%}"     ## "hostin nimi", joku hillitty (140, 146, 139)
 
 
 # Begin a segment
@@ -49,11 +50,17 @@ prompt_end() {
 
 # Status:
 # - was there an error
-prompt_status() {
+prompt_status_context() {
   if [[ $RETVAL -eq 0 ]]; then
     prompt_segment ${color_lambda} "λ"
   else
     prompt_segment ${color_error} "λ"
+  fi
+
+  if [[ "$HOST" == "KANALANMANAT" ]]; then
+    true  ## ei tehdä mitään
+  else
+    prompt_segment ${color_context} " %n@%m"
   fi
 }
 
@@ -127,7 +134,7 @@ prompt_git() {
 ## Main prompt
 build_prompt() {
   RETVAL=$?
-  prompt_status
+  prompt_status_context
   prompt_dir
   prompt_git
   prompt_end
