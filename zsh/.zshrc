@@ -34,10 +34,11 @@ if [ "$USER" = c945fvc ]; then   ## kela
 
 elif [ "$USER" = juuran ]; then  ## windows oma kone
     ZSH_THEME="lambda-valimaa"  ## lambda-valimaa, agnoster-valimaa, macovsky-valimaa
-    ## hyviä: lukerandall, lambda, muse, zhann, sunaku, norm, macovsky, miloshadzic, avit, fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
+    ## hyviä originaaleja:  lukerandall, lambda, muse, zhann, sunaku, norm, macovsky miloshadzic, avit
+    ##                      fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
 
 elif [ "$USER" = ubuntu ]; then  ## rpi
-    ZSH_THE;E="lambda-valimaa"
+    ZSH_THEME="lambda-valimaa"
 
 elif [ "$USER" = juuso ]; then   ## debian oma kone
     ZSH_THEME="powerlevel10k/powerlevel10k"
@@ -50,7 +51,7 @@ fi
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
 # If set to an empty array, this variable will have no effect.
-ZSH_THEME_RANDOM_CANDIDATES=( "lukerandall" "lambda" "macovsky" ) #"zhann" "sunaku" "norm" "miloshadzic" "avit" "fletcherm" "agnoster" "half-life" )
+ZSH_THEME_RANDOM_CANDIDATES=( "lambda-valimaa" "agnoster-valimaa" "macovsky-valimaa" ) #"zhann" "sunaku" "norm" "miloshadzic" "avit" "fletcherm" "agnoster" "half-life" )
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
