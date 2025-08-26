@@ -33,7 +33,7 @@ if [ "$USER" = c945fvc ]; then   ## kela
     ZSH_THEME="powerlevel10k/powerlevel10k"
 
 elif [ "$USER" = juuran ]; then  ## windows oma kone
-    ZSH_THEME="macovsky-valimaa"  ## agnoster-valimaa, lambda-valimaa, macovsky-valimaa
+    ZSH_THEME="lambda-valimaa"  ## lambda-valimaa, agnoster-valimaa, macovsky-valimaa
     ## hyviä: lukerandall, lambda, muse, zhann, sunaku, norm, macovsky, miloshadzic, avit, fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
 
 elif [ "$USER" = ubuntu ]; then  ## rpi
