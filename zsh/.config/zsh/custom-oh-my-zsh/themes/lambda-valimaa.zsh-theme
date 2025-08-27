@@ -39,7 +39,7 @@ prompt_segment() {
 # End the prompt, closing any open segments
 prompt_end() {
   local prompt_symbol prompt_color
-  prompt_symbol="❯"
+  prompt_symbol=" ❯"
   ## eri väri jos olet superuser
   [[ $UID -eq 0 ]] && prompt_color="${color_god}" || prompt_color="${color_lambda}"
   echo -n "%{%k%}%{%f%} ${prompt_color}${prompt_symbol}%{$reset_color%}"
