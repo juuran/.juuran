@@ -61,7 +61,7 @@ prompt_status_context() {
   if [[ "$HOST" == "KANALANMANAT" ]]; then
     true  ## ei tehdä mitään
   else
-    prompt_segment ${color_context} " %n@%m"
+    prompt_segment ${color_context} "  %n@%m "
   fi
 }
 
