@@ -116,7 +116,7 @@ elif [ "$USER" = c945fvc ]; then             ## kolaamo (deprekoitu!)
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
 
 elif [ "$USER" = juuran ]; then              ## oma windows
-    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm web-search)
+    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm web-search spring)
 
 elif [ "$USER" = ubuntu ]; then              ## rpi
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
@@ -155,6 +155,7 @@ source $ZSH/oh-my-zsh.sh
 ## ------------- omat määrittelyt ------------- ##
 ## Eri värit tohon virheenkorjaajaan pitäis saada näin
 grayish='fg=240'
+grayer='fg=238'
 greenish='fg=191'
 reddish='fg=211'
 # Declare the variable
@@ -165,7 +166,9 @@ ZSH_HIGHLIGHT_STYLES[precommand]=$greenish,underline       # =fg=blue,underline
 ZSH_HIGHLIGHT_STYLES[autodirectory]=$greenish,underline    # =fg=blue,underline
 ZSH_HIGHLIGHT_STYLES[arg0]=$greenish                       # =fg=blue
 # punane
-ZSH_HIGHLIGHT_STYLES[unknown-token]=$reddish,bold         # =fg=red,bold
+ZSH_HIGHLIGHT_STYLES[unknown-token]=$reddish,bold          # =fg=red,bold
+# armaa
+ZSH_HIGHLIGHT_STYLES[comment]=$grayer                      # fg=black,bold
 
 ## auto-suggestionsin väri
 typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayish
@@ -290,6 +293,13 @@ elif [ "$USER" = juuran ]; then
         printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
     }
     precmd_functions+=(keep_current_path)
+
+    ## värityksiä
+    local juuranGray juuranGrayer
+    juuranGray='fg=242'
+    juuranGrayer='fg=239'
+    ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
 
 elif [ "$USER" = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
