@@ -1,6 +1,7 @@
 ## -------------- omat muuttujat -------------- ##
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
 export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
+export LAMBDA_VALIMAA_COMPACT_MODE=true
 
 fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 

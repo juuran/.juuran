@@ -9,8 +9,6 @@
 ## - gitin tiedot kattavasti kys. hakemistolle
 ##
 
-COMPACT_MODE=true  ## false jos haluaa enemmän väliä
-
 color_error_bold="%{$fg_bold[red]%}"      ## bold punainen
 color_error="%{${(%):-"%F{1}"}%}"         ## punainen, (124, 197, 160, 9, 1)
 color_git_good="%{${(%):-"%F{41}"}%}"     ## vihreä (47, 120, 41)
@@ -22,7 +20,7 @@ color_warn="%{${(%):-"%F{227}"}%}"        ## keltainen (227, 142)
 color_warner="%{${(%):-"%F{208}"}%}"      ## oranssi (208, 130)
 color_god="%{${(%):-"%F{226}"}%}"         ## väri jos olet root, kultainen (226)
 color_context="%{${(%):-"%F{139}"}%}"     ## "hostin nimi", joku hillitty (140, 146, 139)
-[[ $COMPACT_MODE == 'true' ]] && SEGMENT_SPACE=" " || SEGMENT_SPACE="  "
+[[ $LAMBDA_VALIMAA_COMPACT_MODE == 'true' ]] && SEGMENT_SPACE=" " || SEGMENT_SPACE="  "
 
 # Begin a segment
 # Takes an argument: foreground. Can be "default".
