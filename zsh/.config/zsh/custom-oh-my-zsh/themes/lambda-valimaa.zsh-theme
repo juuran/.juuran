@@ -13,7 +13,7 @@ color_error_bold="%{$fg_bold[red]%}"      ## bold punainen
 color_error="%{${(%):-"%F{1}"}%}"         ## punainen, (124, 197, 160, 9, 1)
 color_git_good="%{${(%):-"%F{41}"}%}"     ## vihreä (47, 120, 41)
 color_git_neutral="%{${(%):-"%F{43}"}%}"  ## sinisempi (43, 44, 81)
-color_dotdotdot="%{${(%):-"%F{244}"}%}"   ## harmaa (244, 247)
+color_dotdotdot="%{${(%):-"%F{102}"}%}"   ## harmaa (244, 247, 102)
 color_dir_text="%{${(%):-"%F{152}"}%}"    ## "polun väri", esim joku harmahtava (152, 103, 145, 146)
 color_lambda="%{$fg_bold[white]%}"        ## kirkkaan valkoinen (231, 256)
 color_warn="%{${(%):-"%F{227}"}%}"        ## keltainen (227, 142)
@@ -73,7 +73,7 @@ prompt_dir() {
   elif [[ "$dir" == "/"* ]]; then
     prompt_segment ${color_dir_text} ' %3~'
   else
-    prompt_segment default "${color_dotdotdot} ... ${color_dir_text}%3~/"
+    prompt_segment default "${color_dotdotdot} … ${color_dir_text}%3~/"
   fi
 }
 
