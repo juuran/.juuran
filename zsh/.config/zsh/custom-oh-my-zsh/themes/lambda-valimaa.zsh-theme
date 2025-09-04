@@ -9,6 +9,8 @@
 ## - gitin tiedot kattavasti kys. hakemistolle
 ##
 
+COMPACT_MODE=true  ## false jos haluaa enemmän väliä
+
 color_error_bold="%{$fg_bold[red]%}"      ## bold punainen
 color_error="%{${(%):-"%F{1}"}%}"         ## punainen, (124, 197, 160, 9, 1)
 color_git_good="%{${(%):-"%F{41}"}%}"     ## vihreä (47, 120, 41)
@@ -20,7 +22,7 @@ color_warn="%{${(%):-"%F{227}"}%}"        ## keltainen (227, 142)
 color_warner="%{${(%):-"%F{208}"}%}"      ## oranssi (208, 130)
 color_god="%{${(%):-"%F{226}"}%}"         ## väri jos olet root, kultainen (226)
 color_context="%{${(%):-"%F{139}"}%}"     ## "hostin nimi", joku hillitty (140, 146, 139)
-
+[[ $COMPACT_MODE == 'true' ]] && SEGMENT_SPACE=" " || SEGMENT_SPACE="  "
 
 # Begin a segment
 # Takes an argument: foreground. Can be "default".
@@ -39,10 +41,10 @@ prompt_segment() {
 # End the prompt, closing any open segments
 prompt_end() {
   local prompt_symbol prompt_color
-  prompt_symbol=" ❯"
+  prompt_symbol="${SEGMENT_SPACE}❯"
   ## eri väri jos olet superuser
   [[ $UID -eq 0 ]] && prompt_color="${color_god}" || prompt_color="${color_lambda}"
-  echo -n "%{%k%}%{%f%} ${prompt_color}${prompt_symbol}%{$reset_color%}"
+  echo -n "%{%k%}%{%f%}${prompt_color}${prompt_symbol}%{$reset_color%}"
 }
 
 
@@ -61,7 +63,7 @@ prompt_status_context() {
   if [[ "$HOST" == "KANALANMANAT" ]]; then
     true  ## ei tehdä mitään
   else
-    prompt_segment ${color_context} "  %n@%m "
+    prompt_segment ${color_context} "${SEGMENT_SPACE}%n@%m"
   fi
 }
 
@@ -69,11 +71,11 @@ prompt_status_context() {
 prompt_dir() {
   local dir; dir=$(print -P "%3~")
   if [[ "$dir" == "~"* ]]; then
-    prompt_segment ${color_dir_text} ' %3~/'
+    prompt_segment ${color_dir_text} "${SEGMENT_SPACE}%3~/"
   elif [[ "$dir" == "/"* ]]; then
-    prompt_segment ${color_dir_text} ' %3~'
+    prompt_segment ${color_dir_text} "${SEGMENT_SPACE}%3~"
   else
-    prompt_segment default "${color_dotdotdot} … ${color_dir_text}%3~/"
+    prompt_segment default "${SEGMENT_SPACE}${color_dotdotdot}… ${color_dir_text}%3~/"
   fi
 }
 
@@ -87,15 +89,15 @@ prompt_git() {
     local LC_ALL="" LC_CTYPE="en_US.UTF-8"
     PL_BRANCH_CHAR=''         # git ikoni, jos haluat
   }
-  local ref dirty repo_path mode
+  local ref dirty repo_path mode temp_space
 
   repo_path=$(command git rev-parse --git-dir 2>/dev/null)
   dirty=$(parse_git_dirty)
   ref=$(command git symbolic-ref HEAD 2> /dev/null)
   if [[ -n $dirty ]]; then
-    prompt_segment ${color_git_neutral} '  '
+    prompt_segment ${color_git_neutral} "${SEGMENT_SPACE}"
   else
-    prompt_segment ${color_git_good} '  '
+    prompt_segment ${color_git_good} "${SEGMENT_SPACE}"
   fi
 
   local ahead behind
@@ -110,11 +112,12 @@ prompt_git() {
   fi
 
   if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-    mode="${color_git_neutral} <B>" 
+    [[ $COMPACT_MODE == 'true' ]] && temp_space="" || temp_space=" "
+    mode="${temp_space}${color_git_neutral}<B>" 
   elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-    mode="${color_git_neutral} >M<"
+    mode="${temp_space}${color_git_neutral}>M<"
   elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-    mode="${color_error} >R>"
+    mode="${temp_space}${color_error}>R>"
   fi
 
   setopt promptsubst
