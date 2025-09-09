@@ -231,6 +231,14 @@ if [ "$HOST" = dev047tools1.kela.fi ]; then
     ## tämä suotta ulisee, nyt käynnistyy aavistuksen hitaammin mutta se on ok!
     typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 
+    ## värityksiä
+    local grayMore grayDoor
+    grayMore='fg=243'
+    grayDoor='fg=240'
+    ZSH_HIGHLIGHT_STYLES[comment]=$grayDoor
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayMore
+
+
 elif [ "$USER" = c945fvc ]; then
     ## jos ohjelma olemassa, niin svidduun se non-breaking space
     if command -v setxkbmap > /dev/null &> /dev/null; then
