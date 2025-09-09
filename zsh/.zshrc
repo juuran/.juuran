@@ -297,8 +297,8 @@ elif [ "$USER" = juuran ]; then
 
     ## värityksiä
     local juuranGray juuranGrayer
-    juuranGray='fg=242'
-    juuranGrayer='fg=239'
+    juuranGray='fg=243'
+    juuranGrayer='fg=240'
     ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
 
