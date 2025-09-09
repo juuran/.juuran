@@ -233,8 +233,8 @@ if [ "$HOST" = dev047tools1.kela.fi ]; then
 
     ## värityksiä
     local grayMore grayDoor
-    grayMore='fg=243'
-    grayDoor='fg=240'
+    grayMore='fg=244'
+    grayDoor='fg=242'
     ZSH_HIGHLIGHT_STYLES[comment]=$grayDoor
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayMore
 
