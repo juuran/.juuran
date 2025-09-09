@@ -31,7 +31,7 @@ export ZSH="$HOME/.config/zsh/oh-my-zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 if [ "$HOST" = dev047tools1.kela.fi ]; then  ## kehityspalvelin
-   ZSH_THEME="lambda-valimaa"
+   ZSH_THEME="powerlevel10k/powerlevel10k"
 
 elif [ "$USER" = c945fvc ]; then   ## kela kolaamo (ihan kohta voi poistaa!)
    ZSH_THEME="powerlevel10k/powerlevel10k"
