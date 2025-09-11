@@ -16,7 +16,8 @@ alias tree='tree -C'
 alias cd..='cd ..'
 alias diff='diff --color=always'
 alias watch='watch --color'
-alias nano='nano -lci'
+alias nano='nano -lci --softwrap'
+alias nano-without-lines='nano -lci'
 
 ## omat skriptit tästä alaspäin
 alias git-log=$SKRIPTIT_POLKU/git-log.sh
@@ -42,8 +43,8 @@ if [ "$HOST" = dev047tools1.kela.fi ]; then
     sudo env "PATH=$PATH" /bin/bash -c "$*"
   }
   alias sudo='superUserDo'
-  alias nano='\nano -Alciz'
-  alias nano-without-linenumbers='\nano -Aciz'
+  alias nano='\nano -Alciz --softwrap'
+  alias nano-without-lines='\nano -Aciz'
   alias search-logs=$HOME/koodi/omat/lokilucia/search-logs.sh
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias git-pull-all=$SKRIPTIT_POLKU/git-pull-all.sh
@@ -78,8 +79,8 @@ elif [ "$USER" = "c945fvc" ]; then
 elif [ "$USER" = "juuran" ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias note='/mnt/c/Program\ Files/Notepad++/notepad++.exe'
-  alias nano='\nano -Acil'
-  alias nano-without-linenumbers='\nano -Aci'
+  alias nano='\nano -Acil --softwrap'
+  alias nano-without-lines='\nano -Aci'
 
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='\nano'
@@ -91,7 +92,7 @@ elif [ "$USER" = "juuso" ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias intelliJ="(~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea > /dev/null 2>&1 &)"
   alias intelliJWithLogging="~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea"
-  alias nano='\nano -Alci'
+  alias nano='\nano -Alci --softwrap'
   alias nano-without-linenumbers='\nano -Aci'
 
 fi
