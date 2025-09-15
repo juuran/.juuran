@@ -159,9 +159,9 @@ if [ "$USER" = c945fvc ]; then
     fi
 
     slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
-    if [ -e "$slcPolku" ]; then
-        source "$slcPolku"
-    fi
+    sealPolku="$SKRIPTIT_POLKU/auto_completions/_oc-seal_bash.sh"
+    [ -e "$slcPolku" ]  && source "$slcPolku"
+    [ -e "$sealPolku" ] && source "$sealPolku"
     export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 fi
 
