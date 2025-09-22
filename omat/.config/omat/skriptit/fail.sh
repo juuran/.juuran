@@ -3,7 +3,7 @@
 source "$SKRIPTIT_POLKU/error.sh"
 
 ## Elämää helpottava skripti, joka printtaa virheen syserr:iin ja poistuu virhekoodilla.
-##   1. argumentti on viesti
+##   1. argumentti on viesti (jos alkaa rivinvaihdolla, niin se syötetään ennen skriptin nimeä)
 ##   2. argumentti on vapaaehtoinen exit koodi, oletuksena 1
 function fail() {
     error "$1"
