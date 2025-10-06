@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## Deprekoitu! Poista joskus. En vaihda javaa näillä näkyvin näin, mutta
+## voihan tämä olla täällä esimerkkinä... jostain.
+
 noOfArgs=$#
 [ $noOfArgs -gt 0 ] && echo "Argumentti havaittu, mutta sitä ei käytetä."
 

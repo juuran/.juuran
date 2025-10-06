@@ -154,18 +154,28 @@ fi
 
 ## Svidduun se non-breaking space
 if [ "$USER" = c945fvc ]; then
-    if command -v setxkbmap &> /dev/null; then
-        setxkbmap -option "nbsp:none"
-    fi
+    ## omien skriptien polku
+    export NOTES_PATH="/home/c945fvc/notes"
 
     slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
     sealPolku="$SKRIPTIT_POLKU/auto_completions/_oc-seal_bash.sh"
     [ -e "$slcPolku" ]  && source "$slcPolku"
     [ -e "$sealPolku" ] && source "$sealPolku"
     export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-fi
 
-## kun nvm asennettiin, lisäsi tämän
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    ## kun nvm asennettiin, lisäsi tämän
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+    ## nodejs
+    export PATH="$PATH:/usr/local/nodejs/bin"
+
+    # pnpm
+    export PNPM_HOME="/users/c945fvc/.local/share/pnpm"
+    case ":$PATH:" in
+      *":$PNPM_HOME:"*) ;;
+      *) export PATH="$PNPM_HOME:$PATH" ;;
+    esac
+    # pnpm end
+fi

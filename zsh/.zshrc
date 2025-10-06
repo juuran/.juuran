@@ -113,23 +113,20 @@ ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
     #   Custom plugins may be added to $ZSH_CUSTOM/plugins/
     #   Example format: plugins=(rails git textmate ruby lighthouse)
     #   Add wisely, as too many plugins slow down shell startup. )
-if [ "$HOST" = dev047tools1.kela.fi ]; then  ## kehityspalvelin
-    plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions yum docker)
+if [ "$HOST" = c945fvc ]; then    ## kehityspalvelin
+    plugins=(git-aliaksitta sudo zsh-syntax-highlighting zsh-autosuggestions mvn npm jsontools oc yum docker)
 
-elif [ "$USER" = c945fvc ]; then             ## kolaamo (deprekoitu!)
-    plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions oc)
-
-elif [ "$USER" = juuran ]; then              ## oma windows
+elif [ "$USER" = juuran ]; then   ## oma windows
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm web-search spring)
 
-elif [ "$USER" = ubuntu ]; then              ## rpi
+elif [ "$USER" = ubuntu ]; then   ## rpi
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 
-elif [ "$USER" = juuso ]; then               ## oma debian
+elif [ "$USER" = juuso ]; then    ## oma debian
     plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions)
 
-  ## default
-else                                         ## muut (esim. vilman kone)
+## defaultti
+else                              ## muut (esim. vilman kone)
     plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
 fi
 
@@ -201,7 +198,7 @@ function paivitaJavaHome() {
 }
 
 ## eri koneiden muuttujat (muut kuin plugarit)
-if [ "$HOST" = dev047tools1.kela.fi ]; then
+elif [ "$USER" = c945fvc ]; then
     ## asetettava JAVA_HOME, mutta update-alternatives linkkaa virheellisesti java ohjelmaan, ei kansioon
     paivitaJavaHome
 
@@ -241,40 +238,16 @@ if [ "$HOST" = dev047tools1.kela.fi ]; then
     ZSH_HIGHLIGHT_STYLES[comment]=$grayDoor
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayMore
 
+    ## nodejs oma kustomi asennuspaikka
+    export PATH=$PATH:/usr/local/nodejs/bin
 
-elif [ "$USER" = c945fvc ]; then
-    ## jos ohjelma olemassa, niin svidduun se non-breaking space
-    if command -v setxkbmap > /dev/null &> /dev/null; then
-        setxkbmap -option "nbsp:none"
-    fi
-
-    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-    ## Lisäsin tämän nyt manuaalisesti .bashrc:stä
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-    ## Add JBang to environment (ei kovin tärkeä)
-    alias j!=jbang
-    export PATH="$HOME/.jbang/bin:$PATH"
-
-    ## Omien skriptien globaalit muuttujat
-    export NOTES_PATH="/home/c945fvc/notes"
-    export EDITOR_IS_SUBL=true
-
-    ## bash autocomplete search-logsia varten
-    autoload -U +X bashcompinit
-    bashcompinit
-    slcPolku="$HOME/yms/versionhallinnassa/bitbucket/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
-    if [ -e "$slcPolku" ]; then
-        source "$slcPolku"
-    fi
-
-    ## Laita tästä päälle, jos powerlevel alkaa ulisemaan
-    ## neofetch alkoi
-    typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+    # pnpm
+    export PNPM_HOME="/users/c945fvc/.local/share/pnpm"
+    case ":$PATH:" in
+      *":$PNPM_HOME:"*) ;;
+      *) export PATH="$PNPM_HOME:$PATH" ;;
+    esac
+    # pnpm end
 
 elif [ "$USER" = juuran ]; then
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

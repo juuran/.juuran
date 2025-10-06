@@ -1,8 +1,6 @@
 #! /bin/bash
 ## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
 
-source "$SKRIPTIT_POLKU/error.sh"
-
 ## jonkin random .bashrc:n järkevät oletus-aliakset
 alias ls='ls --color=always'
 alias l='ls -CF'
@@ -38,7 +36,7 @@ alias recursive-do=$SKRIPTIT_POLKU/recursive-do.sh
 alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
 
 ## käyttäjä- / ympäristökohtaiset asiat
-if [ "$HOST" = dev047tools1.kela.fi ]; then
+elif [ "$USER" = "c945fvc" ]; then
   function superUserDo() {
     sudo env "PATH=$PATH" /bin/bash -c "$*"
   }
@@ -51,32 +49,6 @@ if [ "$HOST" = dev047tools1.kela.fi ]; then
   alias liberty-run=$SKRIPTIT_POLKU/liberty-run.sh
   alias oc-seal=$SKRIPTIT_POLKU/oc-seal.sh
   alias oc-create-secret=$SKRIPTIT_POLKU/oc-create-secret.sh
-
-elif [ "$USER" = "c945fvc" ]; then
-  alias fmanager='exo-open --launch FileManager'
-  alias mvn='mvn --color always'
-  alias koira='(~/mqjexplorer/mqjexplorer/MQJExplorer/runme.sh > /dev/null &); echo ""'               ## jostain helkatin syystä ...
-  alias keystore='kse %f > /dev/null 2>&1 & disown'
-  alias intelliJ='(/opt/kela/intelliJ/idea-IC-242.20224.300/bin/idea > /dev/null 2>&1 &)'   ## ... näissä ei toimi sama! 
-  alias intelliJWithLogging='/opt/kela/intelliJ/idea-IC-242.20224.300/bin/idea'
-  alias dbeaver='(/usr/bin/dbeaver &> /dev/null &)'
-  alias dbeaverWithLogging='/usr/bin/dbeaver'
-  alias mqexplorer='(/opt/ibm/MQ_Explorer/MQExplorer &> /dev/null &)'
-  alias mqexplorerWithLogging='/opt/ibm/MQ_Explorer/runwithtrace'
-  alias jconsole='(jconsole &> /dev/null &)'
-  alias tasks=$SKRIPTIT_POLKU/tasks.sh
-  alias git-pull-all=$SKRIPTIT_POLKU/git-pull-all.sh
-  alias vaihda-java=$SKRIPTIT_POLKU/vaihda-java.sh
-  alias fix-line-endings=$SKRIPTIT_POLKU/fix-line-endings.sh
-  alias liberty-run=$SKRIPTIT_POLKU/liberty-run.sh
-  alias oc-seal=$SKRIPTIT_POLKU/oc-seal.sh
-  alias oc-create-secret=$SKRIPTIT_POLKU/oc-create-secret.sh
-  export BROWSER=temp_open_google
-
-  function temp_open_google() {
-    #! /bin/bash
-    (exec google-chrome-stable --enable-blink-features=MiddleClickAutoscroll "$@" &>/dev/null &)
-  }
 
 elif [ "$USER" = "juuran" ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
