@@ -36,7 +36,7 @@ alias recursive-do=$SKRIPTIT_POLKU/recursive-do.sh
 alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
 
 ## käyttäjä- / ympäristökohtaiset asiat
-elif [ "$USER" = "c945fvc" ]; then
+if [ "$USER" = "c945fvc" ]; then
   function superUserDo() {
     sudo env "PATH=$PATH" /bin/bash -c "$*"
   }
@@ -79,4 +79,4 @@ function perse()  {
 function llss() { ll "$@" | less ; }
 function lad() { ls -d "$1"/*/; }
 function lld() { ls -d1 "$1"/*/; }
-function softClear() { for i in $(seq 2 $(tput lines)); do echo ""; done; }
+function softClear() { for _i in $(seq 2 $(tput lines)); do echo ""; done; }
