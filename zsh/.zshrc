@@ -198,7 +198,7 @@ function paivitaJavaHome() {
 }
 
 ## eri koneiden muuttujat (muut kuin plugarit)
-elif [ "$USER" = c945fvc ]; then
+if [ "$USER" = c945fvc ]; then
     ## asetettava JAVA_HOME, mutta update-alternatives linkkaa virheellisesti java ohjelmaan, ei kansioon
     paivitaJavaHome
 
