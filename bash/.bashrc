@@ -153,7 +153,7 @@ else
 fi
 
 ## Svidduun se non-breaking space
-if [ "$USER" = c945fvc ]; then
+if [ "$USER" = c945fvc ] || [ $USER = juuran ]; then
     ## omien skriptien polku
     export NOTES_PATH="/home/c945fvc/notes"
 

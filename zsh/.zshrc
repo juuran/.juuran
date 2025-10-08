@@ -114,20 +114,20 @@ ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
     #   Example format: plugins=(rails git textmate ruby lighthouse)
     #   Add wisely, as too many plugins slow down shell startup. )
 if [ "$HOST" = c945fvc ]; then    ## kehityspalvelin
-    plugins=(git-aliaksitta sudo zsh-syntax-highlighting zsh-autosuggestions mvn npm jsontools oc yum docker)
+    plugins=(git-aliax sudo zsh-syntax-highlighting zsh-autosuggestions mvn-aliax npm-aliax jsontools oc yum docker yarn-aliax)
 
 elif [ "$USER" = juuran ]; then   ## oma windows
-    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting mvn npm web-search spring)
+    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting mvn-aliax npm-aliax web-search spring yarn-aliax)
 
 elif [ "$USER" = ubuntu ]; then   ## rpi
-    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
+    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
 
 elif [ "$USER" = juuso ]; then    ## oma debian
-    plugins=(git-aliaksitta sudo web-search-riisuttu mvn npm jsontools zsh-syntax-highlighting zsh-autosuggestions)
+    plugins=(git-aliax sudo web-search-riisuttu mvn-aliax npm-aliax jsontools zsh-syntax-highlighting zsh-autosuggestions)
 
 ## defaultti
 else                              ## muut (esim. vilman kone)
-    plugins=(git-aliaksitta sudo zsh-autosuggestions zsh-syntax-highlighting)
+    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
 fi
 
 source $ZSH/oh-my-zsh.sh
@@ -259,6 +259,14 @@ elif [ "$USER" = juuran ]; then
     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
     autoload -U +X bashcompinit
     bashcompinit
+
+    # pnpm
+    export PNPM_HOME="/home/juuran/.local/share/pnpm"
+    case ":$PATH:" in
+      *":$PNPM_HOME:"*) ;;
+      *) export PATH="$PNPM_HOME:$PATH" ;;
+    esac
+    # pnpm end
 
     ## nvm jutskat
     export NVM_DIR="$HOME/.nvm"
