@@ -178,6 +178,7 @@ typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayish
 unsetopt EXTENDED_HISTORY
 HISTFILE=~/.shell_history
 setopt histsavenodups
+unsetopt autocd
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
