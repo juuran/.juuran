@@ -123,7 +123,7 @@ elif [ "$USER" = ubuntu ]; then   ## rpi
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
 
 elif [ "$USER" = juuso ]; then    ## oma debian
-    plugins=(git-aliax sudo web-search-riisuttu mvn-aliax npm-aliax jsontools zsh-syntax-highlighting zsh-autosuggestions)
+    plugins=(git-aliax sudo web-search-riisuttu mvn-aliax npm-aliax jsontools zsh-syntax-highlighting docker zsh-autosuggestions)
 
 ## defaultti
 else                              ## muut (esim. vilman kone)
@@ -306,11 +306,34 @@ elif [ "$USER" = juuso ]; then
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-    export NOTES_PATH="/home/juuran/notes"
+    export NOTES_PATH="/home/juuso/notes"
 
     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
     autoload -U +X bashcompinit
     bashcompinit
+
+    ## värityksiä
+    local juuranGray juuranGrayer
+    juuranGray='fg=243'
+    juuranGrayer='fg=240'
+    ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
+
+    ## Lisäsin tämän nyt manuaalisesti .bashrc:stä
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+    ## nodejs oma kustomi asennuspaikka
+    export PATH=$PATH:/usr/share/nodejs
+
+    # pnpm
+    export PNPM_HOME="/home/juuso/.local/share/pnpm"
+    case ":$PATH:" in
+      *":$PNPM_HOME:"*) ;;
+      *) export PATH="$PNPM_HOME:$PATH" ;;
+    esac
+    # pnpm end
 
 elif [ "$USER" = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
