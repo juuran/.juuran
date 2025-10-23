@@ -195,7 +195,7 @@ function paivitaJavaHome() {
     local java_home; java_home=$(readlink -f /usr/bin/java)
     java_home=${java_home:0:-9}
     JAVA_HOME=$java_home
-    PATH=$ORIGINAL_PATH:$JAVA_HOME/bin
+    PATH=$ORIGINAL_PATH:$JAVA_HOME
 }
 
 ## eri koneiden muuttujat (muut kuin plugarit)
