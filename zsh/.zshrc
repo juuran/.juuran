@@ -335,6 +335,8 @@ elif [ "$USER" = juuso ]; then
     esac
     # pnpm end
 
+    export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+
 elif [ "$USER" = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 fi
