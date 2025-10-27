@@ -116,7 +116,6 @@ main() {
             paths=( "${eitherDirOrOpt[@]}" )
             shift 2             ## ... jos taas polku niin, pistetään talteen ja mahdolliset grep optiot sen jälkeen
         fi
-        echo "DEBUG: grep $PTTRN_SNTX $IC $B $L $A $L $RECURSIVE $COLOR      $E \"$arg\" ${paths[@]} \"$@\""
 
     ## grep usealle argumentille (kelan koneet ei tue zgrepin kanssa argumentteja loppuun, siksi tällä tyylillä)
         if   [ "$GREP_MODE" == "normal" ];     then  grep $PTTRN_SNTX $IC $B $L $A $L $RECURSIVE $COLOR      $E "$arg" ${paths[@]} "$@" | less -FRM$X $IC;  exitCode="${PIPESTATUS[0]}"
