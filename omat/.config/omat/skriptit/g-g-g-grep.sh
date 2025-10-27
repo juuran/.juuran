@@ -1,14 +1,15 @@
 #!/bin/bash
 source "$SKRIPTIT_POLKU/fail.sh"
 
-iC="--ignore-case"
-recursive="--recursive"
-patternSyntax="--fixed-strings"
-color="--color=always"
-grepMode="normal"
-l=""
+IC="--ignore-case"
+RECURSIVE="--recursive"
+PTTRN_SNTX="--fixed-strings"
+COLOR="--color=always"
+GREP_MODE="normal"
+L=""
 A=""
 B=""
+E=""
 
 printHelp() {
   echo ""
@@ -21,7 +22,8 @@ printHelp() {
   echo '    g-g-g-grep.sh [OPTION]... "arg1" [OPTION_TO_GREP]...           search for arg1 from current dir with n options given to grep'
   echo '    g-g-g-grep.sh [OPTION]... "arg1" "argN" [OPTION_TO_GREP]...    search for arg1 from argN paths with n options given to grep'
   echo ""
-  echo "ATTENZION! Options in the beginning are handled by this script but options after args are fed straight to grep!"
+  echo "ATTENZION! Options in the beginning are handled by this script but options AFTER args are fed straight to grep!"
+  echo "           E.g. to list files with 'bob' exluding .txt files:    g-g-g-grep.sh bob --exclude='*.txt' --files-with-matches"
   echo ""
   echo "Options:"
   echo "    -h, --help  prints this help"
@@ -44,30 +46,30 @@ done
 while getopts "il:drcXEh" OPTION; do
   case "$OPTION" in
     i)
-      iC=""
+      IC=""
       ;;
     l)
-      l="$OPTARG"
-      [ "$l" -eq "$l" ] || fail "Argument given must be a number!"
+      L="$OPTARG"
+      [ "$L" -eq "$L" ] || fail "Argument given must be a number!"
       A="-A"
       B="-B"
       ;;
     d)
-      recursive="--dereference-recursive"
+      RECURSIVE="--dereference-recursive"
       ;;
     r)
-      recursive=""
+      RECURSIVE=""
       ;;
     c)
-      grepMode="compressed"
-      recursive=""
+      GREP_MODE="compressed"
+      RECURSIVE=""
       ;;
     X)
       X="X"
       ;;
     E)
-      patternSyntax="--extended-regexp"
-      e="-e"
+      PTTRN_SNTX="--extended-regexp"
+      E="-e"
       ;;
     h)
       printHelp
@@ -81,48 +83,52 @@ done
 ## getopts käytön jälkeen täytyy "nollata" argumenttien indeksi, että saadaan "tavalliset" argumentit mukaan
 shift "$(($OPTIND -1))"
 
-if [[ "$HOSTNAME" == *kola* ]]  ## kola-koneille eri väriprofiili
-  then  export GREP_COLORS="mt=7;33:fn=2;34:ln=2;33:cx=0:bn=0:se=0"
-  else  export GREP_COLORS="mt=7;33:fn=2;37:ln=2;33:cx=0:bn=0:se=0"
-fi
-
 ## Ohjelmalogiikka (uudelleenkirjoitettu ja yksinkertaistettu)
-exitCode=0
-noOfArgs=$#
-if [ "$noOfArgs" -lt 1 ]; then
-  fail "At least one argument is needed" 3
-
-
-elif [ "$noOfArgs" -eq 1 ]; then
-  if [ "$grepMode" == "normal" ]; then
-    [ -z "$recursive" ] && fail "Missing path! When using -r flag, a file or list of files must be given. Otherwise grep would try to search from ./ which is a path in itself."
+main() {
+    local paths exitCode noOfArgs eitherDirOrOpt
     
-         grep $patternSyntax $iC $B $l $A $l $recursive $color $e "$1" ./  | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
-    else zgrep $patternSyntax $iC $B $l $A $l            $color $e "$1" ./  | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
-  fi
+    export GREP_COLORS="mt=7;33:fn=2;34:ln=2;33:cx=0:bn=0:se=0"
 
-elif [ "$noOfArgs" -gt 1 ]; then
-  arg="$1"
-  eitherDirOrOpt="$2"
-  [ -z "$eitherDirOrOpt" ] && fail "The second argument cannot be empty!" 3
+    paths=()
+    exitCode=0
+    noOfArgs=$#
+    if [ "$noOfArgs" -lt 1 ]; then
+        fail "At least one argument is needed" 3
 
-  if [ "${eitherDirOrOpt:0:1}" == "-" ]; then
-    possiblyDir="./*"
-    shift 1             ## jos kyseessä on optioni, niin se halutaan siirtää suoraan grepille ...
-  else
-    possiblyDir="$2"
-    shift 2             ## ... jos taas polku niin, pistetään talteen ja mahdolliset grep optiot sen jälkeen
-  fi
-  paths=( "${possiblyDir[@]}" )
 
-  ## grep usealle argumentille (kelan koneet ei tue zgrepin kanssa argumentteja loppuun, siksi tällä tyylillä)
-  if   [ "$grepMode" == "normal" ];     then  grep $patternSyntax $iC $B $l $A $l $recursive $color      $e "$arg" ${paths[@]} "$@" | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
-  elif [ "$grepMode" == "compressed" ]; then zgrep $patternSyntax $iC $B $l $A $l            $color "$@" $e "$arg" ${paths[@]}      | less -FRM$X $iC;  exitCode="${PIPESTATUS[0]}"
-  fi
+    elif [ "$noOfArgs" -eq 1 ]; then
+        if [ "$GREP_MODE" == "normal" ]; then
+            [ -z "$RECURSIVE" ] && fail "Missing path! When using -r flag, a file or list of files must be given. Otherwise grep would try to search from ./ which is a path in itself."
+            
+                 grep  $PTTRN_SNTX $IC $B $L $A $L $RECURSIVE $COLOR $E "$1" ./  | less -FRM$X $IC;  exitCode="${PIPESTATUS[0]}"
+            else zgrep $PTTRN_SNTX $IC $B $L $A $L            $COLOR $E "$1" ./  | less -FRM$X $IC;  exitCode="${PIPESTATUS[0]}"
+        fi
 
-fi
+    elif [ "$noOfArgs" -gt 1 ]; then
+        arg="$1"
+        eitherDirOrOpt="$2"
+        [ -z "$eitherDirOrOpt" ] && fail "The second argument cannot be empty!" 3
 
-if [ "$exitCode" -eq 141 ]
-  then exit 0
-  else exit $exitCode
-fi
+        if [ "${eitherDirOrOpt:0:1}" == "-" ]; then
+            # paths=( "./*" )
+            shift 1             ## jos kyseessä on optioni, niin se halutaan siirtää suoraan grepille ...
+        else
+            paths=( "${eitherDirOrOpt[@]}" )
+            shift 2             ## ... jos taas polku niin, pistetään talteen ja mahdolliset grep optiot sen jälkeen
+        fi
+        echo "DEBUG: grep $PTTRN_SNTX $IC $B $L $A $L $RECURSIVE $COLOR      $E \"$arg\" ${paths[@]} \"$@\""
+
+    ## grep usealle argumentille (kelan koneet ei tue zgrepin kanssa argumentteja loppuun, siksi tällä tyylillä)
+        if   [ "$GREP_MODE" == "normal" ];     then  grep $PTTRN_SNTX $IC $B $L $A $L $RECURSIVE $COLOR      $E "$arg" ${paths[@]} "$@" | less -FRM$X $IC;  exitCode="${PIPESTATUS[0]}"
+        elif [ "$GREP_MODE" == "compressed" ]; then zgrep $PTTRN_SNTX $IC $B $L $A $L            $COLOR "$@" $E "$arg" ${paths[@]}      | less -FRM$X $IC;  exitCode="${PIPESTATUS[0]}"
+        fi
+
+    fi
+
+    if [ "$exitCode" -eq 141 ]
+        then exit 0
+        else exit $exitCode
+    fi
+}
+
+main "$@"

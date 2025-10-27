@@ -337,8 +337,11 @@ elif [ "$USER" = juuso ]; then
 
     export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 
+    . "$HOME/.cargo/env"
+
 elif [ "$USER" = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
+
 fi
 
 ## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest

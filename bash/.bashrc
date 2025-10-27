@@ -153,7 +153,7 @@ else
 fi
 
 ## Svidduun se non-breaking space
-if [ "$USER" = c945fvc ] || [ $USER = juuran ]; then
+if [ "$USER" = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
     ## omien skriptien polku
     export NOTES_PATH="/home/c945fvc/notes"
 
@@ -178,4 +178,6 @@ if [ "$USER" = c945fvc ] || [ $USER = juuran ]; then
       *) export PATH="$PNPM_HOME:$PATH" ;;
     esac
     # pnpm end
+
+    . "$HOME/.cargo/env"
 fi
