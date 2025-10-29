@@ -67,7 +67,7 @@ elif [ "$USER" = "juuso" ]; then
   alias intelliJ="(~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea > /dev/null 2>&1 &)"
   alias intelliJWithLogging="~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea"
   alias nano='\nano -Alci --softwrap'
-  alias nano-without-linenumbers='\nano -Aci'
+  alias nano-without-lines='\nano -Aci'
 
 fi
 
