@@ -17,6 +17,7 @@ ajaLuupissa() {
     trap 'handleSigInt' SIGINT
     trap 'handleSigQuit' SIGQUIT
 
+    echo "-- [ Aja komentoa luupissa v. 1.0 ]"
     echo "-- yksi SIGINT        keskeyttää ajossa olevan komennon --"
     echo "-- kaksi SIGINTIÄ     lopettaa tämän skriptin"
     sleep 1
@@ -26,7 +27,7 @@ ajaLuupissa() {
         while [ $RUNNING = true ]; do
             $komento
         done
-        echo -e "keskeytetty, mutta kännistetään pian uudelleen. \n(lopeta serveri toisella SIGINTILLÄ [ctrl + c])\n"
+        echo -e "keskeytetty, mutta kännistetään pian uudelleen. \n(lopeta serveri toisella SIGINTILLÄ [ctrl + c])\n\n\n"
         sleep 1
 
         RUNNING=true
