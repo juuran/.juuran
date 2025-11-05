@@ -31,6 +31,7 @@ alias clear='softClear'
 alias echo-server-localhost=$SKRIPTIT_POLKU/echo-server-localhost.sh
 alias sha-tarkistin=$SKRIPTIT_POLKU/sha-tarkistin.sh
 alias recursive-do=$SKRIPTIT_POLKU/recursive-do.sh
+alias aja-luupissa=$SKRIPTIT_POLKU/aja-luupissa.sh
 
 ## tämä mahdollistaa omien skriptien ajon /usr/local/bin kautta
 alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
