@@ -9,22 +9,22 @@ handleSigInt() {
 }
 
 RUNNING=true
-KOMENTO="$*"
 
 ajaLuupissa() {
+    local komento="$*"
 
-    [ -z "$KOMENTO" ] && fail 'argumentti vaaditaan, esim. "echo moi && sleep 1"'
+    [ -z "$komento" ] && fail 'argumentti vaaditaan, esim. "echo moi && sleep 1"'
     trap 'handleSigInt' SIGINT
     trap 'handleSigQuit' SIGQUIT
 
     echo "-- yksi SIGINT        keskeyttää ajossa olevan komennon --"
     echo "-- kaksi SIGINTIÄ     lopettaa tämän skriptin"
     sleep 1
-    echo -e "\naloitetaan ajamaan luupissa: $KOMENTO\n"
+    echo -e "\naloitetaan ajamaan luupissa: $komento\n"
 
     while true; do
         while [ $RUNNING = true ]; do
-            $KOMENTO
+            $komento
         done
         echo -e "keskeytetty, mutta kännistetään pian uudelleen. \n(lopeta serveri toisella SIGINTILLÄ [ctrl + c])\n"
         sleep 1
