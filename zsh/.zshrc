@@ -295,6 +295,11 @@ elif [ "$USER" = juuran ]; then
     ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
 
+    #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+    export SDKMAN_DIR="$HOME/.sdkman"
+    [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+
 elif [ "$USER" = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
 
