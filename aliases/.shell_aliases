@@ -69,6 +69,7 @@ elif [ "$USER" = "juuso" ]; then
   alias intelliJWithLogging="~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea"
   alias nano='\nano -Alci --softwrap --atblanks'
   alias nano-without-lines='\nano -Aci --softwrap --atblanks'
+  alias rm='mv -t /home/juuso/.local/share/Trash/files/'
 
 fi
 
