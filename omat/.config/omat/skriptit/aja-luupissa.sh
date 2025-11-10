@@ -17,9 +17,13 @@ ajaLuupissa() {
     trap 'handleSigInt' SIGINT
     trap 'handleSigQuit' SIGQUIT
 
-    echo "-- [ Aja komentoa luupissa v. 1.0 ]"
-    echo "-- yksi SIGINT        keskeyttää ajossa olevan komennon --"
-    echo "-- kaksi SIGINTIÄ     lopettaa tämän skriptin"
+    echo "+-------------------------------------------------------------+"
+    echo "|                                                             |"
+    echo "|   [            Aja komentoa luupissa v. 1.1             ]   |"
+    echo "|    - yksi SIGINT:      restarttaa ajossa olevan komennon    |"
+    echo "|    - kaksi SIGINTIÄ:   lopettaa komennon ja skriptin        |"
+    echo "|                                                             |"
+    echo "+-------------------------------------------------------------+"
     sleep 1
     echo -e "\naloitetaan ajamaan luupissa: $komento\n"
 
