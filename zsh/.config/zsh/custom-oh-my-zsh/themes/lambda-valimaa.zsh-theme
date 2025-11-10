@@ -9,40 +9,27 @@
 ## - gitin tiedot kattavasti kys. hakemistolle
 ##
 
-color_error_bold="%{$fg_bold[red]%}"      ## bold punainen
-color_error="%{${(%):-"%F{1}"}%}"         ## punainen, (124, 197, 160, 9, 1)
-color_git_good="%{${(%):-"%F{41}"}%}"     ## vihreä (47, 120, 41)
-color_git_neutral="%{${(%):-"%F{43}"}%}"  ## sinisempi (43, 44, 81)
-color_dotdotdot="%{${(%):-"%F{102}"}%}"   ## harmaa (244, 247, 102)
-color_dir_text="%{${(%):-"%F{152}"}%}"    ## "polun väri", esim joku harmahtava (152, 103, 145, 146)
-color_lambda="%{$fg_bold[white]%}"        ## kirkkaan valkoinen (231, 256)
-color_warn="%{${(%):-"%F{227}"}%}"        ## keltainen (227, 142)
-color_warner="%{${(%):-"%F{208}"}%}"      ## oranssi (208, 130)
-color_god="%{${(%):-"%F{226}"}%}"         ## väri jos olet root, kultainen (226)
-color_context="%{${(%):-"%F{139}"}%}"     ## "hostin nimi", joku hillitty (140, 146, 139)
-[[ $LAMBDA_VALIMAA_COMPACT_MODE == 'true' ]] && SEGMENT_SPACE=" " || SEGMENT_SPACE="  "
-
 # Begin a segment
 # Takes an argument: foreground. Can be "default".
-prompt_segment() {
-  local fg
-  if [[ $1 == "default" ]] || [[ -z "$1" ]]; then
-    fg="%f"
-  else
-    fg="$1"
-  fi
-  
-  echo -n "%{$fg%}"  ## <- ei sisällä välilyöntiä toisin kuin agnoster!
-  [[ -n $2 ]] && echo -n $2
+function prompt_segment() {
+    local fg
+    if [[ $1 == "default" ]] || [[ -z "$1" ]]; then
+        fg="%f"
+    else
+        fg="$1"
+    fi
+
+    echo -n "%{$fg%}"  ## <- ei sisällä välilyöntiä toisin kuin agnoster!
+    [[ -n $2 ]] && echo -n $2
 }
 
 # End the prompt, closing any open segments
-prompt_end() {
-  local prompt_symbol prompt_color
-  prompt_symbol="${SEGMENT_SPACE}❯"
-  ## eri väri jos olet superuser
-  [[ $UID -eq 0 ]] && prompt_color="${color_god}" || prompt_color="${color_lambda}"
-  echo -n "%{%k%}%{%f%}${prompt_color}${prompt_symbol}%{$reset_color%}"
+function prompt_end() {
+    local prompt_symbol prompt_color
+    prompt_symbol="${SEGMENT_SPACE}❯"
+    ## eri väri jos olet superuser
+    [[ $UID -eq 0 ]] && prompt_color="${LV_COLOR_GOD}" || prompt_color="${LV_COLOR_LAMBDA}"
+    echo -n "%{%k%}%{%f%}${prompt_color}${prompt_symbol}%{$reset_color%}"
 }
 
 
@@ -51,95 +38,117 @@ prompt_end() {
 
 # Status:
 # - was there an error
-prompt_status_context() {
-  if [[ $RETVAL -eq 0 ]]; then
-    prompt_segment ${color_lambda} "λ"
-  else
-    prompt_segment ${color_error_bold} "λ"
-  fi
+function prompt_status_context() {
+    if [[ $RETVAL -eq 0 ]]; then
+        prompt_segment ${LV_COLOR_LAMBDA} "λ"
+    else
+        prompt_segment ${LV_COLOR_ERROR_BOLD} "λ"
+    fi
 
-  if [[ "$HOST" == "KANALANMANAT" ]]; then
-    true  ## ei tehdä mitään
-  else
-    prompt_segment ${color_context} "${SEGMENT_SPACE}%n@%m"
-  fi
+    if [[ "$HOST" == "KANALANMANAT" ]]; then
+        true  ## ei tehdä mitään
+    else
+        prompt_segment ${LV_COLOR_CONTEXT} "${SEGMENT_SPACE}%n@%m"
+    fi
 }
 
 # Dir: current working directory
-prompt_dir() {
-  local dir; dir=$(print -P "%3~")
-  if [[ "$dir" == "~"* ]]; then
-    prompt_segment ${color_dir_text} "${SEGMENT_SPACE}%3~/"
-  elif [[ "$dir" == "/"* ]]; then
-    prompt_segment ${color_dir_text} "${SEGMENT_SPACE}%3~"
-  else
-    prompt_segment default "${SEGMENT_SPACE}${color_dotdotdot}… ${color_dir_text}%3~/"
-  fi
+function prompt_dir() {
+    local dir; dir=$(print -P "%3~")
+    if [[ "$dir" == "~"* ]]; then
+        prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~/"
+    elif [[ "$dir" == "/"* ]]; then
+        prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~"
+    else
+        prompt_segment default "${SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}… ${LV_COLOR_DIR_TEXT}%3~/"
+    fi
 }
 
 # Git: branch/detached head, dirty status
-prompt_git() {
-  command git rev-parse --is-inside-work-tree &> /dev/null || return  ## nopea poistuminen
-  (( $+commands[git] )) || return
-  
-  local PL_BRANCH_CHAR
-  () {
-    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
-    PL_BRANCH_CHAR=''         # git ikoni, jos haluat
-  }
-  local ref dirty repo_path mode temp_space
+function prompt_git() {
+    command git rev-parse --is-inside-work-tree &> /dev/null || return  ## nopea poistuminen
+    (( $+commands[git] )) || return
 
-  repo_path=$(command git rev-parse --git-dir 2>/dev/null)
-  dirty=$(parse_git_dirty)
-  ref=$(command git symbolic-ref HEAD 2> /dev/null)
-  if [[ -n $dirty ]]; then
-    prompt_segment ${color_git_neutral} "${SEGMENT_SPACE}"
-  else
-    prompt_segment ${color_git_good} "${SEGMENT_SPACE}"
-  fi
+    local PL_BRANCH_CHAR
+    () {
+        local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+        PL_BRANCH_CHAR=''         # git ikoni, jos haluat
+    }
+    local ref dirty repo_path mode temp_space
 
-  local ahead behind
-  ahead=$(command git log --oneline @{upstream}.. 2>/dev/null)
-  behind=$(command git log --oneline ..@{upstream} 2>/dev/null)
-  if [[ -n "$ahead" ]] && [[ -n "$behind" ]]; then
-    PL_BRANCH_CHAR="${color_error} ⇅"
-  elif [[ -n "$ahead" ]]; then
-    PL_BRANCH_CHAR="${color_git_neutral} ↥"
-  elif [[ -n "$behind" ]]; then
-    PL_BRANCH_CHAR="${color_git_neutral} ↧"
-  fi
+    repo_path=$(command git rev-parse --git-dir 2>/dev/null)
+    dirty=$(parse_git_dirty)
+    ref=$(command git symbolic-ref HEAD 2> /dev/null)
+    if [[ -n $dirty ]]; then
+        prompt_segment ${LV_COLOR_GIT_NEUTRAL} "${SEGMENT_SPACE}"
+    else
+        prompt_segment ${LV_COLOR_GIT_GOOD} "${SEGMENT_SPACE}"
+    fi
 
-  if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-    [[ $COMPACT_MODE == 'true' ]] && temp_space="" || temp_space=" "
-    mode="${temp_space}${color_git_neutral}<B>" 
-  elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-    mode="${temp_space}${color_git_neutral}>M<"
-  elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-    mode="${temp_space}${color_error}>R>"
-  fi
+    local ahead behind
+    ahead=$(command git log --oneline @{upstream}.. 2>/dev/null)
+    behind=$(command git log --oneline ..@{upstream} 2>/dev/null)
+    if [[ -n "$ahead" ]] && [[ -n "$behind" ]]; then
+        PL_BRANCH_CHAR="${LV_COLOR_ERROR} ⇅"
+    elif [[ -n "$ahead" ]]; then
+        PL_BRANCH_CHAR="${LV_COLOR_GIT_NEUTRAL} ↥"
+    elif [[ -n "$behind" ]]; then
+        PL_BRANCH_CHAR="${LV_COLOR_GIT_NEUTRAL} ↧"
+    fi
 
-  setopt promptsubst
-  autoload -Uz vcs_info
+    if [[ -e "${repo_path}/BISECT_LOG" ]]; then
+        [[ $COMPACT_MODE == 'true' ]] && temp_space="" || temp_space=" "
+        mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}<B>" 
+    elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
+        mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}>M<"
+    elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
+        mode="${temp_space}${LV_COLOR_ERROR}>R>"
+    fi
 
-  zstyle ':vcs_info:*' enable git
-  zstyle ':vcs_info:*' get-revision true
-  zstyle ':vcs_info:*' check-for-changes true
-  zstyle ':vcs_info:*' stagedstr "${color_warn}⋇"
-  zstyle ':vcs_info:*' unstagedstr "${color_warner}*"
-  zstyle ':vcs_info:*' formats ' %u%c'
-  zstyle ':vcs_info:*' actionformats ' %u%c'
-  vcs_info
-  echo -n "${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${mode}"
+    setopt promptsubst
+    autoload -Uz vcs_info
+
+    zstyle ':vcs_info:*' enable git
+    zstyle ':vcs_info:*' get-revision true
+    zstyle ':vcs_info:*' check-for-changes true
+    zstyle ':vcs_info:*' stagedstr "${LV_COLOR_WARN}⋇"
+    zstyle ':vcs_info:*' unstagedstr "${LV_COLOR_WARNER}*"
+    zstyle ':vcs_info:*' formats ' %u%c'
+    zstyle ':vcs_info:*' actionformats ' %u%c'
+    vcs_info
+    echo -n "${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${mode}"
 }
 
 
 ## Main prompt
-build_prompt() {
-  RETVAL=$?
-  prompt_status_context
-  prompt_dir
-  prompt_git
-  prompt_end
+function build_prompt() {
+    RETVAL=$?
+    prompt_status_context
+    prompt_dir
+    prompt_git
+    prompt_end
 }
 
-PROMPT='%{%f%b%k%}$(build_prompt) '
+
+function main() {
+    export LV_COLOR_ERROR_BOLD LV_COLOR_ERROR LV_COLOR_GIT_GOOD LV_COLOR_GIT_NEUTRAL LV_COLOR_DOTDOTDOT LV_COLOR_DIR_TEXT \
+    LV_COLOR_LAMBDA LV_COLOR_WARN LV_COLOR_WARNER LV_COLOR_GOD LV_COLOR_CONTEXT;
+
+    LV_COLOR_ERROR_BOLD="%{$fg_bold[red]%}"      ## bold punainen
+    LV_COLOR_ERROR="%{${(%):-"%F{1}"}%}"         ## punainen, (124, 197, 160, 9, 1)
+    LV_COLOR_GIT_GOOD="%{${(%):-"%F{41}"}%}"     ## vihreä (47, 120, 41)
+    LV_COLOR_GIT_NEUTRAL="%{${(%):-"%F{43}"}%}"  ## sinisempi (43, 44, 81)
+    LV_COLOR_DOTDOTDOT="%{${(%):-"%F{102}"}%}"   ## harmaa (244, 247, 102)
+    LV_COLOR_DIR_TEXT="%{${(%):-"%F{152}"}%}"    ## "polun väri", esim joku harmahtava (152, 103, 145, 146)
+    LV_COLOR_LAMBDA="%{$fg_bold[white]%}"        ## kirkkaan valkoinen (231, 256)
+    LV_COLOR_WARN="%{${(%):-"%F{227}"}%}"        ## keltainen (227, 142)
+    LV_COLOR_WARNER="%{${(%):-"%F{208}"}%}"      ## oranssi (208, 130)
+    LV_COLOR_GOD="%{${(%):-"%F{226}"}%}"         ## väri jos olet root, kultainen (226)
+    LV_COLOR_CONTEXT="%{${(%):-"%F{139}"}%}"     ## "hostin nimi", joku hillitty (140, 146, 139)
+
+    [[ $LAMBDA_VALIMAA_COMPACT_MODE == 'true' ]] && SEGMENT_SPACE=" " || SEGMENT_SPACE="  "
+
+    PROMPT='%{%f%b%k%}$(build_prompt) '
+}
+
+main
