@@ -47,7 +47,7 @@ ajaLuupissa() {
         echo "|   lopeta serveri toisella SIGINTILLÄ: [ctrl + c]        |"
         echo "|                                                         |"
         echo "+---------------------------------------------------------+"
-        sleep 1
+        sleep 0.7
 
         RUNNING=true
     done
