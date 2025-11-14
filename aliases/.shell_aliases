@@ -16,6 +16,8 @@ alias diff='diff --color=always'
 alias watch='watch --color'
 alias nano='nano -lci'
 alias nano-without-lines='nano -lci --softwrap'
+alias rm='rm -i'
+alias rd='rm -d'
 
 ## omat skriptit tästä alaspäin
 alias git-log=$SKRIPTIT_POLKU/git-log.sh
@@ -50,14 +52,13 @@ if [ "$USER" = "c945fvc" ]; then
   alias liberty-run=$SKRIPTIT_POLKU/liberty-run.sh
   alias oc-seal=$SKRIPTIT_POLKU/oc-seal.sh
   alias oc-create-secret=$SKRIPTIT_POLKU/oc-create-secret.sh
-  alias rm='rm -i'
 
 elif [ "$USER" = "juuran" ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias note='/mnt/c/Program\ Files/Notepad++/notepad++.exe'
   alias nano='\nano -Acil --softwrap'
   alias nano-without-lines='\nano -Aci'
-  alias rm='rm -i'
+
 
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='\nano'
