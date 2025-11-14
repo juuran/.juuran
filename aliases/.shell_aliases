@@ -18,6 +18,7 @@ alias nano='nano -lci'
 alias nano-without-lines='nano -lci --softwrap'
 alias rm='rm -i'
 alias rd='rm -d'
+alias md='mkdir -p'
 
 ## omat skriptit tästä alaspäin
 alias git-log=$SKRIPTIT_POLKU/git-log.sh
