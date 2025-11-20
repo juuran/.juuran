@@ -86,8 +86,9 @@ shift "$(($OPTIND -1))"
 ## Ohjelmalogiikka (uudelleenkirjoitettu ja yksinkertaistettu)
 main() {
     local paths exitCode noOfArgs eitherDirOrOpt
-    
-    export GREP_COLORS="mt=7;33:fn=2;34:ln=2;33:cx=0:bn=0:se=0"
+
+    ## määritetään tämä .rc tiedostoissa, mutta esimerkiksi näin
+    #export GREP_COLORS="mt=7;33:fn=2;34:ln=2;33:cx=0:bn=0:se=0"
 
     paths=()
     exitCode=0

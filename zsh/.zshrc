@@ -170,6 +170,7 @@ ZSH_HIGHLIGHT_STYLES[arg0]=$greenish                       # =fg=blue
 ZSH_HIGHLIGHT_STYLES[unknown-token]=$reddish,bold          # =fg=red,bold
 # armaa
 ZSH_HIGHLIGHT_STYLES[comment]=$grayer                      # fg=black,bold
+export GREP_COLORS="mt=7;33:fn=2;37:ln=2;33:cx=0:bn=0:se=0"  ## perus tylsän harmaa
 
 ## auto-suggestionsin väri
 typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayish
