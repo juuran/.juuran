@@ -117,7 +117,7 @@ if [ "$HOST" = c945fvc ]; then    ## kehityspalvelin
     plugins=(git-aliax sudo zsh-syntax-highlighting zsh-autosuggestions mvn-aliax npm-aliax jsontools oc yum docker yarn-aliax)
 
 elif [ "$USER" = juuran ]; then   ## oma windows
-    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting mvn-aliax npm-aliax web-search spring yarn-aliax)
+    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting mvn-aliax npm-aliax web-search spring yarn-aliax rust)
 
 elif [ "$USER" = ubuntu ]; then   ## rpi
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
