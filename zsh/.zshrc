@@ -296,6 +296,9 @@ elif [ "$USER" = juuran ]; then
     ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
 
+    ## rust
+    . "$HOME/.cargo/env"
+
     #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
     export SDKMAN_DIR="$HOME/.sdkman"
     [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
