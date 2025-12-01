@@ -98,7 +98,7 @@ function prompt_git() {
 
     local stashed
     stashed=$(git stash list)
-    [[ -n "$stashed" ]] && PL_STASH_CHAR=" ⚹"
+    [[ -n "$stashed" ]] && PL_STASH_CHAR="${LV_COLOR_GIT_NEUTRAL} ⚹"
 
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
         [[ $COMPACT_MODE == 'true' ]] && temp_space="" || temp_space=" "
