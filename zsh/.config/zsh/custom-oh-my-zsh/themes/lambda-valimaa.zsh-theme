@@ -64,12 +64,12 @@ function prompt_dir() {
     fi
 }
 
-# Git: branch/detached head, dirty status
+# Git: branch/detached head, dirty & stashed status
 function prompt_git() {
     command git rev-parse --is-inside-work-tree &> /dev/null || return  ## nopea poistuminen
     (( $+commands[git] )) || return
 
-    local PL_BRANCH_CHAR
+    local PL_BRANCH_CHAR PL_STASH_CHAR
     () {
         local LC_ALL="" LC_CTYPE="en_US.UTF-8"
         PL_BRANCH_CHAR=''         # git ikoni, jos haluat
@@ -96,6 +96,10 @@ function prompt_git() {
         PL_BRANCH_CHAR="${LV_COLOR_GIT_NEUTRAL} ↧"
     fi
 
+    local stashed
+    stashed=$(git stash list)
+    [[ -n "$stashed" ]] && PL_STASH_CHAR=" ⚹"
+
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
         [[ $COMPACT_MODE == 'true' ]] && temp_space="" || temp_space=" "
         mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}<B>" 
@@ -116,7 +120,7 @@ function prompt_git() {
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
     vcs_info
-    echo -n "${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${mode}"
+    echo -n "${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${PL_STASH_CHAR}${mode}"
 }
 
 
