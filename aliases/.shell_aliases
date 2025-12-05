@@ -17,7 +17,7 @@ alias watch='watch --color'
 alias nano='nano -lci'
 alias nano-without-lines='nano -lci --softwrap'
 alias rm='rm -i'
-alias rd='rm -d'
+alias rd='\rm -d'
 alias md='mkdir -p'
 
 ## omat skriptit tästä alaspäin
