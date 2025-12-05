@@ -102,7 +102,7 @@ fi
 
   GREP_COLORS="mt=0;94" grep --line-buffered --color=always -a -E -e "$timeStamp" -e "**" \
 | GREP_COLORS="mt=1;32" grep --line-buffered --color=always -a -E -e "$INFO"  -e "**" \
-| GREP_COLORS="mt=2;32" grep --line-buffered --color=always -a -E -e "$DEBUG" -e "**" \
+| GREP_COLORS="mt=0;32" grep --line-buffered --color=always -a -E -e "$DEBUG" -e "**" \
 | GREP_COLORS="mt=2;36" grep --line-buffered --color=always -a -E -e "$TRACE" -e "**" \
 | GREP_COLORS="mt=1;33" grep --line-buffered --color=always -a -E -e "$WARN"  -e "**" \
 | GREP_COLORS="mt=1;31" grep --line-buffered --color=always -a -E -e "$ERROR" -e "**" \
