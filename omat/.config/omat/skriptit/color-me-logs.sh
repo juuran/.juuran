@@ -100,10 +100,10 @@ fi
       ## ln     line numbers                              37 White
       ##
 
-  GREP_COLORS="mt=0;94" grep --line-buffered --color=always -a -E -e "$timeStamp" -e "**" \
-| GREP_COLORS="mt=1;32" grep --line-buffered --color=always -a -E -e "$INFO"  -e "**" \
-| GREP_COLORS="mt=0;32" grep --line-buffered --color=always -a -E -e "$DEBUG" -e "**" \
-| GREP_COLORS="mt=2;36" grep --line-buffered --color=always -a -E -e "$TRACE" -e "**" \
-| GREP_COLORS="mt=1;33" grep --line-buffered --color=always -a -E -e "$WARN"  -e "**" \
-| GREP_COLORS="mt=1;31" grep --line-buffered --color=always -a -E -e "$ERROR" -e "**" \
-| GREP_COLORS="mt=1;31" grep --line-buffered --color=always -a -E -e "$FATAL" -e "**"
+  GREP_COLORS="mt=0;94" grep --line-buffered --color=always -a -E -e "$timeStamp" -e "**" 2> /dev/null \
+| GREP_COLORS="mt=1;32" grep --line-buffered --color=always -a -E -e "$INFO"  -e "**" 2> /dev/null \
+| GREP_COLORS="mt=0;32" grep --line-buffered --color=always -a -E -e "$DEBUG" -e "**" 2> /dev/null \
+| GREP_COLORS="mt=2;36" grep --line-buffered --color=always -a -E -e "$TRACE" -e "**" 2> /dev/null \
+| GREP_COLORS="mt=1;33" grep --line-buffered --color=always -a -E -e "$WARN"  -e "**" 2> /dev/null \
+| GREP_COLORS="mt=1;31" grep --line-buffered --color=always -a -E -e "$ERROR" -e "**" 2> /dev/null \
+| GREP_COLORS="mt=1;31" grep --line-buffered --color=always -a -E -e "$FATAL" -e "**" 2> /dev/null
