@@ -17,15 +17,15 @@ NORMAL_TEXT='\033[1;37m'
 NORMAL_CB='\033[1;90m'
 DONE_TEXT='\033[0;92m'
 DONE_CB='\033[2;92m'
-RED='\033[0;31m'          ## error
-MAGENTA='\033[0;95m'
+ERROR='\033[0;31m'
+FNAME='\033[2;93m'
 PRIORITY='\033[1;33m'
 PRIORITY_CB='\033[2;33m'
 IGNORE_CB='\033[2;37m'
 IGNORE='\033[1;30m'
 
 ## ---- Funktiot ----
-clearCache() {
+function clearCache() {
   echo -n "" > "$AUTOCOMPLETE_CACHE_FILE"
   echo -n "" > "$AUTOCOMPLETE_CACHE_FILE.files"
 }
@@ -34,7 +34,8 @@ clearCache() {
 AUTOCOMPLETE_CACHE_FILE="$HOME/.cache/.tasks_edit_cache"
 ! [ -e "$AUTOCOMPLETE_CACHE_FILE" ] && clearCache  ## jos ei ole cachea, luo cachen (ja toki myös tyhjää sen)
 
-printHelp() {
+# shellcheck disable=SC2016  ## ettei shellcheck ulisisi kun $NOTES_PATH ei expandoidu (ei pidäkään)
+function printHelp() {
   echo ""
   echo "tasks.sh (v.1.23)"
   echo ""
@@ -63,14 +64,14 @@ printHelp() {
   echo "  §     arkistoitu merkintä §                           ei näy ollenkaan millään vivulla"
 }
 
-addMe() {
+function addMe() {
   local thingToAdd; thingToAdd="$1"
   local pathToFile; pathToFile="$NOTES_PATH/$2"
   [[ "$thingToAdd" == *"§"* ]] || fail "Muista käyttää syntaksimerkintöjä, kuten merkkiä '§'. Mitään ei tallennettu."
   echo "$thingToAdd" >> "$pathToFile"  || fail "Merkintää ei voitu tallentaa."
 }
 
-printWithinScreenWithColors() {
+function printWithinScreenWithColors() {
   local beginningPart="  ${checkbox}  (${file}) "
   local endPart="$text"
   local finalPrintWithoutColor="${beginningPart}${endPart}"
@@ -87,13 +88,13 @@ printWithinScreenWithColors() {
   
   if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ] && \
      [ "$isNormalOutputRendered" == false ] && [ "$COLORFUL_AUTOCOMPLETE" == false ]; then
-    local cbColor=""; local NO_COLOR=""; local textColor=""; MAGENTA="";
+    local cbColor=""; local NO_COLOR=""; local textColor=""; FNAME="";
   fi
 
   widthOfFinalWithoutColor=${#finalPrintWithoutColor}
   if [[ $widthOfFinalWithoutColor -gt $maxSize ]]
-    then local finalPrint="  ${cbColor}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${endPart:0:$((spaceLeftForEndPart))} ...${NO_COLOR}"
-    else local finalPrint="  ${cbColor}${checkbox}${NO_COLOR}  (${MAGENTA}${file}${NO_COLOR}) ${textColor}${text}${NO_COLOR}"
+    then local finalPrint="  ${cbColor}${checkbox}${NO_COLOR}  (${FNAME}${file}${NO_COLOR}) ${textColor}${endPart:0:$((spaceLeftForEndPart))} ...${NO_COLOR}"
+    else local finalPrint="  ${cbColor}${checkbox}${NO_COLOR}  (${FNAME}${file}${NO_COLOR}) ${textColor}${text}${NO_COLOR}"
   fi
 
   if [ "$isGatherValuesForAutocomplete" == true ] && [ "$isCacheUsable" == false ]; then  ## jos cache ei kunnossa, täytetään se
@@ -104,7 +105,7 @@ printWithinScreenWithColors() {
 }
 
 ## -- Tärkein funktio! --
-printMatching() {
+function printMatching() {
   local tasks; tasks=()
   local regexp="$1"
   local checkbox="$2"
@@ -143,13 +144,13 @@ printMatching() {
   done
 }
 
-readCache() {
+function readCache() {
   readarray -t TASKS_FOR_AUTOCOMPLETE < "$AUTOCOMPLETE_CACHE_FILE"
   readarray -t FILES_FOR_AUTOCOMPLETE < "$AUTOCOMPLETE_CACHE_FILE.files"
 }
 
 
-writeToCache() {
+function writeToCache() {
   local size="${#TASKS_FOR_AUTOCOMPLETE[@]}"
   for (( i=0 ; i < $size ; i++ )); do
     echo "${TASKS_FOR_AUTOCOMPLETE[i]}" >> "$AUTOCOMPLETE_CACHE_FILE"
@@ -157,7 +158,7 @@ writeToCache() {
   done
 }
 
-setIsCacheUsableOrClear() {
+function setIsCacheUsableOrClear() {
   if  [ "$(stat -c %s $AUTOCOMPLETE_CACHE_FILE)" -ne 0 ] && \
       [[ "$(find "$AUTOCOMPLETE_CACHE_FILE" -newermt "-$CACHE_VALID_MAX_SECONDS seconds" -print)" ]]; then
         isCacheUsable=true
@@ -167,14 +168,14 @@ setIsCacheUsableOrClear() {
   fi
 }
 
-displayResultsForAutocomplete() {
+function displayResultsForAutocomplete() {
   local size="${#TASKS_FOR_AUTOCOMPLETE[@]}"
   for (( i=0 ; i < $size ; i++ )); do
     echo -e "${TASKS_FOR_AUTOCOMPLETE[i]}"  ## tiedostopolkuja ei tässä erikseen liitetä
   done
 }
 
-editNote() {
+function editNote() {
   local index="$(($indexToEditZsh - 1))"  ## zsh indeksointi alkaa 1:stä eikä 0:sta
   local size="${#FILES_FOR_AUTOCOMPLETE[@]}"
   [ "$index" -ge $size ] && fail "Annettu indeksi on liian suuri!"
@@ -255,7 +256,7 @@ for arg in "$@"; do
 done
 
 
-main() {
+function main() {
   [ "$isNormalOutputRendered" == true ] && echo -e "Tämänhetkiset täskit"
 
   ## Käytetään ohituskaistaa jos juuri cachetettu tulokset, että toimisi nopeammin!
@@ -288,7 +289,7 @@ main() {
     printMatching "$start!§$end"    "[x]"   1   "$DONE_CB"   "$DONE_TEXT"
 
   ## vanhat väärät
-    printMatching "$start§!$end"    "Virheellinen merkintä! Katso --help"    1   "$RED"
+    printMatching "$start§!$end"    "Virheellinen merkintä! Katso --help"    1   "$ERROR"
 
   [ "$isCacheUsable" == false ] && writeToCache
   [ "$isEditNotes" == true ] && editNote && exit 0
