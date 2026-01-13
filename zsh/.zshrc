@@ -190,6 +190,8 @@ else
     export EDITOR='nano -lci'
 fi
 
+export GIT_EDITOR='\nano -ci --softwrap'
+
 ORIGINAL_PATH=$PATH
 export ORIGINAL_PATH
 function paivitaJavaHome() {
