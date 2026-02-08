@@ -60,7 +60,7 @@ function prompt_dir() {
     elif [[ "$dir" == "/"* ]]; then
         prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~"
     else
-        prompt_segment default "${SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}… ${LV_COLOR_DIR_TEXT}%3~/"
+        prompt_segment default "${SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}…${LV_COLOR_DIR_TEXT}/%3~/"
     fi
 }
 
