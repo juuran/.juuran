@@ -80,7 +80,7 @@ fi
 ## aliaksen kaltaiset funktiot (kaikki ei taivu aliakseksi sen rajoitusten takia)
 function perse()  {
   [ -n "$1" ] && local pilkku=", "
-  echo -e "\e[0;33m Jep, sanopa muuta$pilkku$*! \e[0m"
+  echo -e "\e[0;33mJep, sanopa muuta$pilkku$*! \e[0m"
 }
 function llss() { ll "$@" | less ; }
 function lad() { ls -d "$1"/*/; }

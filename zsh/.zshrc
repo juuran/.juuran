@@ -2,10 +2,12 @@
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
 export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
 export LAMBDA_VALIMAA_COMPACT_MODE=true
+ubuntuJuuran="false"
+[[ $(cat /proc/version) == *Ubuntu* ]] && [[ "$USER" == "juuran" ]] && ubuntuJuuran="true"
 
 fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
-if [ "$USER" = c945fvc ] || [ "$USER" = juuran ] || [ "$USER" = juuso ]; then
+if [ "$USER" = c945fvc ] || [ "$USER" = juuran ]; then
     # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
     # Initialization code that may require console input (password prompts, [y/n]
     # confirmations, etc.) must go above this block; everything else may go below.
@@ -43,9 +45,6 @@ elif [ "$USER" = juuran ]; then  ## windows oma kone
 
 elif [ "$USER" = ubuntu ]; then  ## rpi
     ZSH_THEME="lambda-valimaa"
-
-elif [ "$USER" = juuso ]; then   ## debian oma kone
-    ZSH_THEME="powerlevel10k/powerlevel10k"
 
 else                             ## muut koneet (mm. vilma)
     ZSH_THEME="random"
@@ -119,11 +118,11 @@ if [ "$HOST" = c945fvc ]; then    ## kehityspalvelin
 elif [ "$USER" = juuran ]; then   ## oma windows
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting mvn-aliax npm-aliax web-search spring yarn-aliax rust)
 
+elif [ "$ubuntuJuuran" = true ]; then
+    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting web-search)
+
 elif [ "$USER" = ubuntu ]; then   ## rpi
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
-
-elif [ "$USER" = juuso ]; then    ## oma debian
-    plugins=(git-aliax sudo web-search-riisuttu mvn-aliax npm-aliax jsontools zsh-syntax-highlighting docker zsh-autosuggestions)
 
 ## defaultti
 else                              ## muut (esim. vilman kone)
@@ -253,7 +252,21 @@ if [ "$USER" = c945fvc ]; then
     esac
     # pnpm end
 
-elif [ "$USER" = juuran ]; then
+elif [[ "$ubuntuJuuran" == "true" ]]; then
+    export NOTES_PATH="/home/juuran/notes"
+
+    ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
+    autoload -U +X bashcompinit
+    bashcompinit
+
+    ## värityksiä
+    local juuranGray juuranGrayer
+    juuranGray='fg=243'
+    juuranGrayer='fg=240'
+    ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
+
+elif [ "$USER" = juuran ]; then  ## win (wsl2)
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -312,43 +325,6 @@ elif [ "$USER" = ubuntu ]; then
     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
     autoload -U +X bashcompinit
     bashcompinit
-
-elif [ "$USER" = juuso ]; then
-    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-    export NOTES_PATH="/home/juuso/notes"
-
-    ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
-    autoload -U +X bashcompinit
-    bashcompinit
-
-    ## värityksiä
-    local juuranGray juuranGrayer
-    juuranGray='fg=243'
-    juuranGrayer='fg=240'
-    ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
-    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
-
-    ## Lisäsin tämän nyt manuaalisesti .bashrc:stä
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-    ## nodejs oma kustomi asennuspaikka
-    export PATH=$PATH:/usr/share/nodejs
-
-    # pnpm
-    export PNPM_HOME="/home/juuso/.local/share/pnpm"
-    case ":$PATH:" in
-      *":$PNPM_HOME:"*) ;;
-      *) export PATH="$PNPM_HOME:$PATH" ;;
-    esac
-    # pnpm end
-
-    export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-
-    . "$HOME/.cargo/env"
 
 elif [ "$USER" = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
