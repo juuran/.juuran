@@ -2,8 +2,6 @@
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
 export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
 export LAMBDA_VALIMAA_COMPACT_MODE=true
-ubuntuJuuran="false"
-[[ $(cat /proc/version) == *Ubuntu* ]] && [[ "$USER" == "juuran" ]] && ubuntuJuuran="true"
 
 fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
@@ -118,7 +116,7 @@ if [ "$HOST" = c945fvc ]; then    ## kehityspalvelin
 elif [ "$USER" = juuran ]; then   ## oma windows
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting mvn-aliax npm-aliax web-search spring yarn-aliax rust)
 
-elif [ "$ubuntuJuuran" = true ]; then
+elif [ "$HOST" = dual-ubuntu ]; then
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting web-search)
 
 elif [ "$USER" = ubuntu ]; then   ## rpi
@@ -252,7 +250,7 @@ if [ "$USER" = c945fvc ]; then
     esac
     # pnpm end
 
-elif [[ "$ubuntuJuuran" == "true" ]]; then
+elif [ "$HOST" = dual-ubuntu ]; then
     export NOTES_PATH="/home/juuran/notes"
 
     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
