@@ -264,6 +264,10 @@ elif [ "$HOST" = dual-ubuntu ]; then
     ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
 
+    #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+    export SDKMAN_DIR="/home/juuran/.sdkman"
+    [[ -s "/home/juuran/.sdkman/bin/sdkman-init.sh" ]] && source "/home/juuran/.sdkman/bin/sdkman-init.sh"
+
 elif [ "$USER" = juuran ]; then  ## win (wsl2)
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

@@ -105,10 +105,6 @@ if ! shopt -oq posix; then
     fi
 fi
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/home/juuran/.sdkman"
-[[ -s "/home/juuran/.sdkman/bin/sdkman-init.sh" ]] && source "/home/juuran/.sdkman/bin/sdkman-init.sh"
-
 ## Tulostaa stderr punaisella
 #exec 9>&2
 #exec 8> >(
@@ -164,4 +160,10 @@ if [ "$USER" = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
     # pnpm end
 
     . "$HOME/.cargo/env"
+fi
+
+if [ "$HOST" = "dual-ubuntu" ] || [ "$HOSTNAME" = "dual-ubuntu" ]; then
+    #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+    export SDKMAN_DIR="/home/juuran/.sdkman"
+    [[ -s "/home/juuran/.sdkman/bin/sdkman-init.sh" ]] && source "/home/juuran/.sdkman/bin/sdkman-init.sh"
 fi
