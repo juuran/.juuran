@@ -117,7 +117,7 @@ elif [ "$USER" = juuran ]; then   ## oma windows
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting mvn-aliax npm-aliax web-search spring yarn-aliax rust)
 
 elif [ "$HOST" = dual-ubuntu ]; then
-    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting web-search)
+    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting web-search rust)
 
 elif [ "$USER" = ubuntu ]; then   ## rpi
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
@@ -258,11 +258,11 @@ elif [ "$HOST" = dual-ubuntu ]; then
     bashcompinit
 
     ## värityksiä
-    local juuranGray juuranGrayer
-    juuranGray='fg=243'
-    juuranGrayer='fg=240'
-    ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
-    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
+    local grayMore grayDoor
+    grayMore='fg=244'
+    grayDoor='fg=242'
+    ZSH_HIGHLIGHT_STYLES[comment]=$grayDoor
+    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayMore
 
     #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
     export SDKMAN_DIR="/home/juuran/.sdkman"
