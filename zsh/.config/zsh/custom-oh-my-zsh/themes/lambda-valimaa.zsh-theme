@@ -10,26 +10,18 @@
 ##
 
 # Begin a segment
-# Takes an argument: foreground. Can be "default".
 function prompt_segment() {
-    local fg
-    if [[ $1 == "default" ]] || [[ -z "$1" ]]; then
-        fg="%f"
-    else
-        fg="$1"
-    fi
-
+    fg="$1"
+    
     echo -n "%{$fg%}"  ## <- ei sisällä välilyöntiä toisin kuin agnoster!
     [[ -n $2 ]] && echo -n $2
 }
 
 # End the prompt, closing any open segments
 function prompt_end() {
-    local prompt_symbol prompt_color
-    prompt_symbol="${SEGMENT_SPACE}❯"
     ## eri väri jos olet superuser
-    [[ $UID -eq 0 ]] && prompt_color="${LV_COLOR_PROMPT_GOD}" || prompt_color="${LV_COLOR_PROMPT_NORMAL}"
-    echo -n "%{%k%}%{%f%}${prompt_color}${prompt_symbol}%{$reset_color%}"
+    [[ $UID -ne 0 ]] && prompt_color="${LV_COLOR_PROMPT_NORMAL}" || prompt_color="${LV_COLOR_PROMPT_GOD}"
+    echo -n "%{%k%}%{%f%}${prompt_color}${SEGMENT_SPACE}%{$reset_color%}"
 }
 
 
@@ -50,13 +42,13 @@ function prompt_status_context() {
 
 # Dir: current working directory
 function prompt_dir() {
-    local dir; dir=$(print -P "%3~")
+    dir=$(print -P "%3~")
     if [[ "$dir" == "~"* ]]; then
         prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~/"
     elif [[ "$dir" == "/"* ]]; then
         prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~"
     else
-        prompt_segment default "${SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}…${LV_COLOR_DIR_TEXT}/%3~/"
+        prompt_segment "${SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}…${LV_COLOR_DIR_TEXT}/%3~/"
     fi
 }
 
