@@ -48,26 +48,6 @@ else                             ## muut koneet (mm. vilma)
     ZSH_THEME="random"
 fi
 
-if [ "$ZSH_THEME" = "lambda-valimaa" ]; then
-    ## mikro-optimointi jos käyttääpi meikän omaa teemaa
-
-    export LV_COLOR_ERROR_BOLD LV_COLOR_ERROR LV_COLOR_GIT_GOOD LV_COLOR_GIT_NEUTRAL LV_COLOR_DOTDOTDOT \
-    LV_COLOR_DIR_TEXT LV_COLOR_LAMBDA LV_COLOR_WARN LV_COLOR_WARNER LV_COLOR_PROMPT_NORMAL LV_COLOR_PROMPT_GOD LV_COLOR_CONTEXT
-
-    LV_COLOR_ERROR_BOLD="%{$fg_bold[red]%}"         ## bold punainen
-    LV_COLOR_ERROR="%{${(%):-"%F{1}"}%}"            ## punainen, (124, 197, 160, 9, 1)
-    LV_COLOR_GIT_GOOD="%{${(%):-"%F{41}"}%}"        ## vihreä (47, 120, 41)
-    LV_COLOR_GIT_NEUTRAL="%{${(%):-"%F{43}"}%}"     ## sinisempi (43, 44, 81)
-    LV_COLOR_DOTDOTDOT="%{${(%):-"%F{102}"}%}"      ## harmaa (244, 247, 102)
-    LV_COLOR_DIR_TEXT="%{${(%):-"%F{152}"}%}"       ## "polun väri", esim joku harmahtava (152, 103, 145, 146)
-    LV_COLOR_LAMBDA="%{$fg_bold[white]%}"           ## kirkkaan valkoinen (231, 256)
-    LV_COLOR_WARN="%{${(%):-"%F{227}"}%}"           ## keltainen (227, 142)
-    LV_COLOR_WARNER="%{${(%):-"%F{208}"}%}"         ## oranssi (208, 130)
-    LV_COLOR_PROMPT_NORMAL="%{${(%):-"%F{251}"}%}"  ## promptimerkin väri normaalisti, valkoinen
-    LV_COLOR_PROMPT_GOD="%{${(%):-"%F{226}"}%}"     ## promptimerkin väri jos olet root, kultainen (226)
-    LV_COLOR_CONTEXT="%{${(%):-"%F{139}"}%}"        ## "hostin nimi", joku hillitty (140, 146, 139)
-fi
-
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in $ZSH/themes/
