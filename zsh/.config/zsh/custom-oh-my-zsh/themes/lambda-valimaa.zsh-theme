@@ -10,14 +10,9 @@
 ##
 
 # Begin a segment
-# Takes an argument: foreground. Can be "default".
+# Takes an argument: foreground.
 function prompt_segment() {
     local fg
-    if [[ $1 == "default" ]] || [[ -z "$1" ]]; then
-        fg="%f"
-    else
-        fg="$1"
-    fi
 
     echo -n "%{$fg%}"  ## <- ei sisällä välilyöntiä toisin kuin agnoster!
     [[ -n $2 ]] && echo -n $2
@@ -56,23 +51,15 @@ function prompt_dir() {
     elif [[ "$dir" == "/"* ]]; then
         prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~"
     else
-        prompt_segment default "${SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}…${LV_COLOR_DIR_TEXT}/%3~/"
+        prompt_segment "%f" "${SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}…${LV_COLOR_DIR_TEXT}/%3~/"
     fi
 }
 
 # Git: branch/detached head, dirty & stashed status
 function prompt_git() {
-    command git rev-parse --is-inside-work-tree &> /dev/null || return  ## nopea poistuminen
-    (( $+commands[git] )) || return
-
-    local PL_BRANCH_CHAR PL_STASH_CHAR
-    () {
-        local LC_ALL="" LC_CTYPE="en_US.UTF-8"
-        PL_BRANCH_CHAR=''         # git ikoni, jos haluat
-    }
     local ref dirty repo_path mode temp_space
-
-    repo_path=$(command git rev-parse --git-dir 2>/dev/null)
+    repo_path=$(command git rev-parse --git-dir 2>/dev/null) || return  ## nopea poistuminen
+    
     dirty=$(parse_git_dirty)
     ref=$(command git symbolic-ref HEAD 2> /dev/null)
     if [[ -n $dirty ]]; then
@@ -81,7 +68,7 @@ function prompt_git() {
         prompt_segment ${LV_COLOR_GIT_GOOD} "${SEGMENT_SPACE}"
     fi
 
-    local ahead behind
+    local ahead behind PL_BRANCH_CHAR PL_STASH_CHAR
     ahead=$(command git log --oneline @{upstream}.. 2>/dev/null)
     behind=$(command git log --oneline ..@{upstream} 2>/dev/null)
     if [[ -n "$ahead" ]] && [[ -n "$behind" ]]; then
