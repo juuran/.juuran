@@ -13,6 +13,7 @@
 # Takes an argument: foreground.
 function prompt_segment() {
     local fg
+    fg="$1"
 
     echo -n "%{$fg%}"  ## <- ei sisällä välilyöntiä toisin kuin agnoster!
     [[ -n $2 ]] && echo -n $2
