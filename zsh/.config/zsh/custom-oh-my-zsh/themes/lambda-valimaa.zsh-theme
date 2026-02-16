@@ -12,16 +12,16 @@
 # Begin a segment
 function prompt_segment() {
     fg="$1"
-    msg="$2"
-
-    echo -n "%{$fg%}${msg}"
+    
+    echo -n "%{$fg%}"  ## <- ei sisällä välilyöntiä toisin kuin agnoster!
+    [[ -n $2 ]] && echo -n $2
 }
 
 # End the prompt, closing any open segments
 function prompt_end() {
     ## eri väri jos olet superuser
     [[ $UID -ne 0 ]] && prompt_color="${LV_COLOR_PROMPT_NORMAL}" || prompt_color="${LV_COLOR_PROMPT_GOD}"
-    echo -n "%{%k%}%{%f%}${prompt_color}${SEGMENT_SPACE}❯%{$reset_color%}"
+    echo -n "%{%k%}%{%f%}${prompt_color}${SEGMENT_SPACE}%{$reset_color%}"
 }
 
 
@@ -43,7 +43,6 @@ function prompt_status_context() {
 # Dir: current working directory
 function prompt_dir() {
     dir=$(print -P "%3~")
-
     if [[ "$dir" == "~"* ]]; then
         prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~/"
     elif [[ "$dir" == "/"* ]]; then
@@ -55,10 +54,17 @@ function prompt_dir() {
 
 # Git: branch/detached head, dirty & stashed status
 function prompt_git() {
-    local repo_path
-    repo_path=$(command git rev-parse --git-dir 2>/dev/null) || return  ## nopea poistuminen
+    command git rev-parse --is-inside-work-tree &> /dev/null || return  ## nopea poistuminen
+    (( $+commands[git] )) || return
 
-    local ref dirty 
+    local PL_BRANCH_CHAR PL_STASH_CHAR
+    () {
+        local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+        PL_BRANCH_CHAR=''         # git ikoni, jos haluat
+    }
+    local ref dirty repo_path mode temp_space
+
+    repo_path=$(command git rev-parse --git-dir 2>/dev/null)
     dirty=$(parse_git_dirty)
     ref=$(command git symbolic-ref HEAD 2> /dev/null)
     if [[ -n $dirty ]]; then
@@ -67,7 +73,7 @@ function prompt_git() {
         prompt_segment ${LV_COLOR_GIT_GOOD} "${SEGMENT_SPACE}"
     fi
 
-    local ahead behind PL_BRANCH_CHAR
+    local ahead behind
     ahead=$(command git log --oneline @{upstream}.. 2>/dev/null)
     behind=$(command git log --oneline ..@{upstream} 2>/dev/null)
     if [[ -n "$ahead" ]] && [[ -n "$behind" ]]; then
@@ -78,7 +84,7 @@ function prompt_git() {
         PL_BRANCH_CHAR="${LV_COLOR_GIT_NEUTRAL} ↧"
     fi
 
-    local stashed PL_STASH_CHAR mode temp_space
+    local stashed
     stashed=$(git stash list)
     [[ -n "$stashed" ]] && PL_STASH_CHAR="${LV_COLOR_GIT_NEUTRAL} ⚹"
 
@@ -104,6 +110,7 @@ function prompt_git() {
     vcs_info
     echo -n "${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${PL_STASH_CHAR}${mode}"
 }
+
 
 ## Main prompt
 function build_prompt() {
