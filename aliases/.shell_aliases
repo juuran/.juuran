@@ -5,6 +5,7 @@
 alias ls='ls --color=always'
 alias l='ls -CF'
 alias ll='ls -alFh'
+alias lll='ls -lFh'
 alias la='ls -AF'
 alias grep='grep --color=force'
 
