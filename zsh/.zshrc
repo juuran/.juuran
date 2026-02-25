@@ -113,11 +113,8 @@ ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
 if [ "$HOST" = c945fvc ]; then    ## kehityspalvelin
     plugins=(git-aliax sudo zsh-syntax-highlighting zsh-autosuggestions mvn-aliax npm-aliax jsontools oc yum docker yarn-aliax)
 
-elif [ "$USER" = juuran ]; then   ## oma windows
-    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting mvn-aliax npm-aliax web-search spring yarn-aliax rust)
-
-elif [ "$HOST" = dual-ubuntu ]; then
-    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting web-search rust)
+elif [ "$HOST" = fedora ]; then
+    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting web-search rust spring)
 
 elif [ "$USER" = ubuntu ]; then   ## rpi
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
@@ -250,7 +247,7 @@ if [ "$USER" = c945fvc ]; then
     esac
     # pnpm end
 
-elif [ "$HOST" = dual-ubuntu ]; then
+elif [ "$HOST" = fedora ]; then
     export NOTES_PATH="/home/juuran/notes"
 
     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
@@ -268,7 +265,7 @@ elif [ "$HOST" = dual-ubuntu ]; then
     export SDKMAN_DIR="/home/juuran/.sdkman"
     [[ -s "/home/juuran/.sdkman/bin/sdkman-init.sh" ]] && source "/home/juuran/.sdkman/bin/sdkman-init.sh"
 
-elif [ "$USER" = juuran ]; then  ## win (wsl2)
+elif [ "$USER" = juuran ]; then  ## win (wsl2) - SÄILYTETÄÄN siltä varalta että joskus taas muutan mieleni... (niinkin ON käynyt, usko tai älä)
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -319,7 +316,6 @@ elif [ "$USER" = juuran ]; then  ## win (wsl2)
     #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
     export SDKMAN_DIR="$HOME/.sdkman"
     [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
 
 elif [ "$USER" = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
