@@ -5,7 +5,7 @@ export LAMBDA_VALIMAA_COMPACT_MODE=true
 
 fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
-if [ "$USER" = c945fvc ] || [ "$USER" = juuran ]; then
+if [ "$USER" = c945fvc ]; then
     # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
     # Initialization code that may require console input (password prompts, [y/n]
     # confirmations, etc.) must go above this block; everything else may go below.
@@ -33,10 +33,7 @@ export ZSH="$HOME/.config/zsh/oh-my-zsh"
 if [ "$HOST" = dev047tools1.kela.fi ]; then  ## kehityspalvelin
    ZSH_THEME="powerlevel10k/powerlevel10k"
 
-elif [ "$USER" = c945fvc ]; then   ## kela kolaamo (ihan kohta voi poistaa!)
-   ZSH_THEME="powerlevel10k/powerlevel10k"
-
-elif [ "$USER" = juuran ]; then  ## windows oma kone
+elif [ "$USER" = juuran ]; then  ## fedora-kone
     ZSH_THEME="lambda-valimaa"  ## lambda-valimaa, agnoster-valimaa, macovsky-valimaa
     ## hyviä originaaleja:  lukerandall, lambda, muse, zhann, sunaku, norm, macovsky miloshadzic, avit
     ##                      fletcherm, half-life (melkein: mira, fletcherm, robbyrussell, agnoster)
@@ -110,11 +107,11 @@ ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
     #   Custom plugins may be added to $ZSH_CUSTOM/plugins/
     #   Example format: plugins=(rails git textmate ruby lighthouse)
     #   Add wisely, as too many plugins slow down shell startup. )
-if [ "$HOST" = c945fvc ]; then    ## kehityspalvelin
+if [ "$USER" = c945fvc ]; then    ## kehityspalvelin
     plugins=(git-aliax sudo zsh-syntax-highlighting zsh-autosuggestions mvn-aliax npm-aliax jsontools oc yum docker yarn-aliax)
 
 elif [ "$HOST" = fedora ]; then
-    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting web-search rust spring)
+    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting web-search rust spring docker)
 
 elif [ "$USER" = ubuntu ]; then   ## rpi
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
@@ -186,17 +183,17 @@ fi
 
 export GIT_EDITOR='\nano -ci --softwrap'
 
-ORIGINAL_PATH=$PATH
-export ORIGINAL_PATH
-function paivitaJavaHome() {
-    local java_home; java_home=$(readlink -f /usr/bin/java)
-    java_home=${java_home:0:-9}
-    JAVA_HOME=$java_home
-    PATH=$ORIGINAL_PATH:$JAVA_HOME
-}
-
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ "$USER" = c945fvc ]; then
+    ORIGINAL_PATH=$PATH
+    export ORIGINAL_PATH
+    function paivitaJavaHome() {
+        local java_home; java_home=$(readlink -f /usr/bin/java)
+        java_home=${java_home:0:-9}
+        JAVA_HOME=$java_home
+        PATH=$ORIGINAL_PATH:$JAVA_HOME
+    }
+
     ## asetettava JAVA_HOME, mutta update-alternatives linkkaa virheellisesti java ohjelmaan, ei kansioon
     paivitaJavaHome
 
