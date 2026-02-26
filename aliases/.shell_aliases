@@ -61,7 +61,6 @@ elif [ "$USER" = "juuran" ]; then
   alias nano='\nano -Acil --softwrap'
   alias nano-without-lines='\nano -Aci'
   alias code=runCodeWithArgs
-  alias docker=podman
 
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='\nano'
