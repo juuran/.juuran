@@ -32,6 +32,7 @@ while getopts "m:h" OPTION; do
       elif [ "$OPTARG" == "typical" ];    then mode="typical"
       elif [ "$OPTARG" == "liberty" ];    then mode="liberty"
       elif [ "$OPTARG" == "rpi" ];        then mode="rpi"
+      elif [ "$OPTARG" == "ocp-build" ];  then mode="ocp-build"
       else fail "Unkown mode '$OPTARG'!"
       fi
       ;;
@@ -86,6 +87,15 @@ elif [ "$mode" == "liberty" ]; then
   ERROR=" E "
   FATAL=" FATAL "
   timeStamp="\[[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{4} [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}:[0-9]{1,3} [a-Z]{0,6}\]"
+elif [ "$mode" == "ocp-build" ]; then
+  timeStamp="[0-9]{4}${d}[0-9]{1,2}${d}[0-9]{1,2}T[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{3,9}Z"
+  DEBUG=" STEP [0-9]{1,3}/[0-9]{1,3}"
+  WARN="\[[0-9]{1,3}/[0-9]{1,3}\]"
+  ERROR=" BUILD\$"
+  INFO=" PUSH\$"
+  TRACE=" DIGEST\$"
+  FATAL=" FAILED\$"
+  ##2026-02-25T14:27:54.719208308Z
 fi
 
       ##                              VÄRIT JA EFEKTIT

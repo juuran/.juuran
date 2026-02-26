@@ -60,7 +60,7 @@ elif [ "$USER" = "juuran" ]; then
   alias note='/mnt/c/Program\ Files/Notepad++/notepad++.exe'
   alias nano='\nano -Acil --softwrap'
   alias nano-without-lines='\nano -Aci'
-
+  alias code=runCodeWithArgs
 
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='\nano'
@@ -87,3 +87,6 @@ function llss() { ll "$@" | less ; }
 function lad() { ls -d "$1"/*/; }
 function lld() { ls -d1 "$1"/*/; }
 function softClear() { for _i in $(seq 2 $(tput lines)); do echo ""; done; }
+function runCodeWithArgs() {
+  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@
+}
