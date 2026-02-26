@@ -53,10 +53,10 @@ t="[\.:]"   ## time delimiter
 timeStamp="[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{4} [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{0,6}"
 
 ## default
-  INFO=" INFO "
+ INFO=" INFO "
 DEBUG=" DEBUG "
 TRACE=" TRACE "
-  WARN=" WARN "
+ WARN=" WARN "
 ERROR=" ERROR "
 FATAL=" FATAL "
 
@@ -88,14 +88,13 @@ elif [ "$mode" == "liberty" ]; then
   FATAL=" FATAL "
   timeStamp="\[[0-9]{1,2}${d}[0-9]{1,2}${d}[0-9]{4} [0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}:[0-9]{1,3} [a-Z]{0,6}\]"
 elif [ "$mode" == "ocp-build" ]; then
-  timeStamp="[0-9]{4}${d}[0-9]{1,2}${d}[0-9]{1,2}T[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{3,9}Z"
   DEBUG=" STEP [0-9]{1,3}/[0-9]{1,3}"
-  WARN="\[[0-9]{1,3}/[0-9]{1,3}\]"
+   WARN="\[[0-9]{1,3}/[0-9]{1,3}\]"
   ERROR=" BUILD\$"
-  INFO=" PUSH\$"
-  TRACE=" DIGEST\$"
-  FATAL=" FAILED\$"
-  ##2026-02-25T14:27:54.719208308Z
+  TRACE=" PUSH\$"  ## tämä siis pois käytöstä
+   INFO=" PUSH\$"
+  FATAL=" ERROR: "
+  timeStamp="[0-9]{4}${d}[0-9]{1,2}${d}[0-9]{1,2}T[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{3,9}Z"
 fi
 
       ##                              VÄRIT JA EFEKTIT
