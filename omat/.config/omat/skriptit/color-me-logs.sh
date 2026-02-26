@@ -91,7 +91,7 @@ elif [ "$mode" == "ocp-build" ]; then
   DEBUG=" STEP [0-9]{1,3}/[0-9]{1,3}"
    WARN="\[[0-9]{1,3}/[0-9]{1,3}\]"
   ERROR=" BUILD\$"
-  TRACE=" PUSH\$"  ## tämä siis pois käytöstä
+  TRACE=" DIGEST\$"
    INFO=" PUSH\$"
   FATAL=" ERROR: "
   timeStamp="[0-9]{4}${d}[0-9]{1,2}${d}[0-9]{1,2}T[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{1,2}${t}[0-9]{3,9}Z"
