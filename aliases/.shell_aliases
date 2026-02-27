@@ -31,7 +31,6 @@ alias f-f-f-find=$SKRIPTIT_POLKU/f-f-f-find.sh
 alias g-g-g-grep=$SKRIPTIT_POLKU/g-g-g-grep.sh
 alias show-usable-colors=$SKRIPTIT_POLKU/show-usable-colors.sh
 alias color-me-logs=$SKRIPTIT_POLKU/color-me-logs.sh
-alias sclear='softClear'
 alias echo-server-localhost=$SKRIPTIT_POLKU/echo-server-localhost.sh
 alias sha-tarkistin=$SKRIPTIT_POLKU/sha-tarkistin.sh
 alias recursive-do=$SKRIPTIT_POLKU/recursive-do.sh
@@ -60,7 +59,10 @@ elif [ "$USER" = "juuran" ]; then
   alias note='/mnt/c/Program\ Files/Notepad++/notepad++.exe'
   alias nano='\nano -Acil --softwrap'
   alias nano-without-lines='\nano -Aci'
-  alias code=runCodeWithArgs
+  function code() { /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@ }
+  function startDolphin() { (dolphin "$*" 1> /dev/null 2> /dev/null &) }
+  alias dolphin='startDolphin'
+  alias fmanager='startDolphin'
 
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='\nano'
@@ -86,7 +88,4 @@ function perse()  {
 function llss() { ll "$@" | less ; }
 function lad() { ls -d "$1"/*/; }
 function lld() { ls -d1 "$1"/*/; }
-function softClear() { for _i in $(seq 2 $(tput lines)); do echo ""; done; }
-function runCodeWithArgs() {
-  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@
-}
+function sclear() { for _i in $(seq 2 $(tput lines)); do echo ""; done; }
