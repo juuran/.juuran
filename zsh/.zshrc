@@ -111,7 +111,7 @@ if [ "$USER" = c945fvc ]; then    ## kehityspalvelin
     plugins=(git-aliax sudo zsh-syntax-highlighting zsh-autosuggestions mvn-aliax npm-aliax jsontools oc yum docker yarn-aliax)
 
 elif [ "$HOST" = fedora ]; then
-    plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting web-search rust spring docker)
+    plugins=(git-aliax sudox zsh-autosuggestions zsh-syntax-highlighting web-search rust spring docker)
 
 elif [ "$USER" = ubuntu ]; then   ## rpi
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
@@ -174,11 +174,11 @@ unsetopt autocd
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-    export EDITOR='nano'
+    export EDITOR='\nano'
 elif [ "$USER" = vilmasilvennoinen ]; then
-    export EDITOR='nano'
+    export EDITOR='\nano'
 else
-    export EDITOR='nano -lci'
+    export EDITOR='\nano -lci'
 fi
 
 export GIT_EDITOR='\nano -ci --softwrap'
