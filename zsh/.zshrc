@@ -18,6 +18,10 @@ fi
 if command -v neofetch > /dev/null && [ "$(date +%j)" != "$(cat ~/.neofetched 2>/dev/null)" ]; then
     date +%j > ~/.neofetched  # day of year
     neofetch
+
+elif command -v fastfetch > /dev/null && [ "$(date +%j)" != "$(cat ~/.fastfetched 2>/dev/null)" ]; then
+    date +%j > ~/.fastfetched  # day of year
+    fastfetch
 fi
 
 # If you come from bash you might have to change your $PATH.

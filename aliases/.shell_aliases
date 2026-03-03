@@ -59,8 +59,12 @@ elif [ "$USER" = "juuran" ]; then
   alias note='/mnt/c/Program\ Files/Notepad++/notepad++.exe'
   alias nano='\nano -Acil --softwrap'
   alias nano-without-lines='\nano -Aci'
-  function code() { /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@ }
-  function startDolphin() { (dolphin "$*" 1> /dev/null 2> /dev/null &) }
+  function code() {
+    /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@
+  }
+  function startDolphin() {
+    (dolphin "$*" 1> /dev/null 2> /dev/null &)
+  }
   alias dolphin='startDolphin'
   alias fmanager='startDolphin'
 
