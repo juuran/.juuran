@@ -120,7 +120,7 @@ function main() {
     local avainArvot=() literaalit
     trap 'handleSignals' SIGINT SIGTERM SIGQUIT
 
-    echo "<<  $SKRIPTIN_NIMI ($V)  >>"
+    echo -e "<<  $SKRIPTIN_NIMI ($V)  >>\n"
 
     ## tarkistetaan yhteys
     oc get secrets &> /dev/null \
