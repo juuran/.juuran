@@ -115,7 +115,7 @@ if [ "$USER" = c945fvc ]; then    ## kehityspalvelin
     plugins=(git-aliax sudo zsh-syntax-highlighting zsh-autosuggestions mvn-aliax npm-aliax jsontools oc yum docker yarn-aliax)
 
 elif [ "$HOST" = fedora ]; then
-    plugins=(git-aliax sudox zsh-autosuggestions zsh-syntax-highlighting web-search rust spring docker)
+    plugins=(git-aliax sudox zsh-autosuggestions zsh-syntax-highlighting web-searchx rust spring dockerx podmanx)
 
 elif [ "$USER" = ubuntu ]; then   ## rpi
     plugins=(git-aliax sudo zsh-autosuggestions zsh-syntax-highlighting)
