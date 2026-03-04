@@ -1,15 +1,13 @@
 #! /bin/bash
 ## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
 
-## jonkin random .bashrc:n järkevät oletus-aliakset
+## peruskirjasto-ohjelmien aliakset
 alias ls='ls --color=always'
 alias l='ls -CF'
 alias ll='ls -alFh'
 alias lll='ls -lFh'
 alias la='ls -AF'
 alias grep='grep --color=force'
-
-## oikeat ohjelmat
 alias less='less --RAW-CONTROL-CHARS --quit-if-one-screen --no-init --ignore-case --LONG-PROMPT'
 alias tree='tree -C'
 alias cd..='cd ..'
@@ -39,7 +37,7 @@ alias aja-luupissa=$SKRIPTIT_POLKU/aja-luupissa.sh
 ## tämä mahdollistaa omien skriptien ajon /usr/local/bin kautta
 alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
 
-## käyttäjä- / ympäristökohtaiset asiat
+## käyttäjä- / ympäristökohtaiset aliasmaisuudet
 if [ "$USER" = "c945fvc" ]; then
   function superUserDo() {
     sudo env "PATH=$PATH" /bin/bash -c "$*"
@@ -58,12 +56,9 @@ elif [ "$USER" = "juuran" ]; then
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
   alias nano='\nano -Acil --softwrap'
   alias nano-without-lines='\nano -Aci'
-  function code() {
-    /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@
-  }
-  function startDolphin() {
-    (dolphin "$*" 1> /dev/null 2> /dev/null &)
-  }
+  function code()              { /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@ }
+  function code-new-instance() { /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code $@ }
+  function startDolphin()      { (dolphin "$*" 1> /dev/null 2> /dev/null &) }
   alias dolphin='startDolphin'
   alias fmanager='startDolphin'
 
@@ -71,7 +66,7 @@ elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='\nano'
 
 elif [ "$USER" = "juuso" ]; then
-  function startNautilus() { (nautilus "$*" 1> /dev/null 2> /dev/null &) }
+  function startNautilus() {  (nautilus "$*" 1> /dev/null 2> /dev/null &)  }
   alias nautilus='startNautilus'
   alias fmanager='startNautilus'
   alias tasks=$SKRIPTIT_POLKU/tasks.sh
@@ -91,4 +86,4 @@ function perse()  {
 function llss() { ll "$@" | less ; }
 function lad() { ls -d "$1"/*/; }
 function lld() { ls -d1 "$1"/*/; }
-function sclear() { for _i in $(seq 2 $(tput lines)); do echo ""; done; }
+function sclear() {  for _i in $(seq 2 $(tput lines)); do echo ""; done;  }
