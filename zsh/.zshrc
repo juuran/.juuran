@@ -15,7 +15,7 @@ if [ "$USER" = c945fvc ]; then
 fi
 
 ## tulostetaan kauniihko inhvo-ruutu kerran päivässä (jos löytyy)
-fetched='~/.config/.fastneofetched'; touch $fetched
+fetched="$HOME/.config/.fastneofetched"; touch $fetched
 if command -v fastfetch > /dev/null && [ "$(date +%j)" != "$(cat $fetched 2> /dev/null)" ]; then
     date +%j > $fetched  # day of year
     fastfetch
