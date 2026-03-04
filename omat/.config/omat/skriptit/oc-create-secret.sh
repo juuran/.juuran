@@ -24,7 +24,7 @@ LINE=""
 SECRET_NIMI=""
 SEALED_FILE=""
 IS_BACKED_UP=true
-V="v. 1.0"
+V="v. 1.01"
 SKRIPTIN_NIMI="$(basename "$0")"
 
 ## APUFUNKTIOT
@@ -126,14 +126,14 @@ function main() {
     oc get secrets &> /dev/null \
         || fail 'oc ei saa yhteyttä, oletko varmasti kirjautunut oikeaan ympäristöön?\n(esim. "oc login -u $USER api.cp4apps.testikela.fi:6443  ## openshiftin IBM:n cp4apps testiklusteriin omalla puukkarilla")'
 
-    echo -e "luo ja salaa secret yhdellä iskulla\n(syötä kentät avain-arvo pareina tyylillä avain=arvo)\n"
-
     ## secretin nimi
-    readLine "anna secretille nimi: "
+    readLine "anna secret \"tiedostolle\" / merkinnälle nimi (alaviiva kielletty): "
     SECRET_NIMI="$LINE"
     [[ -z "$SECRET_NIMI" ]] && fail "annetun secretin nimi ei voi olla tyhjä!"
     [[ "$SECRET_NIMI" == *" "* ]] && fail "annettava rivi ei saa sisältää välilyöntejä!"
     [[ -e "./sealed-$SECRET_NIMI.yaml" ]] && fail "samanniminen salattu tiedosto on jo olemassa eikä ohjelmointini salli ylikirjoittaa sitä..."
+
+    echo -e "\nhyvä,\nnytsyötä kentät avain-arvo pareina tyylillä avain=arvo\n"
 
     ## varsinainen sisältö secretiin
     while true; do
