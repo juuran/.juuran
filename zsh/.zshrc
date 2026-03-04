@@ -15,9 +15,13 @@ if [ "$USER" = c945fvc ]; then
 fi
 
 ## tulostetaan kauniihko inhvo-ruutu kerran päivässä (jos löytyy)
-if command -v fastfetch > /dev/null && [ "$(date +%j)" != "$(cat ~/.fastfetched 2>/dev/null)" ]; then
-    date +%j > ~/.config/.fastfetched  # day of year
+fetched='~/.config/.fastneofetched'
+if command -v fastfetch > /dev/null && [ "$(date +%j)" != "$(cat $fetched 2> /dev/null)" ]; then
+    date +%j > $fetched  # day of year
     fastfetch
+elif command -v neofetch > /dev/null && [ "$(date +%j)" != "$(cat $fetched 2> /dev/null)" ]; then
+    date +%j > $fetched  # day of year
+    neofetch
 fi
 
 # If you come from bash you might have to change your $PATH.
