@@ -189,6 +189,7 @@ export GIT_EDITOR='\nano -ci --softwrap'
 
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ "$USER" = c945fvc ]; then
+    export HOME="/home/c945fvc"
     ORIGINAL_PATH=$PATH
     export ORIGINAL_PATH
     function paivitaJavaHome() {
