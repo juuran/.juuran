@@ -127,7 +127,7 @@ function main() {
         || fail 'oc ei saa yhteyttä, oletko varmasti kirjautunut oikeaan ympäristöön?\n(esim. "oc login -u $USER api.cp4apps.testikela.fi:6443  ## openshiftin IBM:n cp4apps testiklusteriin omalla puukkarilla")'
 
     ## secretin nimi
-    readLine "anna secret \"tiedostolle\" / merkinnälle nimi (alaviiva kielletty): "
+    readLine "anna secret \"tiedostolle\" nimi (alaviiva kielletty): "
     SECRET_NIMI="$LINE"
     [[ -z "$SECRET_NIMI" ]] && fail "annetun secretin nimi ei voi olla tyhjä!"
     [[ "$SECRET_NIMI" == *" "* ]] && fail "annettava rivi ei saa sisältää välilyöntejä!"
