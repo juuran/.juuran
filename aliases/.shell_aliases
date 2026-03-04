@@ -20,61 +20,48 @@ alias rd='\rm -d'
 alias md='mkdir -p'
 
 ## omat skriptit tästä alaspäin
-alias git-log=$SKRIPTIT_POLKU/git-log.sh
-alias git-branch-descriptions=$SKRIPTIT_POLKU/git-branch-descriptions.sh
-alias git-log=$SKRIPTIT_POLKU/git-log.sh
-alias git-modified-branches=$SKRIPTIT_POLKU/git-modified-branches.sh
+alias git-log="$SKRIPTIT_POLKU/git-log.sh"
+alias git-branch-descriptions="$SKRIPTIT_POLKU/git-branch-descriptions.sh"
+alias git-log="$SKRIPTIT_POLKU/git-log.sh"
+alias git-modified-branches="$SKRIPTIT_POLKU/git-modified-branches.sh"
 
-alias f-f-f-find=$SKRIPTIT_POLKU/f-f-f-find.sh
-alias g-g-g-grep=$SKRIPTIT_POLKU/g-g-g-grep.sh
-alias show-usable-colors=$SKRIPTIT_POLKU/show-usable-colors.sh
-alias color-me-logs=$SKRIPTIT_POLKU/color-me-logs.sh
-alias echo-server-localhost=$SKRIPTIT_POLKU/echo-server-localhost.sh
-alias sha-tarkistin=$SKRIPTIT_POLKU/sha-tarkistin.sh
-alias recursive-do=$SKRIPTIT_POLKU/recursive-do.sh
-alias aja-luupissa=$SKRIPTIT_POLKU/aja-luupissa.sh
+alias f-f-f-find="$SKRIPTIT_POLKU/f-f-f-find.sh"
+alias g-g-g-grep="$SKRIPTIT_POLKU/g-g-g-grep.sh"
+alias show-usable-colors="$SKRIPTIT_POLKU/show-usable-colors.sh"
+alias color-me-logs="$SKRIPTIT_POLKU/color-me-logs.sh"
+alias echo-server-localhost="$SKRIPTIT_POLKU/echo-server-localhost.sh"
+alias sha-tarkistin="$SKRIPTIT_POLKU/sha-tarkistin.sh"
+alias recursive-do="$SKRIPTIT_POLKU/recursive-do.sh"
+alias aja-luupissa="$SKRIPTIT_POLKU/aja-luupissa.sh"
 
 ## tämä mahdollistaa omien skriptien ajon /usr/local/bin kautta
 alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
 
 ## käyttäjä- / ympäristökohtaiset aliasmaisuudet
 if [ "$USER" = "c945fvc" ]; then
-  function superUserDo() {
-    sudo env "PATH=$PATH" /bin/bash -c "$*"
-  }
+  function superUserDo() {  sudo env "PATH=$PATH" /bin/bash -c "$*"  }
   alias sudo='superUserDo'
   alias nano='\nano -Alciz --softwrap'
   alias nano-without-lines='\nano -Aciz --softwrap'
-  alias search-logs=$HOME/koodi/omat/lokilucia/search-logs.sh
-  alias tasks=$SKRIPTIT_POLKU/tasks.sh
-  alias git-pull-all=$SKRIPTIT_POLKU/git-pull-all.sh
-  alias liberty-run=$SKRIPTIT_POLKU/liberty-run.sh
-  alias oc-seal=$SKRIPTIT_POLKU/oc-seal.sh
-  alias oc-create-secret=$SKRIPTIT_POLKU/oc-create-secret.sh
+  alias search-logs="$HOME/koodi/omat/lokilucia/search-logs.sh"
+  alias tasks="$SKRIPTIT_POLKU/tasks.sh"
+  alias git-pull-all="$SKRIPTIT_POLKU/git-pull-all.sh"
+  alias liberty-run="$SKRIPTIT_POLKU/liberty-run.sh"
+  alias oc-seal="$SKRIPTIT_POLKU/oc-seal.sh"
+  alias oc-create-secret="$SKRIPTIT_POLKU/oc-create-secret.sh"
 
 elif [ "$USER" = "juuran" ]; then
-  alias tasks=$SKRIPTIT_POLKU/tasks.sh
-  alias nano='\nano -Acil --softwrap'
-  alias nano-without-lines='\nano -Aci'
-  function code()              { /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@ }
-  function code-new-instance() { /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code $@ }
-  function startDolphin()      { (dolphin "$*" 1> /dev/null 2> /dev/null &) }
+  alias tasks="$SKRIPTIT_POLKU/tasks.sh"
+  alias nano='\nano -Alci --softwrap --atblanks'
+  alias nano-without-lines='\nano -Aci --softwrap --atblanks'
+  function code-same-instance() {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@  }
+  function code()               {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code $@  }
+  function startDolphin() {  (dolphin "$*" 1> /dev/null 2> /dev/null &)  }
   alias dolphin='startDolphin'
   alias fmanager='startDolphin'
 
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='\nano'
-
-elif [ "$USER" = "juuso" ]; then
-  function startNautilus() {  (nautilus "$*" 1> /dev/null 2> /dev/null &)  }
-  alias nautilus='startNautilus'
-  alias fmanager='startNautilus'
-  alias tasks=$SKRIPTIT_POLKU/tasks.sh
-  alias intelliJ="(~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea > /dev/null 2>&1 &)"
-  alias intelliJWithLogging="~/.local/share/JetBrains/Toolbox/apps/intellij-idea-community-edition/bin/idea"
-  alias nano='\nano -Alci --softwrap --atblanks'
-  alias nano-without-lines='\nano -Aci --softwrap --atblanks'
-  alias rm='mv -t /home/juuso/.local/share/Trash/files/'
 
 fi
 
