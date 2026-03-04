@@ -14,13 +14,9 @@ if [ "$USER" = c945fvc ]; then
     fi
 fi
 
-## tulostetaan neofetchillä kauniihko inhvo-ruutu kerran päivässä (jos neofetch löytyy)
-if command -v neofetch > /dev/null && [ "$(date +%j)" != "$(cat ~/.neofetched 2>/dev/null)" ]; then
-    date +%j > ~/.neofetched  # day of year
-    neofetch
-
-elif command -v fastfetch > /dev/null && [ "$(date +%j)" != "$(cat ~/.fastfetched 2>/dev/null)" ]; then
-    date +%j > ~/.fastfetched  # day of year
+## tulostetaan kauniihko inhvo-ruutu kerran päivässä (jos löytyy)
+if command -v fastfetch > /dev/null && [ "$(date +%j)" != "$(cat ~/.fastfetched 2>/dev/null)" ]; then
+    date +%j > ~/.config/.fastfetched  # day of year
     fastfetch
 fi
 
@@ -238,7 +234,7 @@ if [ "$USER" = c945fvc ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayMore
 
     ## nodejs oma kustomi asennuspaikka
-    export PATH=$PATH:/usr/local/nodejs/bin
+    #export PATH=$PATH:/usr/local/nodejs/bin
 
     # pnpm
     export PNPM_HOME="/users/c945fvc/.local/share/pnpm"
@@ -266,57 +262,57 @@ elif [ "$HOST" = fedora ]; then
     export SDKMAN_DIR="/home/juuran/.sdkman"
     [[ -s "/home/juuran/.sdkman/bin/sdkman-init.sh" ]] && source "/home/juuran/.sdkman/bin/sdkman-init.sh"
 
-elif [ "$USER" = juuran ]; then  ## win (wsl2) - SÄILYTETÄÄN siltä varalta että joskus taas muutan mieleni... (niinkin ON käynyt, usko tai älä)
-    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# elif [ "$USER" = juuran ]; then  ## win (wsl2) - SÄILYTETÄÄN siltä varalta että joskus taas muutan mieleni... (niinkin ON käynyt, usko tai älä)
+#     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+#     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
-    export NOTES_PATH="/home/juuran/notes"
+#     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
+#     export NOTES_PATH="/home/juuran/notes"
 
-    ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
-    autoload -U +X bashcompinit
-    bashcompinit
+#     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
+#     autoload -U +X bashcompinit
+#     bashcompinit
 
-    # pnpm
-    export PNPM_HOME="/home/juuran/.local/share/pnpm"
-    case ":$PATH:" in
-      *":$PNPM_HOME:"*) ;;
-      *) export PATH="$PNPM_HOME:$PATH" ;;
-    esac
-    # pnpm end
+#     # pnpm
+#     export PNPM_HOME="/home/juuran/.local/share/pnpm"
+#     case ":$PATH:" in
+#       *":$PNPM_HOME:"*) ;;
+#       *) export PATH="$PNPM_HOME:$PATH" ;;
+#     esac
+#     # pnpm end
 
-    ## nvm jutskat
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#     ## nvm jutskat
+#     export NVM_DIR="$HOME/.nvm"
+#     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-    export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+#     export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
-    ## Näillä taikasanoilla saadaan winkkari ymmärtämään, missä pwd:ssä (winkkarissa CWD) kulloinkin
-    ## ollaan. Nyt just ei jaksa kiinnostaa, mutta näin se toimii: The precmd_functions hook tells
-    ## zsh what commands to run before displaying the prompt. "The printf statement is what we're using
-    ## to append the sequence for setting the working directory with the Terminal. The
-    ## $(wslpath -w "$PWD") bit will invoke the wslpath executable to convert the current directory into
-    ## its Windows-like path. Using precmd_functions+= make sure we append the keep_current_path function
-    ## to any existing function already defined for this hook."
-    keep_current_path() {
-        printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
-    }
-    precmd_functions+=(keep_current_path)
+#     ## Näillä taikasanoilla saadaan winkkari ymmärtämään, missä pwd:ssä (winkkarissa CWD) kulloinkin
+#     ## ollaan. Nyt just ei jaksa kiinnostaa, mutta näin se toimii: The precmd_functions hook tells
+#     ## zsh what commands to run before displaying the prompt. "The printf statement is what we're using
+#     ## to append the sequence for setting the working directory with the Terminal. The
+#     ## $(wslpath -w "$PWD") bit will invoke the wslpath executable to convert the current directory into
+#     ## its Windows-like path. Using precmd_functions+= make sure we append the keep_current_path function
+#     ## to any existing function already defined for this hook."
+#     keep_current_path() {
+#         printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
+#     }
+#     precmd_functions+=(keep_current_path)
 
-    ## värityksiä
-    local juuranGray juuranGrayer
-    juuranGray='fg=243'
-    juuranGrayer='fg=240'
-    ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
-    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
+#     ## värityksiä
+#     local juuranGray juuranGrayer
+#     juuranGray='fg=243'
+#     juuranGrayer='fg=240'
+#     ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
+#     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
 
-    ## rust
-    . "$HOME/.cargo/env"
+#     ## rust
+#     . "$HOME/.cargo/env"
 
-    #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-    export SDKMAN_DIR="$HOME/.sdkman"
-    [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+#     #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+#     export SDKMAN_DIR="$HOME/.sdkman"
+#     [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 elif [ "$USER" = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
