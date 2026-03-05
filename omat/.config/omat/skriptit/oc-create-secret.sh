@@ -144,7 +144,7 @@ function main() {
         elif [[ "$LINE" == "q" ]]; then
             break;
         elif [[ "$LINE" != *"="* ]]; then
-            fail "ei sisältänyt merkkiä '=' \nKäsky on anettava \"java properties\" muotoisesti avain=arvo!"
+            fail "ei sisältänyt merkkiä '=' \nKäsky on anettava \"java properties\" muotoisesti avain=arvo!\nMitään muutoksia ei viety ocp ympäristöön."
         fi
 
         avainArvot+=("$LINE")
@@ -160,10 +160,10 @@ function main() {
     luontiKomento="oc create secret generic $SECRET_NIMI ${literaalit}"
     echo -e "\nsuoritetaan komento annetuilla tiedoilla:"
     echo -e "    $luontiKomento\n"
-    $luontiKomento || fail "\nsecretin luonti epäonnistui!\nkatso englanninkieliset virheen tiedot yltä"
+    $luontiKomento || fail "\nsecretin luonti epäonnistui!\nkatso englanninkieliset virheen tiedot yltä\nMitään muutoksia ei viety ocp ympäristöön."
 
     echo -e "\n(\n  HUOM! Avaimien arvot base64 muodossa\n  luotu väliaikainen secret tarkastettavaksi:\n)\n"
-    oc get secret $SECRET_NIMI -o yaml || fail "\nsecretin haku epäonnistui, keskeytetään!"
+    oc get secret $SECRET_NIMI -o yaml || fail "\nsecretin haku epäonnistui, suoritus on keskeytettävä!\nMitään muutoksia ei viety ocp ympäristöön."
 
     echo ""
     readLine "jos tämä on mielestäsi oikein paina [Enter], jos väärin 'q' tai koska vain [Ctrl + C]: "
