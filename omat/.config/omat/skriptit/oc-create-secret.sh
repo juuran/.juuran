@@ -133,7 +133,8 @@ function main() {
     [[ "$SECRET_NIMI" == *" "* ]] && fail "annettava rivi ei saa sisältää välilyöntejä!"
     [[ -e "./sealed-$SECRET_NIMI.yaml" ]] && fail "samanniminen salattu tiedosto on jo olemassa eikä ohjelmointini salli ylikirjoittaa sitä..."
 
-    echo -e "\nhyvä,\nnyt syötä kentät avain-arvo pareina tyylillä avain=arvo\n"
+    echo -e "\nhyvä,\nnyt syötä kentät avain-arvo pareina tyylillä avain=arvo"
+    echo -e "(huomioita: ääkköset ja välilöynnit eivät toimi, mutta eivätpä ne kuulukaan secreteihin)\n"
 
     ## varsinainen sisältö secretiin
     while true; do
