@@ -120,21 +120,21 @@ function main() {
     local avainArvot=() literaalit
     trap 'handleSignals' SIGINT SIGTERM SIGQUIT
 
-    echo -e "<<  $SKRIPTIN_NIMI ($V)  >>\n"
+    echo -e "***  $SKRIPTIN_NIMI ($V)  ***\n"
 
     ## tarkistetaan yhteys
     oc get secrets &> /dev/null \
         || fail 'oc ei saa yhteyttä, oletko varmasti kirjautunut oikeaan ympäristöön?\n(esim. "oc login -u $USER api.cp4apps.testikela.fi:6443  ## openshiftin IBM:n cp4apps testiklusteriin omalla puukkarilla")'
 
     ## secretin nimi
-    readLine "anna secret \"tiedostolle\" nimi: "
+    readLine "anna secret-\"tiedostolle\" nimi: "
     SECRET_NIMI="$LINE"
     [[ -z "$SECRET_NIMI" ]] && fail "annetun secretin nimi ei voi olla tyhjä!"
     [[ "$SECRET_NIMI" == *" "* ]] && fail "annettava rivi ei saa sisältää välilyöntejä!"
     [[ -e "./sealed-$SECRET_NIMI.yaml" ]] && fail "samanniminen salattu tiedosto on jo olemassa eikä ohjelmointini salli ylikirjoittaa sitä..."
 
-    echo -e "\nhyvä,\nnyt syötä kentät avain-arvo pareina tyylillä avain=arvo"
-    echo -e "(huomioita: ääkköset ja välilöynnit eivät toimi, mutta eivätpä ne kuulukaan secreteihin)\n"
+    echo -e "\nhyvä,\nnyt syötä kentät avain-arvo pareina tyylillä SALAINEN_AVAIN=arvo"
+    echo -e "(ääkköset ja välilöynnit eivät toimi, mutta eivätpä ne kuulukaan secreteihin)\n"
 
     ## varsinainen sisältö secretiin
     while true; do
