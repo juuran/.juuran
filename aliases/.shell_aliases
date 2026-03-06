@@ -39,7 +39,7 @@ alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
 
 ## käyttäjä- / ympäristökohtaiset aliasmaisuudet
 if [ "$USER" = "c945fvc" ]; then
-  function superUserDo() {  sudo env "PATH=$PATH" /bin/bash -c "$*"  }
+  function superUserDo() {  sudo env "PATH=$PATH" /bin/bash -c "$*";  }
   alias sudo='superUserDo'
   alias nano='\nano -Alciz --softwrap'
   alias nano-without-lines='\nano -Aciz --softwrap'
@@ -54,8 +54,8 @@ elif [ "$USER" = "juuran" ]; then
   alias tasks="$SKRIPTIT_POLKU/tasks.sh"
   alias nano='\nano -Alci --softwrap --atblanks'
   alias nano-without-lines='\nano -Aci --softwrap --atblanks'
-  function code-same-instance() {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@  }
-  function code()               {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code $@  }
+  function code-same-instance() {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@;  }
+  function code()               {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code $@;  }
   function startDolphin() {  (dolphin "$*" 1> /dev/null 2> /dev/null &)  }
   alias dolphin='startDolphin'
   alias fmanager='startDolphin'
