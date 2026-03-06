@@ -1,5 +1,7 @@
 #! /bin/bash
 ## Aliaksia – ja kun aliakset eivät riitä – aliaksen kaltaisia kikkailuja
+## HUOM! Päätettiin tuossa juuson kanssa, että aliasoidaan myös aina
+## funktiot niin näkyvät sitten ainakin nätisti whereisit funktiossa.
 
 ## peruskirjasto-ohjelmien aliakset
 alias ls='ls --color=always'
@@ -33,7 +35,8 @@ alias echo-server-localhost="$SKRIPTIT_POLKU/echo-server-localhost.sh"
 alias sha-tarkistin="$SKRIPTIT_POLKU/sha-tarkistin.sh"
 alias recursive-do="$SKRIPTIT_POLKU/recursive-do.sh"
 alias aja-luupissa="$SKRIPTIT_POLKU/aja-luupissa.sh"
-alias where-is-it-really-though="$SKRIPTIT_POLKU/where-is-it-really-though.sh"
+source "$SKRIPTIT_POLKU/where-is-it-really-though.sh"
+alias where-is-it-really-though=really_though_where
 
 ## tämä mahdollistaa omien skriptien ajon /usr/local/bin kautta
 alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
@@ -54,9 +57,12 @@ elif [ "$USER" = "juuran" ]; then
   alias tasks="$SKRIPTIT_POLKU/tasks.sh"
   alias nano='\nano -Alci --softwrap --atblanks'
   alias nano-without-lines='\nano -Aci --softwrap --atblanks'
-  function code-same-instance() {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@;  }
-  function code()               {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code $@;  }
+  
+  function startCodeSameInstance() {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@;  }
+  function startCode()               {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code $@;  }
   function startDolphin() {  (dolphin "$*" 1> /dev/null 2> /dev/null &)  }
+  alias code-same-instance='startCodeSameInstance'
+  alias code='startCode'
   alias dolphin='startDolphin'
   alias fmanager='startDolphin'
 
@@ -74,3 +80,9 @@ function llss() { ll "$@" | less ; }
 function lad() { ls -d "$1"/*/; }
 function lld() { ls -d1 "$1"/*/; }
 function sclear() {  for _i in $(seq 2 $(tput lines)); do echo ""; done;  }
+
+alias perse='perse'
+alias llss='llss'
+alias lad='lad'
+alias lld='lld'
+alias sclear='sclear'
