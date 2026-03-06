@@ -112,7 +112,7 @@ ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
     #   Example format: plugins=(rails git textmate ruby lighthouse)
     #   Add wisely, as too many plugins slow down shell startup. )
 if [ "$USER" = c945fvc ]; then    ## kehityspalvelin
-    plugins=(git-aliax sudo zsh-syntax-highlighting zsh-autosuggestions mvn-aliax npm-aliax jsontools oc yum docker yarn-aliax)
+    plugins=(git-aliax sudox zsh-syntax-highlighting zsh-autosuggestions mvn-aliax npm-aliax jsontools oc yum docker yarn-aliax)
 
 elif [ "$HOST" = fedora ]; then
     plugins=(git-aliax sudox zsh-autosuggestions zsh-syntax-highlighting web-searchx rust spring dockerx podmanx)
@@ -187,6 +187,11 @@ fi
 
 export GIT_EDITOR='\nano -ci --softwrap'
 
+## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
+if [ -f "$HOME/.shell_aliases" ]; then
+    . $HOME/.shell_aliases
+fi
+
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ "$USER" = c945fvc ]; then
     export HOME="/home/c945fvc"
@@ -218,13 +223,17 @@ if [ "$USER" = c945fvc ]; then
     export NOTES_PATH="/home/c945fvc/notes"
     export EDITOR_IS_SUBL=false
 
-    ## bash autocomplete search-logsia varten
-    autoload -U +X bashcompinit
-    bashcompinit
-    slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
-    if [ -e "$slcPolku" ]; then
-        source "$slcPolku"
+    ## bash autocompletet
+    autoload -Uz +X bashcompinit && bashcompinit
+    autoload -Uz +X compinit && compinit
+
+    if command -v tkn 1> /dev/null 2> /dev/null; then
+        source <(tkn completion zsh)
+        compdef _tkn tkn
     fi
+
+    slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
+    [ -e "$slcPolku" ] && source "$slcPolku"
 
     ## että edes git pull toimisi nginx kautta
     export GIT_SSL_NO_VERIFY=true
@@ -330,9 +339,4 @@ elif [ "$USER" = ubuntu ]; then
 elif [ "$USER" = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 
-fi
-
-## Nämä aliakset ylikirjoittaa kaiken, koska fuck the rest
-if [ -f "$HOME/.shell_aliases" ]; then
-    . $HOME/.shell_aliases
 fi

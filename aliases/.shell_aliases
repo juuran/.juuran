@@ -33,6 +33,7 @@ alias echo-server-localhost="$SKRIPTIT_POLKU/echo-server-localhost.sh"
 alias sha-tarkistin="$SKRIPTIT_POLKU/sha-tarkistin.sh"
 alias recursive-do="$SKRIPTIT_POLKU/recursive-do.sh"
 alias aja-luupissa="$SKRIPTIT_POLKU/aja-luupissa.sh"
+alias where-is-it-really-though="$SKRIPTIT_POLKU/where-is-it-really-though.sh"
 
 ## tämä mahdollistaa omien skriptien ajon /usr/local/bin kautta
 alias sudo='sudo --preserve-env=SKRIPTIT_POLKU'
@@ -43,7 +44,6 @@ if [ "$USER" = "c945fvc" ]; then
   alias sudo='superUserDo'
   alias nano='\nano -Alciz --softwrap'
   alias nano-without-lines='\nano -Aciz --softwrap'
-  alias search-logs="$HOME/koodi/omat/lokilucia/search-logs.sh"
   alias tasks="$SKRIPTIT_POLKU/tasks.sh"
   alias git-pull-all="$SKRIPTIT_POLKU/git-pull-all.sh"
   alias liberty-run="$SKRIPTIT_POLKU/liberty-run.sh"
