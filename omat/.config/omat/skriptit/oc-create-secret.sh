@@ -24,7 +24,7 @@ LINE=""
 SECRET_NIMI=""
 SEALED_FILE=""
 IS_BACKED_UP=true
-V="v. 1.01"
+V="v. 1.02"
 SKRIPTIN_NIMI="$(basename "$0")"
 
 ## APUFUNKTIOT
@@ -118,7 +118,7 @@ command -v kubeseal &> /dev/null        || fail "komento 'kubeseal' vaaditaan t√
 
 function main() {
     local avainArvot=() literaalit
-    trap 'handleSignals' SIGINT SIGTERM SIGQUIT
+    trap 'handleSignals' SIGINT; trap 'handleSignals' SIGTERM; trap 'handleSignals' SIGQUIT
 
     echo -e "***  $SKRIPTIN_NIMI ($V)  ***\n"
 
