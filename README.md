@@ -28,10 +28,10 @@ stow yksi
 
 ## Yhden komennon asennus laiscoille
 ```
-cd
-git clone --recurse-submodules git@github.com:juuran/.juuran.git
-cd .juuran
-stow */
+cd && \
+git clone --recurse-submodules git@github.com:juuran/.juuran.git && \
+cd .juuran && \
+stow */ && \
 cd
 ```
 
