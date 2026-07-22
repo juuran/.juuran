@@ -16,7 +16,7 @@ tahi tilalle `git@github.com:juuran/.juuran.git`
 Jos haluat sa kaiken stow'aa (paitsi tämän READMEen) – muistapa myös .juuran cansioon mennä!
 
 ```
-stow */ --ignore=.ssh/config
+stow */
 ```
 
 Ja jospa yhden vain
