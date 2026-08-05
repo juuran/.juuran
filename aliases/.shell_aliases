@@ -57,14 +57,6 @@ elif [ "$USER" = "juuran" ]; then
   alias tasks="$SKRIPTIT_POLKU/tasks.sh"
   alias nano='\nano -Alci --softwrap --atblanks'
   alias nano-without-lines='\nano -Aci --softwrap --atblanks'
-  
-  function startCodeSameInstance() {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code --reuse-window $@;  }
-  function startCode()               {  /usr/bin/flatpak run --branch=stable --arch=x86_64 --command=code --file-forwarding com.visualstudio.code $@;  }
-  function startDolphin() {  (dolphin "$*" 1> /dev/null 2> /dev/null &)  }
-  alias code-same-instance='startCodeSameInstance'
-  alias code='startCode'
-  alias dolphin='startDolphin'
-  alias fmanager='startDolphin'
 
 elif [ "$USER" = "vilmasilvennoinen" ]; then
   alias nano='\nano'
