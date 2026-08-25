@@ -54,8 +54,6 @@ done
 ## getopts käytön jälkeen täytyy "nollata" argumenttien indeksi, että saadaan "tavalliset" argumentit mukaan
 shift "$(($OPTIND -1))"
 
-THING_TO_DO="$1"
-
 function doTheThing() {
     local path;
     path="$1"
@@ -71,7 +69,7 @@ function doTheThing() {
     local exitCode;
 
     ## suoritetaan itse tehtävä
-    ( 
+    (
         ## Sallitaan ne muuttujat, mitä ei ole mainittu alla eli: "shortPath", "path"
         local paths; local pids; local isSkipped; local numberOfPaths; local failures; local optionalWarning; local PARALLEL; local PATHS_TO_SKIP;
         eval "$THING_TO_DO"
@@ -88,19 +86,21 @@ function main() {
     trap 'handleSignals' SIGINT
     trap 'handleSignals' SIGQUIT
 
+    THING_TO_DO="$1"
+
     ## Tehdään näin, koska uikuttaa, jos esittelee ja assignaa samalla rivillä.
-    local paths; local pids; local shortPath; local isSkipped; local numberOfPaths; local failures; local optionalWarning;
+    local paths pids shortPath isSkipped numberOfPaths failures optionalWarning
     numberOfPaths=0
     failures=0
 
     ## itse "rekursio" (yksitasoinen)
     paths=$(find . -mindepth 1 -maxdepth 1 -type d)
     for path in $paths; do
-        
+
         shortPath="${path:2}"
         isSkipped=false
         numberOfPaths=$((numberOfPaths + 1))
-    
+
         ## Skipattavat kansiot
         if [ -n "${PATHS_TO_SKIP[*]}" ]; then  ## tähti teknisesti oikeampi kuin miukumauku, koska antaa yhtenä stringinä ulos
             for skipped in "${PATHS_TO_SKIP[@]}"; do
@@ -141,10 +141,10 @@ function main() {
 
     if [ $failures -eq 0 ]; then
         echo -e "\n** All tasks in all paths ($numberOfPaths in total) completed successfully! **"
-    else    
+    else
         echo -e "\n\n**Out of $numberOfPaths paths, $failures returned an exit code other than 0 (success). Exiting with error. $optionalWarning**"
         fail "" 2
     fi
 }
 
-main
+main "$*"

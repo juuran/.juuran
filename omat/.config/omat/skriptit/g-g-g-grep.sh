@@ -100,7 +100,7 @@ main() {
     elif [ "$noOfArgs" -eq 1 ]; then
         if [ "$GREP_MODE" == "normal" ]; then
             [ -z "$RECURSIVE" ] && fail "Missing path! When using -r flag, a file or list of files must be given. Otherwise grep would try to search from ./ which is a path in itself."
-            
+
                  grep  $PTTRN_SNTX $IC $B $L $A $L $RECURSIVE $COLOR $E "$1" ./  | less -FRM$X $IC;  exitCode="${PIPESTATUS[0]}"
             else zgrep $PTTRN_SNTX $IC $B $L $A $L            $COLOR $E "$1" ./  | less -FRM$X $IC;  exitCode="${PIPESTATUS[0]}"
         fi

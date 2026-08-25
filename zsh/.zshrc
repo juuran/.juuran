@@ -192,22 +192,9 @@ if [ -f "$HOME/.shell_aliases" ]; then
     . $HOME/.shell_aliases
 fi
 
+
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ "$USER" = c945fvc ]; then
-    export HOME="/home/c945fvc"
-    cd $HOME
-    ORIGINAL_PATH=$PATH
-    export ORIGINAL_PATH
-    function paivitaJavaHome() {
-        local java_home; java_home=$(readlink -f /usr/bin/java)
-        java_home=${java_home:0:-9}
-        JAVA_HOME=$java_home
-        PATH=$ORIGINAL_PATH:$JAVA_HOME
-    }
-
-    ## asetettava JAVA_HOME, mutta update-alternatives linkkaa virheellisesti java ohjelmaan, ei kansioon
-    paivitaJavaHome
-
     ## Ei tee tätä oletuksena git bashin kanssa
     export TERM=xterm-256color
 
@@ -259,23 +246,8 @@ if [ "$USER" = c945fvc ]; then
     esac
     # pnpm end
 
-elif [ "$HOST" = fedora ]; then
-    export NOTES_PATH="/home/juuran/notes"
-
-    ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
-    autoload -U +X bashcompinit
-    bashcompinit
-
-    ## värityksiä
-    local grayMore grayDoor
-    grayMore='fg=244'
-    grayDoor='fg=242'
-    ZSH_HIGHLIGHT_STYLES[comment]=$grayDoor
-    typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayMore
-
-    #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-    export SDKMAN_DIR="/home/juuran/.sdkman"
-    [[ -s "/home/juuran/.sdkman/bin/sdkman-init.sh" ]] && source "/home/juuran/.sdkman/bin/sdkman-init.sh"
+    ## asetettava JAVA_HOME, mutta käyttäen vaihda-java tekemää 'default' linkkiä
+    export JAVA_HOME=$(readlink -f /usr/lib/jvm/default)
 
 # elif [ "$USER" = juuran ]; then  ## win (wsl2) - SÄILYTETÄÄN siltä varalta että joskus taas muutan mieleni... (niinkin ON käynyt, usko tai älä)
 #     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -335,6 +307,18 @@ elif [ "$USER" = ubuntu ]; then
     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
     autoload -U +X bashcompinit
     bashcompinit
+
+elif [ "$USER" = juuran ]; then
+    ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
+    autoload -U +X bashcompinit
+    bashcompinit
+
+    ## värityksiä, jos satut tartteemaan
+    # local grayMore grayDoor
+    # grayMore='fg=244'
+    # grayDoor='fg=242'
+    # ZSH_HIGHLIGHT_STYLES[comment]=$grayDoor
+    # typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayMore
 
 elif [ "$USER" = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'

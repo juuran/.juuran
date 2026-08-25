@@ -1,6 +1,10 @@
 #!/bin/bash
 
-## Kopioitu ja parannettu Kelan templates reposta: 
+## Deprekoitu! Tälle ei ole enää käyttöä, koska parempi oc-create-secret
+## on tämän korvannut. Se tekee saman ja enemmän, mutta idioottivarmasti.
+## Mutta pidetään nyt toistaiseksi tallessa jonkinlaisena reliikkinä.
+
+## Kopioitu ja parannettu Kelan templates reposta:
 ## https://bitbucket-alm.kela.fi/projects/TEMPLATES/repos/misc/browse/
 
 source "$SKRIPTIT_POLKU/fail.sh"

@@ -15,7 +15,7 @@ fi
 
 for arg in "$@"; do
     [ -z "$arg" ] && continue
-    
+
     if [[ "$arg" =~ ^[1-5]{1}$ ]]; then
         viewMode="$arg"
     elif [[ "$arg" =~ ^[6-9]+$ ]] || [[ "$arg" =~ ^[0]+[0-9]*$ ]] || [[ "$arg" =~ ^[1-5]+[0-9]+$ ]]; then

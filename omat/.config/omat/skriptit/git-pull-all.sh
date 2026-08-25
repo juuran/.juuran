@@ -32,7 +32,7 @@ function showHelp() {
 }
 
 runGitCommand() {
-  if      [ $parallel == true ];      then  echo "** Working on $shortPath **"
+  if   [ $parallel == true ]; then          echo "** Working on $shortPath **"
   elif [ $runCustomCommand == true ]; then  echo -e "** --->  Entering '$shortPath' **"
   else                                      echo -e "\n** Working on $shortPath **"
   fi
@@ -117,7 +117,7 @@ main() {
     fullPath="$(pwd)/$shortPath"
     pullBranch="develop"
     isSkipped=false
-    
+
     ## Skipattavat kansiot
     if [ -n "${pathsToSkip[*]}" ]; then  ## Tässä tähti teknisesti oikeampi kuin miukumauku, koska antaa yhtenä stringinä ulos
       for skipped in "${pathsToSkip[@]}"; do
@@ -126,7 +126,7 @@ main() {
     fi
 
     [ "$isSkipped" == true ] && continue
-    
+
     ## Muut erikoistapaukset
     [ "$shortPath" == "cpi-token-test" ] && pullBranch="master" && echo -e "\n** Setting default branch as 'master' for cpi-token-test **"
 
@@ -135,7 +135,7 @@ main() {
       else
         runGitCommand
     fi
-    
+
     pids+=" $!"           ## $! on viimeisimmän uuden taustaprosessin pid (olettaisin että tajuaa hakea vain kys. bash istunnon pidejä...?)
   done
 
