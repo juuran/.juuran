@@ -5,15 +5,6 @@ export LAMBDA_VALIMAA_COMPACT_MODE=true
 
 fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
-if [ "$USER" = c945fvc ]; then
-    # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-    # Initialization code that may require console input (password prompts, [y/n]
-    # confirmations, etc.) must go above this block; everything else may go below.
-    if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-        source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-    fi
-fi
-
 ## tulostetaan kauniihko inhvo-ruutu kerran päivässä (jos löytyy)
 fetched="$HOME/.config/.fastneofetched"; touch $fetched
 if command -v fastfetch > /dev/null && [ "$(date +%j)" != "$(cat $fetched 2> /dev/null)" ]; then
@@ -34,8 +25,8 @@ export ZSH="$HOME/.config/zsh/oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-if [ "$HOST" = dev047tools1.kela.fi ]; then  ## kehityspalvelin
-   ZSH_THEME="powerlevel10k/powerlevel10k"
+if [ "$USER" = c945fvc ]; then  ## kehityspalvelin
+    ZSH_THEME="lambda-valimaa"
 
 elif [ "$USER" = juuran ]; then  ## fedora-kone
     ZSH_THEME="lambda-valimaa"  ## lambda-valimaa, agnoster-valimaa, macovsky-valimaa
@@ -224,9 +215,6 @@ if [ "$USER" = c945fvc ]; then
 
     ## että edes git pull toimisi nginx kautta
     export GIT_SSL_NO_VERIFY=true
-
-    ## tämä suotta ulisee, nyt käynnistyy aavistuksen hitaammin mutta se on ok!
-    typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 
     ## värityksiä
     local grayMore grayDoor
