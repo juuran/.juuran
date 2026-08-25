@@ -16,16 +16,19 @@ function prompt_segment() {
     fg="$1"
     msg="$2"
 
-    echo -n "%{$fg%}${msg}"
+    print -nr -- "%{$fg%}${msg}"
 }
 
 # End the prompt, closing any open segments
 function prompt_end() {
-    local prompt_symbol prompt_color
+    local prompt_symbol color
     prompt_symbol="${SEGMENT_SPACE}❯"
     ## eri väri jos olet superuser
-    [[ $UID -eq 0 ]] && prompt_color="${LV_COLOR_PROMPT_GOD}" || prompt_color="${LV_COLOR_PROMPT_NORMAL}"
-    echo -n "%{%k%}%{%f%}${prompt_color}${prompt_symbol}%{$reset_color%}"
+    if (( EUID == 0))
+        then    color="${LV_COLOR_PROMPT_GOD}"
+        else    color="${LV_COLOR_PROMPT_NORMAL}"
+    fi
+    print -nr -- "%{%k%}%{%f%}${color}${prompt_symbol}%{$reset_color%}"
 }
 
 
@@ -35,7 +38,7 @@ function prompt_end() {
 # Status:
 # - was there an error
 function prompt_status_context() {
-    if [[ $RETVAL -eq 0 ]]; then
+    if (( $RETVAL == 0 )); then
         prompt_segment ${LV_COLOR_LAMBDA} "λ%{$reset_color%}"
     else
         prompt_segment ${LV_COLOR_ERROR_BOLD} "λ%{$reset_color%}"
@@ -46,7 +49,7 @@ function prompt_status_context() {
 
 # Dir: current working directory
 function prompt_dir() {
-    local dir; dir=$(print -P "%3~")
+    local dir=${(%):-%3~}
     if [[ "$dir" == "~"* ]]; then
         prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~/"
     elif [[ "$dir" == "/"* ]]; then
@@ -104,37 +107,44 @@ function prompt_git() {
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
     vcs_info
-    echo -n "${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${PL_STASH_CHAR}${mode}"
+
+    print -nr -- "${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${PL_STASH_CHAR}${mode}"
 }
 
 
 ## Main prompt
-function build_prompt() {
+function _lv_build_prompt() {
     RETVAL=$?
-    prompt_status_context
-    prompt_dir
-    prompt_git
-    prompt_end
+    PROMPT="$(
+        prompt_status_context
+        prompt_dir
+        prompt_git
+        prompt_end
+    )"
 }
 
 
 function main() {
-    LV_COLOR_ERROR_BOLD="%{$fg_bold[red]%}"         ## bold punainen
-    LV_COLOR_ERROR="%{${(%):-"%F{1}"}%}"            ## punainen, (124, 197, 160, 9, 1)
-    LV_COLOR_GIT_GOOD="%{${(%):-"%F{41}"}%}"        ## vihreä (47, 120, 41)
-    LV_COLOR_GIT_NEUTRAL="%{${(%):-"%F{43}"}%}"     ## sinisempi (43, 44, 81)
-    LV_COLOR_DOTDOTDOT="%{${(%):-"%F{102}"}%}"      ## harmaa (244, 247, 102)
-    LV_COLOR_DIR_TEXT="%{${(%):-"%F{152}"}%}"       ## "polun väri", esim joku harmahtava (152, 103, 145, 146)
-    LV_COLOR_LAMBDA="%{$fg_bold[white]%}"           ## kirkkaan valkoinen (231, 256)
-    LV_COLOR_WARN="%{${(%):-"%F{227}"}%}"           ## keltainen (227, 142)
-    LV_COLOR_WARNER="%{${(%):-"%F{208}"}%}"         ## oranssi (208, 130)
-    LV_COLOR_PROMPT_NORMAL="%{${(%):-"%F{251}"}%}"  ## promptimerkin väri normaalisti, valkoinen
-    LV_COLOR_PROMPT_GOD="%{${(%):-"%F{226}"}%}"     ## promptimerkin väri jos olet root, kultainen (226)
-    LV_COLOR_CONTEXT="%{${(%):-"%F{139}"}%}"        ## "hostin nimi", joku hillitty (140, 146, 139)
+    LV_COLOR_ERROR_BOLD="%{$fg_bold[red]%}"     ## bold punainen
+    LV_COLOR_ERROR='%{%F{1}%}'                  ## punainen, (124, 197, 160, 9, 1)
+    LV_COLOR_GIT_GOOD='%{%F{41}%}'              ## vihreä (47, 120, 41)
+    LV_COLOR_GIT_NEUTRAL='%{%F{43}%}'           ## sinisempi (43, 44, 81)
+    LV_COLOR_DOTDOTDOT='%{%F{102}%}'            ## harmaa (244, 247, 102)
+    LV_COLOR_DIR_TEXT='%{%F{152}%}'             ## "polun väri", esim joku harmahtava (152, 103, 145, 146)
+    LV_COLOR_LAMBDA="%{$fg_bold[white]%}"       ## kirkkaan valkoinen (231, 256)
+    LV_COLOR_WARN='%{%F{227}%}'                 ## keltainen (227, 142)
+    LV_COLOR_WARNER='%{%F{208}%}'               ## oranssi (208, 130)
+    LV_COLOR_PROMPT_NORMAL='%{%F{251}%}'        ## promptimerkin väri normaalisti, valkoinen
+    LV_COLOR_PROMPT_GOD='%{%F{226}%}'           ## promptimerkin väri jos olet root, kultainen (226)
+    LV_COLOR_CONTEXT='%{%F{139}%}'              ## "hostin nimi", joku hillitty (140, 146, 139)
 
-    [[ $LAMBDA_VALIMAA_COMPACT_MODE == 'true' ]] && SEGMENT_SPACE=" " || SEGMENT_SPACE="  "
+    if [[ $LAMBDA_VALIMAA_COMPACT_MODE == 'true' ]]
+        then    SEGMENT_SPACE=" "
+        else    SEGMENT_SPACE="  "
+    fi
 
-    PROMPT='%{%f%b%k%}$(build_prompt) '
+    unsetopt prompt_subst
+    add-zsh-hook precmd _lv_build_prompt
 }
 
 main
