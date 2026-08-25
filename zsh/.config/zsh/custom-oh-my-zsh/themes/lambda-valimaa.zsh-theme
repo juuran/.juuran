@@ -12,11 +12,11 @@
 # Begin a segment
 # Takes an argument: foreground.
 function prompt_segment() {
-    local fg
+    local fg msg
     fg="$1"
+    msg="$2"
 
-    echo -n "%{$fg%}"  ## <- ei sisällä välilyöntiä toisin kuin agnoster!
-    [[ -n $2 ]] && echo -n $2
+    echo -n "%{$fg%}${msg}"
 }
 
 # End the prompt, closing any open segments
@@ -86,7 +86,7 @@ function prompt_git() {
 
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
         [[ $COMPACT_MODE == 'true' ]] && temp_space="" || temp_space=" "
-        mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}<B>" 
+        mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}<B>"
     elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
         mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}>M<"
     elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
@@ -119,9 +119,6 @@ function build_prompt() {
 
 
 function main() {
-    export LV_COLOR_ERROR_BOLD LV_COLOR_ERROR LV_COLOR_GIT_GOOD LV_COLOR_GIT_NEUTRAL LV_COLOR_DOTDOTDOT LV_COLOR_DIR_TEXT \
-    LV_COLOR_LAMBDA LV_COLOR_WARN LV_COLOR_WARNER LV_COLOR_PROMPT_GOD LV_COLOR_CONTEXT;
-
     LV_COLOR_ERROR_BOLD="%{$fg_bold[red]%}"         ## bold punainen
     LV_COLOR_ERROR="%{${(%):-"%F{1}"}%}"            ## punainen, (124, 197, 160, 9, 1)
     LV_COLOR_GIT_GOOD="%{${(%):-"%F{41}"}%}"        ## vihreä (47, 120, 41)
