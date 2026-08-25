@@ -136,6 +136,7 @@ fi
 if [ "$USER" = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
     ## omien skriptien polku
     export NOTES_PATH="/home/c945fvc/notes"
+    export EDITOR_IS_SUBL=false
 
     slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
     sealPolku="$SKRIPTIT_POLKU/auto_completions/_oc-seal_bash.sh"
@@ -144,30 +145,12 @@ if [ "$USER" = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
     [ -e "$HOME/.yarn/bin" ] && [ -e "$HOME/.config/yarn/global/node_modules/.bin" ] && \
         export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
-    ## kun nvm asennettiin, lisäsi tämän
-    [ -e "$HOME/.nvm" ] && export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-    ## nodejs
-    [ -e "/usr/local/nodejs/bin" ] && export PATH="$PATH:/usr/local/nodejs/bin"
-
-    # pnpm
-    if [ -e "/users/c945fvc/.local/share/pnpm" ]; then
-        export PNPM_HOME="/users/c945fvc/.local/share/pnpm"
-        case ":$PATH:" in
-        *":$PNPM_HOME:"*) ;;
-        *) export PATH="$PNPM_HOME:$PATH" ;;
-        esac
+    if command -v tkn 1> /dev/null 2> /dev/null; then
+        source <(tkn completion zsh)
+        compdef _tkn tkn
     fi
-    # pnpm end
 
-    [ -e "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
-
-    if [ -e "/home/juuran/.sdkman" ]; then
-        #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-        export SDKMAN_DIR="/home/juuran/.sdkman"
-        [[ -s "/home/juuran/.sdkman/bin/sdkman-init.sh" ]] && source "/home/juuran/.sdkman/bin/sdkman-init.sh"
-    fi
+    ## asetettava JAVA_HOME, mutta käyttäen vaihda-java tekemää 'default' linkkiä
+    export JAVA_HOME=$(readlink -f /usr/lib/jvm/default)
 
 fi
