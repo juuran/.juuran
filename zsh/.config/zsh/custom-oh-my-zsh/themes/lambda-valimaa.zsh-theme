@@ -93,9 +93,9 @@ function precache_git() {
     if (( ahead > 0 && behind > 0 )); then
         branch_char="${LV_COLOR_ERROR} ⇅"
     elif (( ahead > 0 )); then
-        branch_char="${LV_COLOR_GIT_NEUTRAL} ↥"
-    elif (( behind > 0 )); then
         branch_char="${LV_COLOR_GIT_NEUTRAL} ↧"
+    elif (( behind > 0 )); then
+        branch_char="${LV_COLOR_GIT_NEUTRAL} ↥"
     fi
 
     ## onko stäshiä?
