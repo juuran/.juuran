@@ -171,7 +171,7 @@ function main() {
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
 
-    LV_CACHE_VALID_SECONDS=2
+    LV_CACHE_VALID_SECONDS=1
     LV_LAST_TIME_CHECKED=-1  ## aluksi ei mitään, oikea arvo asettuu kun zsh ajaa lv_build_prompt oman logiikkansa mukaan
 
     ## itse suoritus asetetaan zsh:ssä tähän komentoon
