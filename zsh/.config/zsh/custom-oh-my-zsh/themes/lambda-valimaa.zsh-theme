@@ -22,7 +22,7 @@ function prompt_segment() {
 # End the prompt, closing any open segments
 function prompt_end() {
     local prompt_symbol color
-    prompt_symbol="${SEGMENT_SPACE}❯"
+    prompt_symbol="${SEGMENT_SPACE}❯ "
     ## eri väri jos olet superuser
     if (( EUID == 0))
         then    color="${LV_COLOR_PROMPT_GOD}"
@@ -60,32 +60,41 @@ function prompt_dir() {
 }
 
 # Git: branch/detached head, dirty & stashed status
-function prompt_git() {
-    local ref dirty repo_path mode temp_space
-    repo_path=$(command git rev-parse --git-dir 2>/dev/null) || return  ## nopea poistuminen
+function precache_git() {
+    local ref dirty repo_path mode temp_space status_color
     
-    dirty=$(parse_git_dirty)
-    ref=$(command git symbolic-ref HEAD 2> /dev/null)
-    if [[ -n $dirty ]]; then
-        prompt_segment ${LV_COLOR_GIT_NEUTRAL} "${SEGMENT_SPACE}"
-    else
-        prompt_segment ${LV_COLOR_GIT_GOOD} "${SEGMENT_SPACE}"
+    if [[ "$LAST_PWD" == "$PWD" ]]; then  ## sama kansio kuin viimeksi, ei tarvitse cachettaa mitään uutta
+        return
     fi
 
+    if ! repo_path=$(command git rev-parse --git-dir 2>/dev/null); then  ## tyhjätään cache ja poistutaan, ellei git kansio
+        CACHED_GIT_PROMPT=""
+        return
+    fi
+
+    dirty=$(parse_git_dirty)
+    if [[ -n $dirty ]]; then
+        status_color="${LV_COLOR_GIT_NEUTRAL}"
+    else
+        status_color="${LV_COLOR_GIT_GOOD}"
+    fi
+
+    ref=$(command git symbolic-ref HEAD 2> /dev/null)
     local ahead behind PL_BRANCH_CHAR PL_STASH_CHAR
-    ahead=$(command git log --oneline @{upstream}.. 2>/dev/null)
-    behind=$(command git log --oneline ..@{upstream} 2>/dev/null)
-    if [[ -n "$ahead" ]] && [[ -n "$behind" ]]; then
+    read behind ahead <<< "$(
+        git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null
+    )"
+    if (( ahead > 0 && behind > 0 )); then
         PL_BRANCH_CHAR="${LV_COLOR_ERROR} ⇅"
-    elif [[ -n "$ahead" ]]; then
+    elif (( ahead > 0 )); then
         PL_BRANCH_CHAR="${LV_COLOR_GIT_NEUTRAL} ↥"
-    elif [[ -n "$behind" ]]; then
+    elif (( behind > 0 )); then
         PL_BRANCH_CHAR="${LV_COLOR_GIT_NEUTRAL} ↧"
     fi
 
-    local stashed
-    stashed=$(git stash list)
-    [[ -n "$stashed" ]] && PL_STASH_CHAR="${LV_COLOR_GIT_NEUTRAL} ⚹"
+    if [ -e "$repo_path/logs/refs/stash" ]; then
+        PL_STASH_CHAR="${LV_COLOR_GIT_NEUTRAL} ⚹"
+    fi
 
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
         [[ $COMPACT_MODE == 'true' ]] && temp_space="" || temp_space=" "
@@ -96,35 +105,34 @@ function prompt_git() {
         mode="${temp_space}${LV_COLOR_ERROR}>R>"
     fi
 
-    setopt promptsubst
-    autoload -Uz vcs_info
+    ## cachetus nopeuttaa kummasti
+    CACHED_GIT_PROMPT="${status_color}${SEGMENT_SPACE}${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${PL_STASH_CHAR}${mode}"
+}
 
-    zstyle ':vcs_info:*' enable git
-    zstyle ':vcs_info:*' get-revision true
-    zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' stagedstr "${LV_COLOR_WARN}⋇"
-    zstyle ':vcs_info:*' unstagedstr "${LV_COLOR_WARNER}*"
-    zstyle ':vcs_info:*' formats ' %u%c'
-    zstyle ':vcs_info:*' actionformats ' %u%c'
-    vcs_info
-
-    print -nr -- "${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${PL_STASH_CHAR}${mode}"
+function prompt_cached_git() {
+    print -nr -- "$CACHED_GIT_PROMPT"
 }
 
 
 ## Main prompt
-function _lv_build_prompt() {
+function lv_build_prompt() {
     RETVAL=$?
+    
+    precache_git
     PROMPT="$(
         prompt_status_context
         prompt_dir
-        prompt_git
+        prompt_cached_git
         prompt_end
     )"
+
+    LAST_PWD="$PWD"
 }
 
 
 function main() {
+    export LAST_PWD CACHED_GIT_PROMPT SEGMENT_SPACE
+
     LV_COLOR_ERROR_BOLD="%{$fg_bold[red]%}"     ## bold punainen
     LV_COLOR_ERROR='%{%F{1}%}'                  ## punainen, (124, 197, 160, 9, 1)
     LV_COLOR_GIT_GOOD='%{%F{41}%}'              ## vihreä (47, 120, 41)
@@ -143,8 +151,23 @@ function main() {
         else    SEGMENT_SPACE="  "
     fi
 
+    ## esiasetukset (version control system info)
+    setopt promptsubst
+    autoload -Uz vcs_info
+
+    zstyle ':vcs_info:*' enable git
+    zstyle ':vcs_info:*' get-revision true
+    zstyle ':vcs_info:*' check-for-changes true
+    zstyle ':vcs_info:*' stagedstr "${LV_COLOR_WARN}⋇"
+    zstyle ':vcs_info:*' unstagedstr "${LV_COLOR_WARNER}*"
+    zstyle ':vcs_info:*' formats ' %u%c'
+    zstyle ':vcs_info:*' actionformats ' %u%c'
+    vcs_info
+
     unsetopt prompt_subst
-    add-zsh-hook precmd _lv_build_prompt
+
+    ## itse suoritus asetetaan zsh:ssä tähän komentoon
+    add-zsh-hook precmd lv_build_prompt
 }
 
 main
