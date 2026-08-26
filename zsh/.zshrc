@@ -1,7 +1,7 @@
 ## -------------- omat muuttujat -------------- ##
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
 export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
-export LAMBDA_VALIMAA_COMPACT_MODE=true
+export LAMBDA_VALIMAA_COMPACT_MODE=false
 
 fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
@@ -183,14 +183,10 @@ if [ -f "$HOME/.shell_aliases" ]; then
     . $HOME/.shell_aliases
 fi
 
-
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ "$USER" = c945fvc ]; then
     ## Ei tee tätä oletuksena git bashin kanssa
     export TERM=xterm-256color
-
-    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
     ## Lisäsin tämän nyt manuaalisesti .bashrc:stä
     export NVM_DIR="$HOME/.nvm"
@@ -238,31 +234,6 @@ if [ "$USER" = c945fvc ]; then
     export JAVA_HOME=$(readlink -f /usr/lib/jvm/default)
 
 # elif [ "$USER" = juuran ]; then  ## win (wsl2) - SÄILYTETÄÄN siltä varalta että joskus taas muutan mieleni... (niinkin ON käynyt, usko tai älä)
-#     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-#     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-#     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
-#     export NOTES_PATH="/home/juuran/notes"
-
-#     ## nämä tarvitaan, koska bash-tyylisiä autocompleteja
-#     autoload -U +X bashcompinit
-#     bashcompinit
-
-#     # pnpm
-#     export PNPM_HOME="/home/juuran/.local/share/pnpm"
-#     case ":$PATH:" in
-#       *":$PNPM_HOME:"*) ;;
-#       *) export PATH="$PNPM_HOME:$PATH" ;;
-#     esac
-#     # pnpm end
-
-#     ## nvm jutskat
-#     export NVM_DIR="$HOME/.nvm"
-#     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-#     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-#     export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
 #     ## Näillä taikasanoilla saadaan winkkari ymmärtämään, missä pwd:ssä (winkkarissa CWD) kulloinkin
 #     ## ollaan. Nyt just ei jaksa kiinnostaa, mutta näin se toimii: The precmd_functions hook tells
 #     ## zsh what commands to run before displaying the prompt. "The printf statement is what we're using
@@ -274,20 +245,6 @@ if [ "$USER" = c945fvc ]; then
 #         printf "\e]9;9;%s\e\\" "$(wslpath -w "$PWD")"
 #     }
 #     precmd_functions+=(keep_current_path)
-
-#     ## värityksiä
-#     local juuranGray juuranGrayer
-#     juuranGray='fg=243'
-#     juuranGrayer='fg=240'
-#     ZSH_HIGHLIGHT_STYLES[comment]=$juuranGrayer
-#     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$juuranGray
-
-#     ## rust
-#     . "$HOME/.cargo/env"
-
-#     #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-#     export SDKMAN_DIR="$HOME/.sdkman"
-#     [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 elif [ "$USER" = ubuntu ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
