@@ -103,9 +103,13 @@ function precache_git() {
         stash_char="${LV_COLOR_GIT_NEUTRAL} ⚹"
     fi
 
+    if [[ $LV_COMPACT_MODE == 'true' ]]
+        then    temp_space=""
+        else    temp_space=" "
+    fi
+
     ## onko erikoistila päällä gitissä?
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-        [[ $COMPACT_MODE == 'true' ]] && temp_space="" || temp_space=" "
         mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}<B>"
     elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
         mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}>M<"
@@ -141,7 +145,7 @@ function lv_build_prompt() {
 
 
 function main() {
-    export LV_LAST_PWD LV_LAST_TIME_CHECKED LV_CACHED_GIT_PROMPT LV_SEGMENT_SPACE LV_CACHE_VALID_SECONDS
+    export LV_LAST_PWD LV_LAST_TIME_CHECKED LV_CACHED_GIT_PROMPT LV_SEGMENT_SPACE
 
     LV_COLOR_ERROR_BOLD="%{$fg_bold[red]%}"     ## bold punainen
     LV_COLOR_ERROR='%{%F{1}%}'                  ## punainen, (124, 197, 160, 9, 1)
@@ -156,7 +160,7 @@ function main() {
     LV_COLOR_PROMPT_GOD='%{%F{226}%}'           ## promptimerkin väri jos olet root, kultainen (226)
     LV_COLOR_CONTEXT='%{%F{139}%}'              ## "hostin nimi", joku hillitty (140, 146, 139)
 
-    if [[ $LAMBDA_VALIMAA_COMPACT_MODE == 'true' ]]
+    if [[ $LV_COMPACT_MODE == 'true' ]]
         then    LV_SEGMENT_SPACE=" "
         else    LV_SEGMENT_SPACE="  "
     fi
@@ -171,7 +175,6 @@ function main() {
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
 
-    LV_CACHE_VALID_SECONDS=1
     LV_LAST_TIME_CHECKED=-1  ## aluksi ei mitään, oikea arvo asettuu kun zsh ajaa lv_build_prompt oman logiikkansa mukaan
 
     ## itse suoritus asetetaan zsh:ssä tähän komentoon
