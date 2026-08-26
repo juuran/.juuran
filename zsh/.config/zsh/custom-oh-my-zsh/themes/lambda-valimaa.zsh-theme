@@ -22,7 +22,7 @@ function prompt_segment() {
 # End the prompt, closing any open segments
 function prompt_end() {
     local prompt_symbol color
-    prompt_symbol="${SEGMENT_SPACE}❯ "
+    prompt_symbol="${LV_SEGMENT_SPACE}❯ "
     ## eri väri jos olet superuser
     if (( EUID == 0))
         then    color="${LV_COLOR_PROMPT_GOD}"
@@ -38,64 +38,72 @@ function prompt_end() {
 # Status:
 # - was there an error
 function prompt_status_context() {
-    if (( $RETVAL == 0 )); then
+    if (( $LV_RETVAL == 0 )); then
         prompt_segment ${LV_COLOR_LAMBDA} "λ%{$reset_color%}"
     else
         prompt_segment ${LV_COLOR_ERROR_BOLD} "λ%{$reset_color%}"
     fi
     
-    prompt_segment ${LV_COLOR_CONTEXT} "${SEGMENT_SPACE}%n@%m"
+    prompt_segment ${LV_COLOR_CONTEXT} "${LV_SEGMENT_SPACE}%n@%m"
 }
 
 # Dir: current working directory
 function prompt_dir() {
     local dir=${(%):-%3~}
     if [[ "$dir" == "~"* ]]; then
-        prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~/"
+        prompt_segment ${LV_COLOR_DIR_TEXT} "${LV_SEGMENT_SPACE}%3~/"
     elif [[ "$dir" == "/"* ]]; then
-        prompt_segment ${LV_COLOR_DIR_TEXT} "${SEGMENT_SPACE}%3~"
+        prompt_segment ${LV_COLOR_DIR_TEXT} "${LV_SEGMENT_SPACE}%3~"
     else
-        prompt_segment "%f" "${SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}…${LV_COLOR_DIR_TEXT}/%3~/"
+        prompt_segment "%f" "${LV_SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}…${LV_COLOR_DIR_TEXT}/%3~/"
     fi
 }
 
 # Git: branch/detached head, dirty & stashed status
 function precache_git() {
-    local ref dirty repo_path mode temp_space status_color
+    local repo_path now
+    now="$EPOCHSECONDS"
     
-    if [[ "$LAST_PWD" == "$PWD" ]]; then  ## sama kansio kuin viimeksi, ei tarvitse cachettaa mitään uutta
+    ## cachen käyttö vai ei
+    if [[ "$LV_LAST_PWD" == "$PWD" ]] && (( (LV_LAST_TIME_CHECKED + LV_CACHE_VALID_SECONDS) > now )); then
+        return  ## käytetään cachea, jos pysytty samassa polussa vain kotvasen
+    elif ! repo_path=$(command git rev-parse --git-dir 2>/dev/null); then
+        LV_CACHED_GIT_PROMPT=""  ## jos taas ei git kansio, tyhjätään cache
         return
     fi
 
-    if ! repo_path=$(command git rev-parse --git-dir 2>/dev/null); then  ## tyhjätään cache ja poistutaan, ellei git kansio
-        CACHED_GIT_PROMPT=""
-        return
-    fi
+    local ref dirty status_color ahead behind branch_char stash_char temp_space mode
+    
+    ## zsh:n oma version control system -tieto haetaan, kun suoritus alkaa
+    vcs_info
 
+    ## likainen git status eri väriseksi
     dirty=$(parse_git_dirty)
-    if [[ -n $dirty ]]; then
+    if [[ -n "$dirty" ]]; then
         status_color="${LV_COLOR_GIT_NEUTRAL}"
     else
         status_color="${LV_COLOR_GIT_GOOD}"
     fi
 
+    ## edellä vai jäljessä
     ref=$(command git symbolic-ref HEAD 2> /dev/null)
-    local ahead behind PL_BRANCH_CHAR PL_STASH_CHAR
     read behind ahead <<< "$(
         git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null
     )"
     if (( ahead > 0 && behind > 0 )); then
-        PL_BRANCH_CHAR="${LV_COLOR_ERROR} ⇅"
+        branch_char="${LV_COLOR_ERROR} ⇅"
     elif (( ahead > 0 )); then
-        PL_BRANCH_CHAR="${LV_COLOR_GIT_NEUTRAL} ↥"
+        branch_char="${LV_COLOR_GIT_NEUTRAL} ↥"
     elif (( behind > 0 )); then
-        PL_BRANCH_CHAR="${LV_COLOR_GIT_NEUTRAL} ↧"
+        branch_char="${LV_COLOR_GIT_NEUTRAL} ↧"
     fi
 
+    ## onko stäshiä?
     if [ -e "$repo_path/logs/refs/stash" ]; then
-        PL_STASH_CHAR="${LV_COLOR_GIT_NEUTRAL} ⚹"
+        stash_char="${LV_COLOR_GIT_NEUTRAL} ⚹"
     fi
 
+    ## onko erikoistila päällä gitissä?
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
         [[ $COMPACT_MODE == 'true' ]] && temp_space="" || temp_space=" "
         mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}<B>"
@@ -106,19 +114,20 @@ function precache_git() {
     fi
 
     ## cachetus nopeuttaa kummasti
-    CACHED_GIT_PROMPT="${status_color}${SEGMENT_SPACE}${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${PL_BRANCH_CHAR}${PL_STASH_CHAR}${mode}"
+    LV_CACHED_GIT_PROMPT="${status_color}${LV_SEGMENT_SPACE}${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${branch_char}${stash_char}${mode}"
 }
 
 function prompt_cached_git() {
-    print -nr -- "$CACHED_GIT_PROMPT"
+    print -nr -- "$LV_CACHED_GIT_PROMPT"
 }
 
 
 ## Main prompt
 function lv_build_prompt() {
-    RETVAL=$?
-    
+    LV_RETVAL=$?
     precache_git
+
+    ## tämä muuttuja säätää zsh:ssä promptin ulkonäköä (apufunktioidensa ohella)
     PROMPT="$(
         prompt_status_context
         prompt_dir
@@ -126,12 +135,13 @@ function lv_build_prompt() {
         prompt_end
     )"
 
-    LAST_PWD="$PWD"
+    LV_LAST_PWD="$PWD"
+    LV_LAST_TIME_CHECKED="$EPOCHSECONDS"
 }
 
 
 function main() {
-    export LAST_PWD CACHED_GIT_PROMPT SEGMENT_SPACE
+    export LV_LAST_PWD LV_LAST_TIME_CHECKED LV_CACHED_GIT_PROMPT LV_SEGMENT_SPACE LV_CACHE_VALID_SECONDS
 
     LV_COLOR_ERROR_BOLD="%{$fg_bold[red]%}"     ## bold punainen
     LV_COLOR_ERROR='%{%F{1}%}'                  ## punainen, (124, 197, 160, 9, 1)
@@ -147,24 +157,22 @@ function main() {
     LV_COLOR_CONTEXT='%{%F{139}%}'              ## "hostin nimi", joku hillitty (140, 146, 139)
 
     if [[ $LAMBDA_VALIMAA_COMPACT_MODE == 'true' ]]
-        then    SEGMENT_SPACE=" "
-        else    SEGMENT_SPACE="  "
+        then    LV_SEGMENT_SPACE=" "
+        else    LV_SEGMENT_SPACE="  "
     fi
 
     ## esiasetukset (version control system info)
-    setopt promptsubst
     autoload -Uz vcs_info
 
     zstyle ':vcs_info:*' enable git
-    zstyle ':vcs_info:*' get-revision true
     zstyle ':vcs_info:*' check-for-changes true
     zstyle ':vcs_info:*' stagedstr "${LV_COLOR_WARN}⋇"
     zstyle ':vcs_info:*' unstagedstr "${LV_COLOR_WARNER}*"
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
-    vcs_info
 
-    unsetopt prompt_subst
+    LV_CACHE_VALID_SECONDS=3
+    LV_LAST_TIME_CHECKED=-1  ## aluksi ei mitään, oikea arvo asettuu kun zsh ajaa lv_build_prompt oman logiikkansa mukaan
 
     ## itse suoritus asetetaan zsh:ssä tähän komentoon
     add-zsh-hook precmd lv_build_prompt
