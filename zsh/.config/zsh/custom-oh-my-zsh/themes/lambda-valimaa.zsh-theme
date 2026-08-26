@@ -78,6 +78,7 @@ function precache_git() {
     vcs_info
 
     ## likainen git status eri väriseksi
+    ## TODO: tässä viimeinen järkevällä työllä saavutettava optimisaatiokohde
     dirty=$(parse_git_dirty)
     if [[ -n "$dirty" ]]; then
         status_color="${LV_COLOR_GIT_NEUTRAL}"
