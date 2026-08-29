@@ -28,7 +28,7 @@ ${color_lambda}λ%{$reset_color%}${LV_SEGMENT_SPACE}${color_user}%n${color_at}@$
 ## Dir: current working directory
 function prompt_dir() {
     local dir=${(%):-%3~} locked symbo both dir_display
-    
+
     [[ -w . ]] || locked='🔒'
     [[ $PWD != $(pwd -P) ]] && symbo='🔗'
     [[ -n "${locked}${symbo}" ]] && both="${locked}${symbo}${LV_SEGMENT_SPACE}"
@@ -60,7 +60,7 @@ function get_tag() {
 function precache_git() {
     local repo_path now
     now="$EPOCHSECONDS"
-    
+
     ## cachen y/n ja pikapoistumiset
     if [[ "$LV_LAST_PWD" == "$PWD" ]] && (( (LV_LAST_TIME_CHECKED + LV_CACHE_VALID_SECONDS) > now )); then
         return  ## käytetään cachea, jos pysytty samassa polussa vain kotvasen
@@ -70,7 +70,7 @@ function precache_git() {
     fi
 
     local dirty status_color ref branch_or_detach ahead behind unsynced_char stash_char mode un_staged
-    
+
     ## zsh:n oma version control system -tieto haetaan vasta, kun suoritus alkaa
     vcs_info
 
