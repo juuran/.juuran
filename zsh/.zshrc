@@ -1,8 +1,9 @@
 ## -------------- omat muuttujat -------------- ##
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *"
 export SKRIPTIT_POLKU=~/.juuran/omat/.config/omat/skriptit
-export LV_COMPACT_MODE=false
+export LV_COMPACT_MODE=true
 export LV_CACHE_VALID_SECONDS=2
+export LV_TWO_ROW_MODE=false
 
 fpath+=( $SKRIPTIT_POLKU/auto_completions ) ## tarvitaan komentojen syöttämiseksi
 
@@ -186,6 +187,9 @@ fi
 
 ## eri koneiden muuttujat (muut kuin plugarit)
 if [ "$USER" = c945fvc ]; then
+    export HOME=/home/c945fvc
+    cd
+
     ## Ei tee tätä oletuksena git bashin kanssa
     export TERM=xterm-256color
 
@@ -233,6 +237,10 @@ if [ "$USER" = c945fvc ]; then
 
     ## asetettava JAVA_HOME, mutta käyttäen vaihda-java tekemää 'default' linkkiä
     export JAVA_HOME=$(readlink -f /usr/lib/jvm/default)
+
+    export LV_COMPACT_MODE=false
+    export LV_CACHE_VALID_SECONDS=1
+    export LV_TWO_ROW_MODE=true
 
 # elif [ "$USER" = juuran ]; then  ## win (wsl2) - SÄILYTETÄÄN siltä varalta että joskus taas muutan mieleni... (niinkin ON käynyt, usko tai älä)
 #     ## Näillä taikasanoilla saadaan winkkari ymmärtämään, missä pwd:ssä (winkkarissa CWD) kulloinkin

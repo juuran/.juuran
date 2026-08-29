@@ -1,65 +1,52 @@
-## Huippuunsa hiottu lambda teeman mukaelma, jonka rakensin agnoster
-## teeman pohjalta, koska siinä oli kunnollinen ja ymmärrettävän 
-## ohjelmoinnillinen pohja. Tähän tuli ehkä (taas) käytettyä "hieman"
-## liikaa aikaa, mutta kyllähän tätä kestää onneksi katsoakin!
-##
-## Näyttää kivoilla väreillä:
-## - onnistuiko edellinen komento
-## - polun tiettyyn rajaan asti perässään aina / -merkki
-## - gitin tiedot kattavasti kys. hakemistolle
-##
 
-# Begin a segment
-# Takes an argument: foreground.
+## Begin a segment
+## Takes an argument: foreground.
 function prompt_segment() {
-    local fg msg
-    fg="$1"
-    msg="$2"
-
-    print -nr -- "%{$fg%}${msg}"
+    print -nr -- "$1"
 }
-
-# End the prompt, closing any open segments
-function prompt_end() {
-    local prompt_symbol color
-    prompt_symbol="${LV_SEGMENT_SPACE}❯ "
-    ## eri väri jos olet superuser
-    if (( EUID == 0))
-        then    color="${LV_COLOR_PROMPT_GOD}"
-        else    color="${LV_COLOR_PROMPT_NORMAL}"
-    fi
-    print -nr -- "%{%k%}%{%f%}${color}${prompt_symbol}%{$reset_color%}"
-}
-
 
 ### Prompt components
-# Each component will draw itself, and hide itself if no information needs to be shown
+## Each component will draw itself, and hide itself if no information needs to be shown
 
-# Status:
-# - was there an error
-function prompt_status_context() {
+## Status:
+## - was there an error
+function prompt_start() {
+    local color
+
     if (( $LV_RETVAL == 0 )); then
-        prompt_segment ${LV_COLOR_LAMBDA} "λ%{$reset_color%}"
+        color="${LV_COLOR_LAMBDA}"
     else
-        prompt_segment ${LV_COLOR_ERROR_BOLD} "λ%{$reset_color%}"
+        color="${LV_COLOR_ERROR_BOLD}"
     fi
-    
-    prompt_segment ${LV_COLOR_CONTEXT} "${LV_SEGMENT_SPACE}%n@%m"
+
+    if [[ $LV_TWO_ROW_MODE == true ]]; then  ## jos 2-rivinen, aloitetaan entterillä
+        prompt_segment "
+${color}λ%{$reset_color%}${LV_SEGMENT_SPACE}${LV_COLOR_CONTEXT}%n@%m%{$reset_color%}"
+    else
+        prompt_segment "${color}λ%{$reset_color%}${LV_SEGMENT_SPACE}${LV_COLOR_CONTEXT}%n@%m%{$reset_color%}${LV_SEGMENT_SPACE}"
+    fi
 }
 
-# Dir: current working directory
+## Dir: current working directory
 function prompt_dir() {
-    local dir=${(%):-%3~}
+    local dir=${(%):-%3~} locked symbo both dir_display
+    
+    [[ -w . ]] || locked='🔒'
+    [[ $PWD != $(pwd -P) ]] && symbo='🔗'
+    [[ -n "${locked}${symbo}" ]] && both="${locked}${symbo}${LV_SEGMENT_SPACE}"
+
     if [[ "$dir" == "~"* ]]; then
-        prompt_segment ${LV_COLOR_DIR_TEXT} "${LV_SEGMENT_SPACE}%3~/"
+        dir_display="${LV_COLOR_DIR_TEXT}%3~/"
     elif [[ "$dir" == "/"* ]]; then
-        prompt_segment ${LV_COLOR_DIR_TEXT} "${LV_SEGMENT_SPACE}%3~"
+        dir_display="${LV_COLOR_DIR_TEXT}%3~"
     else
-        prompt_segment "%f" "${LV_SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}…${LV_COLOR_DIR_TEXT}/%3~/"
+        dir_display="${LV_COLOR_DOTDOTDOT}…${LV_COLOR_DIR_TEXT}/%3~/"
     fi
+
+    prompt_segment "${both}${dir_display}"
 }
 
-# Git: branch/detached head, dirty & stashed status
+## Git: branch/detached head, dirty & stashed status
 function precache_git() {
     local repo_path now
     now="$EPOCHSECONDS"
@@ -72,31 +59,41 @@ function precache_git() {
         return
     fi
 
-    local ref dirty status_color ahead behind branch_char stash_char temp_space mode
+    local ref dirty status_color ahead behind unsynced_char stash_char temp_space mode tag
     
     ## zsh:n oma version control system -tieto haetaan, kun suoritus alkaa
     vcs_info
 
     ## likainen git status eri väriseksi
-    ## TODO: tässä viimeinen järkevällä työllä saavutettava optimisaatiokohde
-    dirty=$(parse_git_dirty)
-    if [[ -n "$dirty" ]]; then
+    dirty="${vcs_info_msg_0_}"
+    if [[ "$dirty" == *"⋇"* ]] || [[ "$dirty" == *"*"* ]]; then  ## etsii "staged" ja "unstaged" merkkejä "String.contains"-tyylisesti
         status_color="${LV_COLOR_GIT_NEUTRAL}"
     else
         status_color="${LV_COLOR_GIT_GOOD}"
     fi
 
+    if ! ref=$(command git symbolic-ref HEAD 2> /dev/null); then  ## detachediin lisätään aina myös tägi
+        branch_or_detach="${LV_SEGMENT_SPACE}${LV_COLOR_ERROR}detached"
+        if tempTag="$(git describe --tags --exact-match HEAD 2> /dev/null)"; then
+            if [[ $LV_TWO_ROW_MODE == true ]]
+                then    tag="${LV_COLOR_DOTDOTDOT} (tag: ${LV_COLOR_PROMPT_GOD}${tempTag}${LV_COLOR_DOTDOTDOT})"
+                else    tag="${LV_COLOR_DOTDOTDOT} (${LV_COLOR_PROMPT_GOD}${tempTag}${LV_COLOR_DOTDOTDOT})"
+            fi
+        fi
+    else  ## jos löytyy haara ei näytetä tägiä
+        branch_or_detach="${LV_SEGMENT_SPACE}${status_color}${${ref:gs/%/%%}/refs\/heads\//}"
+    fi
+
     ## edellä vai jäljessä
-    ref=$(command git symbolic-ref HEAD 2> /dev/null)
     read behind ahead <<< "$(
         git rev-list --left-right --count HEAD...@{upstream} 2>/dev/null
     )"
     if (( ahead > 0 && behind > 0 )); then
-        branch_char="${LV_COLOR_ERROR} ⇅"
+        unsynced_char="${LV_COLOR_ERROR} ⇅"
     elif (( ahead > 0 )); then
-        branch_char="${LV_COLOR_GIT_NEUTRAL} ↧"
+        unsynced_char="${LV_COLOR_GIT_NEUTRAL} ↧"
     elif (( behind > 0 )); then
-        branch_char="${LV_COLOR_GIT_NEUTRAL} ↥"
+        unsynced_char="${LV_COLOR_GIT_NEUTRAL} ↥"
     fi
 
     ## onko stäshiä?
@@ -104,41 +101,84 @@ function precache_git() {
         stash_char="${LV_COLOR_GIT_NEUTRAL} ⚹"
     fi
 
-    if [[ $LV_COMPACT_MODE == 'true' ]]
-        then    temp_space=""
-        else    temp_space=" "
-    fi
-
     ## onko erikoistila päällä gitissä?
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-        mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}<B>"
+        mode="${LV_COLOR_GIT_NEUTRAL} <B>"
     elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-        mode="${temp_space}${LV_COLOR_GIT_NEUTRAL}>M<"
+        mode="${LV_COLOR_GIT_NEUTRAL} >M<"
     elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-        mode="${temp_space}${LV_COLOR_ERROR}>R>"
+        mode="${LV_COLOR_ERROR} >R>"
     fi
 
+    un_staged="${vcs_info_msg_0_%%}"; [[ -n "$un_staged" ]] && un_staged=" ${un_staged}"
     ## cachetus nopeuttaa kummasti
-    LV_CACHED_GIT_PROMPT="${status_color}${LV_SEGMENT_SPACE}${${ref:gs/%/%%}/refs\/heads\//}${vcs_info_msg_0_%% }${branch_char}${stash_char}${mode}"
+    LV_CACHED_GIT_PROMPT="${branch_or_detach}${un_staged}${tag}${unsynced_char}${stash_char}${mode}"
 }
 
 function prompt_cached_git() {
-    print -nr -- "$LV_CACHED_GIT_PROMPT"
+    prompt_segment "$LV_CACHED_GIT_PROMPT"
 }
 
+function prompt_exit_code() {  ## tätä kutsutaan aina ja vain kaksirivisessä moodissa, siksi enter molemmissa!
+    local exitcode_printout
+    if (($LV_RETVAL > 0 )); then
+        prompt_segment "${LV_SEGMENT_SPACE}${LV_COLOR_DOTDOTDOT}(${LV_COLOR_WARNER}exitcode: $LV_RETVAL${LV_COLOR_DOTDOTDOT})
+"
+    else
+        prompt_segment "
+"
+    fi
+}
+
+## End the prompt, closing any open segments
+function prompt_end() {
+    local prompt_symbol color
+    prompt_symbol="${LV_SEGMENT_SPACE}❯ "
+    if (( EUID == 0)); then
+            color="${LV_COLOR_PROMPT_GOD}"  ## superuserin väri aseteaan olit SSH tai et
+        else
+            if [[ -n $SSH_CONNECTION ]]; then
+                color="${LV_COLOR_PROMPT_NORMAL_SSH}"   ## normikäyttäjän SSH väri
+            else
+                color="${LV_COLOR_PROMPT_NORMAL}"       ## normikäyttäjän natiivi väri
+            fi
+    fi
+
+    prompt_segment "${color}${prompt_symbol}%{$reset_color%}"
+}
 
 ## Main prompt
 function lv_build_prompt() {
     LV_RETVAL=$?
+
+    ## dynaamiset (oletus)arvot
+    [[ -z "$LV_TWO_ROW_MODE" ]]         &&  LV_TWO_ROW_MODE=true
+    [[ -z "$LV_COMPACT_MODE" ]]         &&  LV_COMPACT_MODE=true
+    [[ -z "$LV_CACHE_VALID_SECONDS" ]]  &&  LV_CACHE_VALID_SECONDS=2
+    if [[ $LV_COMPACT_MODE == 'true' ]] ## asetettava build_promptissa, koska .zshrc ENV ei muuten päivity!
+        then    LV_SEGMENT_SPACE=" "
+        else    LV_SEGMENT_SPACE="  "
+    fi
+
     precache_git
 
     ## tämä muuttuja säätää zsh:ssä promptin ulkonäköä (apufunktioidensa ohella)
-    PROMPT="$(
-        prompt_status_context
-        prompt_dir
-        prompt_cached_git
-        prompt_end
-    )"
+    if [[ $LV_TWO_ROW_MODE == true ]]; then
+        PROMPT="$(
+            prompt_start
+            prompt_cached_git
+            prompt_exit_code
+            prompt_dir
+            prompt_end
+        )"
+    else
+        PROMPT="$(
+            prompt_start
+            prompt_dir
+            prompt_cached_git
+            prompt_end
+        )"
+    fi
 
     LV_LAST_PWD="$PWD"
     LV_LAST_TIME_CHECKED="$EPOCHSECONDS"
@@ -146,25 +186,22 @@ function lv_build_prompt() {
 
 
 function main() {
-    export LV_LAST_PWD LV_LAST_TIME_CHECKED LV_CACHED_GIT_PROMPT LV_SEGMENT_SPACE
+    export LV_LAST_PWD LV_LAST_TIME_CHECKED LV_CACHED_GIT_PROMPT LV_SEGMENT_SPACE LV_TWO_ROW_MODE
 
+    ## HUOM! Jos näistä halutaan .zshrc:ssä muokattavia, nämä(kin) siirrettävä build_promptiin!
     LV_COLOR_ERROR_BOLD="%{$fg_bold[red]%}"     ## bold punainen
     LV_COLOR_ERROR='%{%F{1}%}'                  ## punainen, (124, 197, 160, 9, 1)
     LV_COLOR_GIT_GOOD='%{%F{41}%}'              ## vihreä (47, 120, 41)
-    LV_COLOR_GIT_NEUTRAL='%{%F{43}%}'           ## sinisempi (43, 44, 81)
+    LV_COLOR_GIT_NEUTRAL='%{%F{86}%}'           ## sinisempi (43, 44, 81, 86)
     LV_COLOR_DOTDOTDOT='%{%F{102}%}'            ## harmaa (244, 247, 102)
     LV_COLOR_DIR_TEXT='%{%F{152}%}'             ## "polun väri", esim joku harmahtava (152, 103, 145, 146)
     LV_COLOR_LAMBDA="%{$fg_bold[white]%}"       ## kirkkaan valkoinen (231, 256)
     LV_COLOR_WARN='%{%F{227}%}'                 ## keltainen (227, 142)
     LV_COLOR_WARNER='%{%F{208}%}'               ## oranssi (208, 130)
-    LV_COLOR_PROMPT_NORMAL='%{%F{251}%}'        ## promptimerkin väri normaalisti, valkoinen
-    LV_COLOR_PROMPT_GOD='%{%F{226}%}'           ## promptimerkin väri jos olet root, kultainen (226)
+    LV_COLOR_PROMPT_NORMAL='%{%F{252}%}'        ## promptimerkin väri normaalisti, valkoinen
+    LV_COLOR_PROMPT_NORMAL_SSH='%{%F{192}%}'    ## promptimerkin väri normaalisti, vihertävä
+    LV_COLOR_PROMPT_GOD='%{%F{220}%}'           ## promptimerkin väri jos olet root, kultainen (226, 220, 227)
     LV_COLOR_CONTEXT='%{%F{139}%}'              ## "hostin nimi", joku hillitty (140, 146, 139)
-
-    if [[ $LV_COMPACT_MODE == 'true' ]]
-        then    LV_SEGMENT_SPACE=" "
-        else    LV_SEGMENT_SPACE="  "
-    fi
 
     ## esiasetukset (version control system info)
     autoload -Uz vcs_info
@@ -173,8 +210,8 @@ function main() {
     zstyle ':vcs_info:*' check-for-changes true
     zstyle ':vcs_info:*' stagedstr "${LV_COLOR_WARN}⋇"
     zstyle ':vcs_info:*' unstagedstr "${LV_COLOR_WARNER}*"
-    zstyle ':vcs_info:*' formats ' %u%c'
-    zstyle ':vcs_info:*' actionformats ' %u%c'
+    zstyle ':vcs_info:*' formats '%u%c'
+    zstyle ':vcs_info:*' actionformats '%u%c'
 
     LV_LAST_TIME_CHECKED=-1  ## aluksi ei mitään, oikea arvo asettuu kun zsh ajaa lv_build_prompt oman logiikkansa mukaan
 
