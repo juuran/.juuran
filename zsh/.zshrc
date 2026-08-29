@@ -274,6 +274,9 @@ elif [ "$USER" = juuran ]; then
     # ZSH_HIGHLIGHT_STYLES[comment]=$grayDoor
     # typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayMore
 
+    export LV_COMPACT_MODE=false
+    export LV_TWO_ROW_MODE=false
+
 elif [ "$USER" = vilmasilvennoinen ]; then
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 

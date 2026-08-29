@@ -46,12 +46,24 @@ function prompt_dir() {
     prompt_segment "${both}${dir_display}"
 }
 
+function get_tag() {
+    local temp_tag
+    if ! temp_tag="$(git describe --tags --exact-match HEAD 2> /dev/null)"; then
+        return
+    fi
+
+    if [[ $LV_TWO_ROW_MODE == true ]]
+        then  LV_TAG=" ${LV_COLOR_DOTDOTDOT}(tag: ${LV_COLOR_PROMPT_GOD}${temp_tag}${LV_COLOR_DOTDOTDOT})"
+        else  LV_TAG=" ${LV_COLOR_DOTDOTDOT}(${LV_COLOR_PROMPT_GOD}${temp_tag}${LV_COLOR_DOTDOTDOT})"
+    fi
+}
+
 ## Git: branch/detached head, dirty & stashed status
 function precache_git() {
     local repo_path now
     now="$EPOCHSECONDS"
     
-    ## cachen käyttö vai ei
+    ## cachen y/n ja pikapoistumiset
     if [[ "$LV_LAST_PWD" == "$PWD" ]] && (( (LV_LAST_TIME_CHECKED + LV_CACHE_VALID_SECONDS) > now )); then
         return  ## käytetään cachea, jos pysytty samassa polussa vain kotvasen
     elif ! repo_path=$(command git rev-parse --git-dir 2>/dev/null); then
@@ -59,9 +71,9 @@ function precache_git() {
         return
     fi
 
-    local ref dirty status_color ahead behind unsynced_char stash_char temp_space mode tag
+    local dirty status_color ref branch_or_detach ahead behind unsynced_char stash_char mode un_staged
     
-    ## zsh:n oma version control system -tieto haetaan, kun suoritus alkaa
+    ## zsh:n oma version control system -tieto haetaan vasta, kun suoritus alkaa
     vcs_info
 
     ## likainen git status eri väriseksi
@@ -72,16 +84,14 @@ function precache_git() {
         status_color="${LV_COLOR_GIT_GOOD}"
     fi
 
-    if ! ref=$(command git symbolic-ref HEAD 2> /dev/null); then  ## detachediin lisätään aina myös tägi
-        branch_or_detach="${LV_SEGMENT_SPACE}${LV_COLOR_ERROR}detached"
-        if tempTag="$(git describe --tags --exact-match HEAD 2> /dev/null)"; then
-            if [[ $LV_TWO_ROW_MODE == true ]]
-                then    tag="${LV_COLOR_DOTDOTDOT} (tag: ${LV_COLOR_PROMPT_GOD}${tempTag}${LV_COLOR_DOTDOTDOT})"
-                else    tag="${LV_COLOR_DOTDOTDOT} (${LV_COLOR_PROMPT_GOD}${tempTag}${LV_COLOR_DOTDOTDOT})"
-            fi
-        fi
-    else  ## jos löytyy haara ei näytetä tägiä
+    LV_TAG=""
+    if ref=$(command git symbolic-ref HEAD 2> /dev/null); then  ## haara löytyi
         branch_or_detach="${LV_SEGMENT_SPACE}${status_color}${${ref:gs/%/%%}/refs\/heads\//}"
+        [[ $LV_TWO_ROW_MODE == true ]] && get_tag  ## kaksirivimoodissa haetaan tägi myös haarassa ollessa (koska tilaa näyttää se)
+
+    else  ## ei haaraa, detached
+        branch_or_detach="${LV_SEGMENT_SPACE}${LV_COLOR_ERROR}detached"
+        get_tag  ## detachedin tapauksessa haetaan aina tägi, jos sellainen vain on!
     fi
 
     ## edellä vai jäljessä
@@ -112,7 +122,7 @@ function precache_git() {
 
     un_staged="${vcs_info_msg_0_%%}"; [[ -n "$un_staged" ]] && un_staged=" ${un_staged}"
     ## cachetus nopeuttaa kummasti
-    LV_CACHED_GIT_PROMPT="${branch_or_detach}${un_staged}${tag}${unsynced_char}${stash_char}${mode}"
+    LV_CACHED_GIT_PROMPT="${branch_or_detach}${un_staged}${LV_TAG}${unsynced_char}${stash_char}${mode}"
 }
 
 function prompt_cached_git() {
