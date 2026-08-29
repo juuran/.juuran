@@ -11,19 +11,17 @@ function prompt_segment() {
 ## Status:
 ## - was there an error
 function prompt_start() {
-    local color
-
-    if (( $LV_RETVAL == 0 )); then
-        color="${LV_COLOR_LAMBDA}"
-    else
-        color="${LV_COLOR_ERROR_BOLD}"
-    fi
+    local color_lambda color_user color_at color_host
+    color_user="$LV_COLOR_USER"
+    color_at="$LV_COLOR_AT_MACHINE"
+    (( $LV_RETVAL == 0 ))       && color_lambda="$LV_COLOR_LAMBDA"      || color_lambda="$LV_COLOR_ERROR_BOLD"
+    [[ -n $SSH_CONNECTION ]]    && color_host="$LV_COLOR_HOST_SSH"      || color_host="$LV_COLOR_HOST_NORMAL"
 
     if [[ $LV_TWO_ROW_MODE == true ]]; then  ## jos 2-rivinen, aloitetaan entterillä
         prompt_segment "
-${color}λ%{$reset_color%}${LV_SEGMENT_SPACE}${LV_COLOR_CONTEXT}%n@%m%{$reset_color%}"
+${color_lambda}λ%{$reset_color%}${LV_SEGMENT_SPACE}${color_user}%n${color_at}@${color_host}%m%{$reset_color%}"
     else
-        prompt_segment "${color}λ%{$reset_color%}${LV_SEGMENT_SPACE}${LV_COLOR_CONTEXT}%n@%m%{$reset_color%}${LV_SEGMENT_SPACE}"
+        prompt_segment "${color_lambda}λ%{$reset_color%}${LV_SEGMENT_SPACE}${color_user}%n${color_at}@${color_host}%m%{$reset_color%}${LV_SEGMENT_SPACE}"
     fi
 }
 
@@ -142,33 +140,26 @@ function prompt_exit_code() {  ## tätä kutsutaan aina ja vain kaksirivisessä 
 
 ## End the prompt, closing any open segments
 function prompt_end() {
-    local prompt_symbol color
+    local prompt_symbol color_lambda
     prompt_symbol="${LV_SEGMENT_SPACE}❯ "
-    if (( EUID == 0)); then
-            color="${LV_COLOR_PROMPT_GOD}"  ## superuserin väri aseteaan olit SSH tai et
-        else
-            if [[ -n $SSH_CONNECTION ]]; then
-                color="${LV_COLOR_PROMPT_NORMAL_SSH}"   ## normikäyttäjän SSH väri
-            else
-                color="${LV_COLOR_PROMPT_NORMAL}"       ## normikäyttäjän natiivi väri
-            fi
+    if (( EUID == 0)); then                         ## super userin väri
+            color_lambda="${LV_COLOR_PROMPT_GOD}"
+        else                                        ## normikäyttäjän väri
+            color_lambda="${LV_COLOR_PROMPT_NORMAL}"
     fi
 
-    prompt_segment "${color}${prompt_symbol}%{$reset_color%}"
+    prompt_segment "${color_lambda}${prompt_symbol}%{$reset_color%}"
 }
 
 ## Main prompt
 function lv_build_prompt() {
     LV_RETVAL=$?
 
-    ## dynaamiset (oletus)arvot
+    ## dynaamiset (oletus)arvot tai .zshrc ENVeinä asetetut tehtävät nyt, koska "prompt" funktioissa eivät päivity!
     [[ -z "$LV_TWO_ROW_MODE" ]]         &&  LV_TWO_ROW_MODE=true
     [[ -z "$LV_COMPACT_MODE" ]]         &&  LV_COMPACT_MODE=true
     [[ -z "$LV_CACHE_VALID_SECONDS" ]]  &&  LV_CACHE_VALID_SECONDS=2
-    if [[ $LV_COMPACT_MODE == 'true' ]] ## asetettava build_promptissa, koska .zshrc ENV ei muuten päivity!
-        then    LV_SEGMENT_SPACE=" "
-        else    LV_SEGMENT_SPACE="  "
-    fi
+    [[ $LV_COMPACT_MODE == 'true' ]]    && LV_SEGMENT_SPACE=" "         || LV_SEGMENT_SPACE="  "
 
     precache_git
 
@@ -209,9 +200,11 @@ function main() {
     LV_COLOR_WARN='%{%F{227}%}'                 ## keltainen (227, 142)
     LV_COLOR_WARNER='%{%F{208}%}'               ## oranssi (208, 130)
     LV_COLOR_PROMPT_NORMAL='%{%F{252}%}'        ## promptimerkin väri normaalisti, valkoinen
-    LV_COLOR_PROMPT_NORMAL_SSH='%{%F{192}%}'    ## promptimerkin väri normaalisti, vihertävä
+    LV_COLOR_USER='%{%F{139}%}'                 ## käyttäjän väri joku hillitty (139, 140, 146)
+    LV_COLOR_HOST_NORMAL='%{%F{139}%}'          ## normihostin väri: selkeintä käyttää sama k. käyttäjä!
+    LV_COLOR_AT_MACHINE='%{%F{60}%}'            ## "user -->@ host" -väri (60, 61, 69)
+    LV_COLOR_HOST_SSH='%{%F{104}%}'             ## hostin väri, jos ssh (141, 103, 104)
     LV_COLOR_PROMPT_GOD='%{%F{220}%}'           ## promptimerkin väri jos olet root, kultainen (226, 220, 227)
-    LV_COLOR_CONTEXT='%{%F{139}%}'              ## "hostin nimi", joku hillitty (140, 146, 139)
 
     ## esiasetukset (version control system info)
     autoload -Uz vcs_info
