@@ -105,7 +105,7 @@ ZSH_CUSTOM=~/.config/zsh/custom-oh-my-zsh
     #   Example format: plugins=(rails git textmate ruby lighthouse)
     #   Add wisely, as too many plugins slow down shell startup. )
 if [ "$USER" = c945fvc ]; then    ## kehityspalvelin
-    plugins=(git-aliax sudox zsh-syntax-highlighting zsh-autosuggestions mvn-aliax npm-aliax jsontools oc yum docker yarn-aliax)
+    plugins=(git-aliax sudox zsh-syntax-highlighting zsh-autosuggestions mvn-aliax jsontools oc yum dnf docker)
 
 elif [ "$HOST" = fedora ]; then
     plugins=(git-aliax sudox zsh-autosuggestions zsh-syntax-highlighting web-searchx rust spring dockerx podmanx)
@@ -201,21 +201,24 @@ if [ "$USER" = c945fvc ]; then
     ## Omien skriptien globaalit muuttujat
     export NOTES_PATH="/home/c945fvc/notes"
     export EDITOR_IS_SUBL=false
-
-    ## bash autocompletet
-    autoload -Uz +X bashcompinit && bashcompinit
-    autoload -Uz +X compinit && compinit
+    export LV_COMPACT_MODE=false
+    export LV_CACHE_VALID_SECONDS=1
+    export LV_TWO_ROW_MODE=false
 
     if command -v tkn 1> /dev/null 2> /dev/null; then
         source <(tkn completion zsh)
         compdef _tkn tkn
     fi
 
-    slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
-    [ -e "$slcPolku" ] && source "$slcPolku"
-
-    ## että edes git pull toimisi nginx kautta
-    export GIT_SSL_NO_VERIFY=true
+    ## bash completionit (zsh completionit sourssattiin jo ylhäällä fpathiin)
+    bashcompletions=(
+        "$HOME/koodi/omat/hyppykoneelle/pikkuskriptit/_search-logs-completions.sh"
+        "$HOME/koodi/omat/hyppykoneelle/pikkuskriptit/_oc-create-secret-completions.sh"
+        "$HOME/koodi/omat/hyppykoneelle/pikkuskriptit/_paivita-trusted-sertit.sh"
+    )
+    for bashcompl in "${bashcompletions[@]}"; do
+        [ -r "$bashcompl" ] && source "$bashcompl"
+    done
 
     ## värityksiä
     local grayMore grayDoor
@@ -224,23 +227,11 @@ if [ "$USER" = c945fvc ]; then
     ZSH_HIGHLIGHT_STYLES[comment]=$grayDoor
     typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$grayMore
 
-    ## nodejs oma kustomi asennuspaikka
-    #export PATH=$PATH:/usr/local/nodejs/bin
-
-    # pnpm
-    export PNPM_HOME="/users/c945fvc/.local/share/pnpm"
-    case ":$PATH:" in
-      *":$PNPM_HOME:"*) ;;
-      *) export PATH="$PNPM_HOME:$PATH" ;;
-    esac
-    # pnpm end
+    ## että edes git pull toimisi nginx kautta
+    export GIT_SSL_NO_VERIFY=true
 
     ## asetettava JAVA_HOME, mutta käyttäen vaihda-java tekemää 'default' linkkiä
     export JAVA_HOME=$(readlink -f /usr/lib/jvm/default)
-
-    export LV_COMPACT_MODE=false
-    export LV_CACHE_VALID_SECONDS=1
-    export LV_TWO_ROW_MODE=true
 
 # elif [ "$USER" = juuran ]; then  ## win (wsl2) - SÄILYTETÄÄN siltä varalta että joskus taas muutan mieleni... (niinkin ON käynyt, usko tai älä)
 #     ## Näillä taikasanoilla saadaan winkkari ymmärtämään, missä pwd:ssä (winkkarissa CWD) kulloinkin

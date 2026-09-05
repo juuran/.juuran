@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 ## Tämän vastauksen oli näemmä syöttänyt Peda.net:in kehittäjä Mikko Rantalainen:
 # https://serverfault.com/questions/401437/how-to-retrieve-the-last-modification-date-of-all-files-in-a-git-repository

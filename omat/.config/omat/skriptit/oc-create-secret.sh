@@ -1,5 +1,10 @@
 #!/bin/bash
 
+## DEPREKOITU!
+## Vanha versio, jota en aio ylläpitää tässä repossa.
+## Mutta voihan tämän säilyttää täällä jonkinlaisena
+## esimerkkinä... jostain.
+
 ## "staattisesti linkatut" funktioni fail ja error (saa lainata!)
 function error() {
     [ -z "$*" ] && return

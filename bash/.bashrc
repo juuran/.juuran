@@ -117,8 +117,7 @@ fi
 #trap "redirect;" DEBUG
 #PROMPT_COMMAND='undirect;'
 
-
-# Yeah, fuck those
+## omat aliakset
 if [ -f $HOME/.shell_aliases ]; then
     . $HOME/.shell_aliases
 fi
@@ -138,17 +137,24 @@ if [ "$USER" = c945fvc ] || [ $USER = juuran ] || [ $USER = juuso ]; then
     export NOTES_PATH="/home/c945fvc/notes"
     export EDITOR_IS_SUBL=false
 
-    slcPolku="$HOME/koodi/omat/lokilucia/.ei-hyppykoneelle/.search-logs-completions.sh"
-    sealPolku="$SKRIPTIT_POLKU/auto_completions/_oc-seal_bash.sh"
-    [ -e "$slcPolku" ]  && source "$slcPolku"
-    [ -e "$sealPolku" ] && source "$sealPolku"
     [ -e "$HOME/.yarn/bin" ] && [ -e "$HOME/.config/yarn/global/node_modules/.bin" ] && \
         export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
     if command -v tkn 1> /dev/null 2> /dev/null; then
-        source <(tkn completion zsh)
-        compdef _tkn tkn
+        source <(tkn completion bash)
     fi
+
+    bashcompletions=(
+        "$HOME/koodi/omat/hyppykoneelle/pikkuskriptit/_search-logs-completions.sh"
+        "$HOME/koodi/omat/hyppykoneelle/pikkuskriptit/_oc-create-secret-completions.sh"
+        "$HOME/koodi/omat/hyppykoneelle/pikkuskriptit/_paivita-trusted-sertit.sh"
+        "$SKRIPTIT_POLKU/auto_completions/_git-modified-branches.sh"
+        "$SKRIPTIT_POLKU/auto_completions/_git-log.sh"
+        "$SKRIPTIT_POLKU/auto_completions/_color_me_logs.sh"
+    )
+    for bashcompl in "${bashcompletions[@]}"; do
+        [ -r "$bashcompl" ] && source "$bashcompl"
+    done
 
     ## asetettava JAVA_HOME, mutta käyttäen vaihda-java tekemää 'default' linkkiä
     export JAVA_HOME=$(readlink -f /usr/lib/jvm/default)

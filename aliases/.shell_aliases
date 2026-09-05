@@ -51,8 +51,8 @@ if [ "$USER" = "c945fvc" ]; then
   alias tasks="$SKRIPTIT_POLKU/tasks.sh"
   alias git-pull-all="$SKRIPTIT_POLKU/git-pull-all.sh"
   alias liberty-run="$SKRIPTIT_POLKU/liberty-run.sh"
-  alias oc-seal="$SKRIPTIT_POLKU/oc-seal.sh"
-  alias oc-create-secret="$SKRIPTIT_POLKU/oc-create-secret.sh"
+  alias oc-create-secret="/home/c945fvc/koodi/omat/hyppykoneelle/oc-create-secret.sh"
+  alias search-logs="/home/c945fvc/koodi/omat/hyppykoneelle/search-logs.sh"
 
   source $SKRIPTIT_POLKU/vaihda-java.sh
   alias vaihda-java=vaihda_java
